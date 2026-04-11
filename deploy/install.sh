@@ -4,7 +4,9 @@ set -Eeuo pipefail
 REPO_URL="${REPO_URL:-https://github.com/NGPpQr0oWJ12/my-ossetia-tour.git}"
 BRANCH="${BRANCH:-main}"
 APP_DIR="${APP_DIR:-$HOME/apps/my-ossetia-tour}"
+TRAEFIK_NETWORK="${TRAEFIK_NETWORK:-edge}"
 GIT_CMD=(git)
+COMPOSE_CMD=()
 
 log() {
   printf '\n[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1"
@@ -99,6 +101,14 @@ prompt_domain() {
   printf '%s' "$domain"
 }
 
+ensure_proxy_network() {
+  if docker network inspect "$TRAEFIK_NETWORK" >/dev/null 2>&1; then
+    return
+  fi
+
+  fail "Shared proxy network '$TRAEFIK_NETWORK' was not found. Install the Traefik proxy stack first or connect this app to your existing reverse proxy."
+}
+
 ensure_domain_config() {
   local env_file current_domain domain
   env_file="$APP_DIR/deploy/.env.production"
@@ -108,16 +118,22 @@ ensure_domain_config() {
     current_domain="$(normalize_domain "$current_domain")"
 
     if [ -n "$current_domain" ]; then
+      if grep -q '^TRAEFIK_NETWORK=' "$env_file"; then
+        sed -i "s|^TRAEFIK_NETWORK=.*|TRAEFIK_NETWORK=$TRAEFIK_NETWORK|" "$env_file"
+      else
+        printf 'TRAEFIK_NETWORK=%s\n' "$TRAEFIK_NETWORK" >> "$env_file"
+      fi
       log "Using saved domain: $current_domain"
       return
     fi
   fi
 
-  log "Before issuing a certificate, point the domain A/AAAA record to this server and open ports 80/443."
+  log "Before issuing a certificate, point the domain A/AAAA record to the shared proxy server and make sure ports 80/443 are handled by Traefik."
   domain="$(prompt_domain)"
 
   cat > "$env_file" <<EOF
 DOMAIN=$domain
+TRAEFIK_NETWORK=$TRAEFIK_NETWORK
 EOF
 
   log "Saved domain configuration to $env_file"
@@ -147,6 +163,7 @@ main() {
   configure_git_auth
   resolve_compose_cmd
   clone_or_update_repo
+  ensure_proxy_network
   ensure_domain_config
   deploy_stack
   print_summary

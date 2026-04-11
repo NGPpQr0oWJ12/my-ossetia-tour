@@ -9,14 +9,17 @@ services:
     restart: unless-stopped
     env_file:
       - ./deploy/.env.production
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK}"
+      - "traefik.http.routers.my-ossetia-tour.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.my-ossetia-tour.entrypoints=websecure"
+      - "traefik.http.routers.my-ossetia-tour.tls.certresolver=le"
+      - "traefik.http.services.my-ossetia-tour.loadbalancer.server.port=80"
 
-volumes:
-  caddy_data:
-  caddy_config:
-
+networks:
+  proxy:
+    external: true
+    name: ${TRAEFIK_NETWORK}

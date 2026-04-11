@@ -1,48 +1,37 @@
 # Docker deployment
 
-This project is prepared for isolated deployment in Docker with automatic HTTPS via Caddy.
+This repository now uses a shared reverse-proxy architecture.
 
-## What the stack does
+## How it works
 
-- builds the Vite app into static files
-- serves it from a Docker container based on `caddy`
-- requests and renews a free TLS certificate automatically
-- keeps certificates in Docker volumes, without installing nginx or certbot on the host
+- a single Dockerized `Traefik` instance owns host ports `80` and `443`
+- Traefik issues and renews Let's Encrypt certificates
+- this app runs in its own container and joins the shared proxy network
+- the app itself does not bind host ports
 
-## Server requirements
+This is the correct setup when multiple applications must coexist on one server.
 
-- Docker Engine
-- Docker Compose plugin or `docker-compose`
-- Git
-- open ports `80` and `443`
-- DNS `A` or `AAAA` record for your domain already pointing to the server
+## Server-wide proxy
 
-## First deployment
-
-For a public repository:
+Install the shared proxy once per server:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/proxy/install.sh | ACME_EMAIL=admin@example.com bash
 ```
 
-If you prefer a non-interactive run:
+That creates the shared Docker network `edge` and starts Traefik with automatic Let's Encrypt.
+
+If your server already has a reverse proxy, do not install another one. Instead, connect this app to the same proxy network and routing scheme.
+
+## App deployment
+
+Public repository:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | DOMAIN=example.com bash
 ```
 
-For a private repository:
-
-```bash
-export GITHUB_TOKEN=your_github_token
-curl -fsSL \
-  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-  -H "Accept: application/vnd.github.raw" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  "https://api.github.com/repos/NGPpQr0oWJ12/my-ossetia-tour/contents/deploy/install.sh?ref=main" | bash
-```
-
-Non-interactive variant:
+Private repository:
 
 ```bash
 export GITHUB_TOKEN=your_github_token
@@ -53,42 +42,20 @@ curl -fsSL \
   "https://api.github.com/repos/NGPpQr0oWJ12/my-ossetia-tour/contents/deploy/install.sh?ref=main" | DOMAIN=example.com bash
 ```
 
-The script will:
-
-1. clone the repository to `$HOME/apps/my-ossetia-tour`
-2. ask for the domain on the first run
-3. save the domain in `deploy/.env.production`
-4. build and start the Docker stack
-5. let Caddy obtain the certificate automatically
-
-## Optional parameters
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | APP_DIR=/srv/my-ossetia-tour BRANCH=main bash
-```
-
-Supported variables:
+## Variables
 
 - `APP_DIR` - target directory on the server
-- `BRANCH` - git branch to deploy
+- `BRANCH` - branch to deploy
 - `REPO_URL` - custom repository URL
-- `DOMAIN` - site domain for non-interactive bootstrap
-- `GITHUB_TOKEN` - token for cloning a private GitHub repository over HTTPS
-- `FORCE_RECONFIGURE=1` - ask for the domain again even if it is already saved
+- `DOMAIN` - site domain
+- `TRAEFIK_NETWORK` - external proxy network name, default `edge`
+- `GITHUB_TOKEN` - token for private GitHub repository access
+- `FORCE_RECONFIGURE=1` - ask for the domain again
+- `ACME_EMAIL` - Let's Encrypt email for the shared proxy
 
-## Updating an existing deployment
+## Manual commands
 
-Run the same command again:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | bash
-```
-
-If `deploy/.env.production` already exists, the saved domain is reused.
-
-## Manual operations
-
-From the project directory on the server:
+App:
 
 ```bash
 docker compose --env-file deploy/.env.production up -d --build
@@ -96,6 +63,9 @@ docker compose logs -f
 docker compose down
 ```
 
-## Important note
+Proxy:
 
-This stack binds host ports `80` and `443`. If another service already uses these ports, Docker will not start the site until the conflict is removed or you switch to a shared reverse proxy architecture.
+```bash
+docker compose -f deploy/proxy/compose.yaml --env-file deploy/proxy/.env up -d
+docker compose -f deploy/proxy/compose.yaml logs -f
+```
