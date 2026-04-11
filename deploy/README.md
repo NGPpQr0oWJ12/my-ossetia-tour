@@ -25,6 +25,12 @@ For a public repository:
 curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | bash
 ```
 
+If you prefer a non-interactive run:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | DOMAIN=example.com bash
+```
+
 For a private repository:
 
 ```bash
@@ -34,6 +40,17 @@ curl -fsSL \
   -H "Accept: application/vnd.github.raw" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   "https://api.github.com/repos/NGPpQr0oWJ12/my-ossetia-tour/contents/deploy/install.sh?ref=main" | bash
+```
+
+Non-interactive variant:
+
+```bash
+export GITHUB_TOKEN=your_github_token
+curl -fsSL \
+  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  -H "Accept: application/vnd.github.raw" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  "https://api.github.com/repos/NGPpQr0oWJ12/my-ossetia-tour/contents/deploy/install.sh?ref=main" | DOMAIN=example.com bash
 ```
 
 The script will:
@@ -55,6 +72,7 @@ Supported variables:
 - `APP_DIR` - target directory on the server
 - `BRANCH` - git branch to deploy
 - `REPO_URL` - custom repository URL
+- `DOMAIN` - site domain for non-interactive bootstrap
 - `GITHUB_TOKEN` - token for cloning a private GitHub repository over HTTPS
 - `FORCE_RECONFIGURE=1` - ask for the domain again even if it is already saved
 

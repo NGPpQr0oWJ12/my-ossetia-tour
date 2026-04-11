@@ -76,6 +76,29 @@ normalize_domain() {
   printf '%s' "$input" | tr '[:upper:]' '[:lower:]'
 }
 
+prompt_domain() {
+  local domain=""
+
+  if [ -n "${DOMAIN:-}" ]; then
+    domain="$(normalize_domain "$DOMAIN")"
+  fi
+
+  while [ -z "$domain" ]; do
+    if [ -r /dev/tty ]; then
+      read -r -p "Domain for the site (example.com): " domain < /dev/tty
+      domain="$(normalize_domain "$domain")"
+    else
+      fail "Interactive input is unavailable. Re-run with DOMAIN=example.com."
+    fi
+
+    if [ -z "$domain" ]; then
+      printf 'Domain cannot be empty.\n' > /dev/tty
+    fi
+  done
+
+  printf '%s' "$domain"
+}
+
 ensure_domain_config() {
   local env_file current_domain domain
   env_file="$APP_DIR/deploy/.env.production"
@@ -91,17 +114,7 @@ ensure_domain_config() {
   fi
 
   log "Before issuing a certificate, point the domain A/AAAA record to this server and open ports 80/443."
-
-  while true; do
-    read -r -p "Domain for the site (example.com): " domain
-    domain="$(normalize_domain "$domain")"
-
-    if [ -n "$domain" ]; then
-      break
-    fi
-
-    printf 'Domain cannot be empty.\n'
-  done
+  domain="$(prompt_domain)"
 
   cat > "$env_file" <<EOF
 DOMAIN=$domain
