@@ -1,84 +1,112 @@
-# 🏔️ My Ossetia Tour
+# My Ossetia Tour
 
-Современная платформа для планирования незабываемых путешествий по Северной Осетии. Приложение сочетает в себе премиальный дизайн, интерактивный интерфейс и возможности искусственного интеллекта для создания персональных маршрутов.
+Современный сайт авторских туров по Северной Осетии на `React 19` + `TypeScript` + `Vite`.
 
----
+## Стек
 
-## ✨ Основные возможности
+- `React 19`
+- `TypeScript`
+- `Vite 6`
+- `Tailwind CSS v4`
+- `motion`
+- `react-router-dom`
 
-- **Интерактивные туры**: Исследуйте лучшие локации Осетии с детальным описанием и фотографиями.
-- **AI-Ассистент**: Встроенный чат-бот на базе Google Gemini поможет спланировать поездку и ответит на вопросы.
-- **Премиальный UI**: Использование современных анимаций (Framer Motion) и шрифтов для лучшего пользовательского опыта.
-- **Адаптивность**: Полная поддержка мобильных устройств и десктопов.
+## Локальная разработка
 
----
+Требования:
 
-## 🚀 Стек технологий
+- `Node.js 20+`
+- `npm`
 
-- **Ядро**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Сборка**: [Vite 6](https://vitejs.dev/)
-- **Стилизация**: [Tailwind CSS v4](https://tailwindcss.com/) (с использованием нового движка Oxide)
-- **Анимации**: [Framer Motion 12](https://motion.dev/)
-- **Иконки**: [Lucide React](https://lucide.dev/)
-- **Интеграция ИИ**: [Google Generative AI SDK](https://github.com/google-gemini/generative-ai-js)
-- **Роутинг**: [React Router 7](https://reactrouter.com/)
+Установка и запуск:
 
----
-
-## 🛠️ Быстрый старт
-
-### 1. Предварительные требования
-Убедитесь, что у вас установлен **Node.js** (рекомендуется версия 20 или выше).
-
-### 2. Установка зависимостей
-Склонируйте проект и выполните установку:
 ```bash
 npm install
-```
-
-### 3. Настройка окружения
-Для работы AI-функций необходим API ключ Google Gemini.
-
-1.  Создайте файл `.env` в корневом каталоге (или скопируйте `.env.example`):
-    ```bash
-    cp .env.example .env
-    ```
-2.  Откройте `.env` и вставьте ваш ключ:
-    ```env
-    VITE_GEMINI_API_KEY=ваш_ключ_здесь
-    ```
-    > [!IMPORTANT]
-    > Получить бесплатный API ключ можно в [Google AI Studio](https://aistudio.google.com/app/apikey).
-
-### 4. Запуск проекта
-Запустите сервер разработки:
-```bash
 npm run dev
 ```
-Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
 
----
+Сборка и проверка типов:
 
-## 📂 Структура проекта
+```bash
+npm run build
+npm run lint
+```
 
-- `src/components/` — Переиспользуемые UI-компоненты (Layout, Navbar и др.).
-- `src/pages/` — Основные страницы приложения (Home, Tours, About).
-- `src/lib/` — Конфигурация внешних сервисов (AI, API).
-- `src/index.css` — Конфигурация Tailwind CSS v4 и глобальные стили.
+## Docker-деплой
 
----
+Проект подготовлен к изолированному деплою в Docker:
 
-## 📝 Доступные команды
+- приложение собирается в production-образ
+- статика отдается через `Caddy`
+- SSL-сертификат выпускается и продлевается автоматически
+- сертификаты и конфиг хранятся в docker volumes
+- на хосте не требуется отдельно ставить `nginx` или `certbot`
 
-| Команда | Описание |
-| :--- | :--- |
-| `npm run dev` | Запуск сервера разработки на порту 3000 |
-| `npm run build` | Сборка проекта для продакшена |
-| `npm run preview` | Просмотр собранного проекта локально |
-| `npm run lint` | Проверка типов TypeScript |
+### Что нужно на сервере
 
----
+- `Docker`
+- `Docker Compose` или `docker-compose`
+- `Git`
+- открытые порты `80` и `443`
+- домен, уже направленный на IP сервера
 
-## 📄 Лицензия
-SPDX-License-Identifier: Apache-2.0
+### Первый деплой
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | bash
+```
+
+Что делает скрипт:
+
+1. Клонирует репозиторий в `$HOME/apps/my-ossetia-tour`.
+2. При первом запуске спрашивает домен сайта.
+3. Сохраняет домен в `deploy/.env.production`.
+4. Собирает и поднимает docker-стек.
+5. Дает `Caddy` автоматически получить бесплатный SSL-сертификат.
+
+### Повторный деплой или обновление
+
+Запускается той же командой:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | bash
+```
+
+Если `deploy/.env.production` уже существует, сохраненный домен будет использован повторно.
+
+### Полезные переменные
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NGPpQr0oWJ12/my-ossetia-tour/main/deploy/install.sh | APP_DIR=/srv/my-ossetia-tour BRANCH=main bash
+```
+
+Поддерживаются:
+
+- `APP_DIR` — куда клонировать проект на сервере
+- `BRANCH` — какая ветка деплоится
+- `REPO_URL` — URL репозитория
+- `FORCE_RECONFIGURE=1` — повторно спросить домен
+
+### Ручное управление
+
+Из директории проекта на сервере:
+
+```bash
+docker compose --env-file deploy/.env.production up -d --build
+docker compose logs -f
+docker compose down
+```
+
+### Ограничение
+
+Текущая схема занимает порты `80` и `443` на сервере. Если они уже используются другим сервисом, нужно либо освободить их, либо переходить на общую reverse-proxy архитектуру для нескольких сайтов.
+
+## Структура
+
+- [src/App.tsx](/c:/Users/22/Desktop/my-ossetia-tour/src/App.tsx)
+- [src/pages/Home.tsx](/c:/Users/22/Desktop/my-ossetia-tour/src/pages/Home.tsx)
+- [src/pages/Tours.tsx](/c:/Users/22/Desktop/my-ossetia-tour/src/pages/Tours.tsx)
+- [src/pages/TourDetail.tsx](/c:/Users/22/Desktop/my-ossetia-tour/src/pages/TourDetail.tsx)
+- [src/index.css](/c:/Users/22/Desktop/my-ossetia-tour/src/index.css)
+- [deploy/install.sh](/c:/Users/22/Desktop/my-ossetia-tour/deploy/install.sh)
+- [deploy/README.md](/c:/Users/22/Desktop/my-ossetia-tour/deploy/README.md)

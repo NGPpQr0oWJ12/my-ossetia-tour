@@ -1,0 +1,22 @@
+name: my-ossetia-tour
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: my-ossetia-tour:latest
+    restart: unless-stopped
+    env_file:
+      - ./deploy/.env.production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
+
