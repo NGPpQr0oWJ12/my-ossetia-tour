@@ -10,22 +10,22 @@ export default function TourDetail() {
     {
       title: "АЛАНСКИЙ ЖЕНСКИЙ МОНАСТЫРЬ",
       desc: "Аланский женский монастырь — святое место в сердце Алагирского ущелья. Основан на земле древней Алании, где зародилось христианство на Кавказе. Среди гор и елей здесь царят тишина, молитва и особая духовная сила.",
-      image: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000"
     },
     {
       title: "ПАМЯТНИК УАСТЫРДЖИ",
       desc: "Величественный монумент, вырывающийся прямо из скалы. Уастырджи — покровитель мужчин, путников и воинов в осетинском эпосе. Одно из самых впечатляющих зрелищ на Транскаме.",
-      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000"
     },
     {
       title: "ЦЕЙСКОЕ УЩЕЛЬЕ",
       desc: "Насладитесь активным отдыхом на курорте Цей. Подъем по канатной дороге к Сказскому леднику, потрясающие виды на заснеженные вершины и кристально чистый горный воздух.",
-      image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1000&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000"
     },
     {
       title: "ТЕРМАЛЬНЫЕ ИСТОЧНИКИ БИРАГЗАНГ",
       desc: "Завершите день в тёплых целебных источниках Бирагзанг — почувствуйте гармонию с природой и силу осетинских гор! Отличное расслабление после насыщенного дня.",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1000&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1000"
     }
   ];
 
@@ -72,7 +72,7 @@ export default function TourDetail() {
         
         <div className="relative h-[50vh] min-h-[400px] rounded-3xl overflow-hidden mb-8">
           <img 
-            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000" 
             alt="Цейское ущелье" 
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -142,7 +142,7 @@ export default function TourDetail() {
       {/* Timeline Section */}
       <section className="relative py-16 overflow-hidden">
         {/* Subtle mountain background */}
-        <div className="absolute inset-0 z-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=2000&auto=format&fit=crop")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}></div>
+        <div className="absolute inset-0 z-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=2000")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}></div>
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
@@ -239,7 +239,7 @@ export default function TourDetail() {
           >
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
               <img 
-                src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=800&auto=format&fit=crop" 
+                src="/gid.png" 
                 alt="Гид Тимур" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"

@@ -41,7 +41,7 @@ export default function About() {
             className="h-[500px] rounded-2xl overflow-hidden"
           >
             <img 
-              src="https://images.unsplash.com/photo-1516466723877-e4ec1d736c8a?q=80&w=1000&auto=format&fit=crop" 
+              src="/gid.png" 
               alt="Гид в горах" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
@@ -55,7 +55,7 @@ export default function About() {
               className="h-[234px] rounded-2xl overflow-hidden"
             >
               <img 
-                src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1000&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop" 
                 alt="Природа Осетии" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
@@ -68,7 +68,7 @@ export default function About() {
               className="h-[234px] rounded-2xl overflow-hidden"
             >
               <img 
-                src="https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?q=80&w=1000&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop" 
                 alt="Горы Кавказа" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
