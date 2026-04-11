@@ -119,15 +119,32 @@ export default function Home() {
           transition={{ duration: 1, delay: 0.8 }}
           className="absolute bottom-12 right-12 hidden lg:block z-20"
         >
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-white w-80 shadow-2xl">
-            <div className="flex items-center gap-2 mb-4 text-accent-500 text-sm font-medium tracking-widest uppercase">
-              <Star className="h-4 w-4 fill-accent-500" /> Хит продаж
+          <div className="relative w-80 overflow-hidden rounded-[28px] border border-white/20 bg-white/6 p-7 text-white shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/16 via-white/7 to-white/3" />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/28 via-stone-950/10 to-white/6" />
+            <div className="absolute inset-x-0 top-0 h-px bg-white/32" />
+
+            <div className="relative z-10">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent-300/35 bg-white/10 px-3 py-1.5 text-[11px] font-semibold tracking-[0.28em] uppercase text-accent-200">
+                <Star className="h-3.5 w-3.5 fill-accent-400 text-accent-400" />
+                Хит продаж
+              </div>
+
+              <h3 className="font-serif text-[2rem] leading-tight text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.22)]">
+                Кармадон и Даргавс
+              </h3>
+
+              <p className="mt-3 max-w-[18rem] text-[1.02rem] leading-7 text-white/90">
+                Самый популярный однодневный маршрут по главным ущельям.
+              </p>
+
+              <Link
+                to="/tours/1"
+                className="mt-6 inline-flex items-center border-b border-accent-400/70 pb-1 text-sm font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:text-accent-300"
+              >
+                Смотреть программу
+              </Link>
             </div>
-            <h3 className="font-serif text-xl mb-2">Кармадон и Даргавс</h3>
-            <p className="text-stone-300 text-sm mb-4 font-light">Самый популярный однодневный маршрут по главным ущельям.</p>
-            <Link to="/tours/1" className="text-sm font-medium uppercase tracking-widest border-b border-accent-500 pb-1 hover:text-accent-500 transition-colors">
-              Смотреть программу
-            </Link>
           </div>
         </motion.div>
       </section>
