@@ -1,0 +1,256 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - link "My Ossetia Tours Logo" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img "My Ossetia Tours Logo" [ref=e8]
+      - navigation [ref=e9]:
+        - link "Главная" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - link "О компании" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - link "Туры" [ref=e12] [cursor=pointer]:
+          - /url: /tours
+        - link "Контакты" [ref=e13] [cursor=pointer]:
+          - /url: /contacts
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - img "Кавказские горы" [ref=e18]
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e28]: EST. 2014 • My Ossetia
+            - heading "Открой настоящий Кавказ" [level=1] [ref=e29]:
+              - text: Открой
+              - text: настоящий
+              - text: Кавказ
+            - paragraph [ref=e30]: Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.
+            - generic [ref=e31]:
+              - link "Выбрать тур" [ref=e32] [cursor=pointer]:
+                - /url: /tours
+                - generic [ref=e34]:
+                  - text: Выбрать тур
+                  - img [ref=e35]
+              - link "Наша история" [ref=e37] [cursor=pointer]:
+                - /url: /about
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - generic [ref=e44]:
+                - img [ref=e45]
+                - text: Бестселлер
+              - generic [ref=e47]:
+                - img [ref=e48]
+                - text: 12 часов
+            - heading "Кармадон & Даргавс" [level=3] [ref=e51]:
+              - text: Кармадон
+              - text: "& Даргавс"
+            - paragraph [ref=e52]: Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
+            - generic [ref=e53]:
+              - generic [ref=e54]: "На маршруте:"
+              - generic [ref=e55]:
+                - generic [ref=e56]: Некрополь
+                - generic [ref=e57]: Кармадон
+                - generic [ref=e58]: Качели
+                - generic [ref=e59]: Арт-объекты
+            - link "Смотреть программу" [ref=e60] [cursor=pointer]:
+              - /url: /tours/1
+              - text: Смотреть программу
+              - img [ref=e61]
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: "10"
+              - generic [ref=e70]: +
+            - generic [ref=e71]: Лет опыта
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - generic [ref=e74]: "5000"
+              - generic [ref=e75]: +
+            - generic [ref=e76]: Довольных туристов
+          - generic [ref=e77]:
+            - generic [ref=e79]: "15"
+            - generic [ref=e80]: Авторских маршрутов
+          - generic [ref=e81]:
+            - generic [ref=e83]: 4000м
+            - generic [ref=e84]: Максимальная высота
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: "120"
+              - generic [ref=e88]: +
+            - generic [ref=e89]: Скрытых локаций
+          - generic [ref=e90]:
+            - generic [ref=e92]: 4.9/5
+            - generic [ref=e93]: Рейтинг туров
+      - generic [ref=e96]:
+        - generic [ref=e98]:
+          - img "Горы и сторожевые башни Осетии" [ref=e100]
+          - img "Основатель My Ossetia Tours" [ref=e103]
+        - generic [ref=e106]:
+          - generic [ref=e109]: Основано в 2014
+          - heading "Мы знаем горы как свои пять пальцев" [level=2] [ref=e110]:
+            - text: Мы знаем горы
+            - text: как свои пять пальцев
+          - paragraph [ref=e111]: Наши гиды — коренные жители Осетии, влюблённые в каждый склон Кавказского хребта. Мы создаём не просто туры, а глубокое погружение в аутентичную культуру через живые маршруты.
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - img [ref=e116]
+              - generic [ref=e119]:
+                - heading "Авторские маршруты" [level=4] [ref=e120]
+                - paragraph [ref=e121]: Уникальные тропы вдали от туристического шума.
+            - generic [ref=e122]:
+              - img [ref=e125]
+              - generic [ref=e130]:
+                - heading "Мини-группы" [level=4] [ref=e131]
+                - paragraph [ref=e132]: Максимум внимания каждому участнику и комфорт.
+            - generic [ref=e133]:
+              - img [ref=e136]
+              - generic [ref=e139]:
+                - heading "Эстетика в деталях" [level=4] [ref=e140]
+                - paragraph [ref=e141]: Тщательно отобранные точки для лучших кадров.
+          - link "Узнать больше о команде" [ref=e142] [cursor=pointer]:
+            - /url: /about
+            - generic [ref=e143]: Узнать больше о команде
+            - img [ref=e145]
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - generic [ref=e153]: Маршруты
+            - heading "Популярные направления" [level=2] [ref=e154]:
+              - text: Популярные
+              - text: направления
+          - link "Смотреть все туры" [ref=e155] [cursor=pointer]:
+            - /url: /tours
+            - generic [ref=e156]: Смотреть все туры
+            - img [ref=e159]
+        - generic [ref=e161]:
+          - link "Кармадонское ущелье и Даргавс 1 день от 3 500 ₽ до 6 чел Кармадонское ущелье и Даргавс Маршрут тура" [ref=e163] [cursor=pointer]:
+            - /url: /tours/1
+            - img "Кармадонское ущелье и Даргавс" [ref=e165]
+            - generic [ref=e168]:
+              - generic [ref=e169]: 1 день
+              - generic [ref=e170]: от 3 500 ₽
+            - generic [ref=e171]:
+              - generic [ref=e172]:
+                - img [ref=e173]
+                - generic [ref=e178]: до 6 чел
+              - heading "Кармадонское ущелье и Даргавс" [level=3] [ref=e179]
+              - generic [ref=e180]:
+                - generic [ref=e181]: Маршрут тура
+                - img [ref=e183]
+          - link "Цейское ущелье и Сказский ледник 1 день от 4 000 ₽ до 8 чел Цейское ущелье и Сказский ледник Маршрут тура" [ref=e186] [cursor=pointer]:
+            - /url: /tours/2
+            - img "Цейское ущелье и Сказский ледник" [ref=e188]
+            - generic [ref=e191]:
+              - generic [ref=e192]: 1 день
+              - generic [ref=e193]: от 4 000 ₽
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img [ref=e196]
+                - generic [ref=e201]: до 8 чел
+              - heading "Цейское ущелье и Сказский ледник" [level=3] [ref=e202]
+              - generic [ref=e203]:
+                - generic [ref=e204]: Маршрут тура
+                - img [ref=e206]
+          - link "Дигория — край тысячи водопадов 2 дня от 9 000 ₽ до 4 чел Дигория — край тысячи водопадов Маршрут тура" [ref=e209] [cursor=pointer]:
+            - /url: /tours/3
+            - img "Дигория — край тысячи водопадов" [ref=e211]
+            - generic [ref=e214]:
+              - generic [ref=e215]: 2 дня
+              - generic [ref=e216]: от 9 000 ₽
+            - generic [ref=e217]:
+              - generic [ref=e218]:
+                - img [ref=e219]
+                - generic [ref=e224]: до 4 чел
+              - heading "Дигория — край тысячи водопадов" [level=3] [ref=e225]
+              - generic [ref=e226]:
+                - generic [ref=e227]: Маршрут тура
+                - img [ref=e229]
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - generic [ref=e235]: Галерея
+            - heading "Атмосфера Осетии" [level=2] [ref=e236]
+          - paragraph [ref=e237]: «В горах нет времени, есть только вечность и вы.»
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - generic [ref=e240]:
+              - img "Масштаб гор"
+            - paragraph [ref=e242]: Величие хребтов
+          - generic [ref=e243]:
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - img "Цейский ледник"
+              - paragraph [ref=e247]: Ледовые вершины
+            - generic [ref=e249]:
+              - img "Дигория"
+            - generic [ref=e251]:
+              - img "Куртатинское ущелье"
+      - generic [ref=e252]:
+        - generic [ref=e254]:
+          - img "Закат в горах"
+        - generic [ref=e257]:
+          - generic [ref=e259]: 42°50′21″N 44°24′15″E
+          - heading "Готовы к незабываемому путешествию?" [level=2] [ref=e261]
+          - paragraph [ref=e262]:
+            - text: Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.
+            - generic [ref=e263]: — Ваш гид, Тимур
+          - generic [ref=e264]:
+            - link "WhatsApp" [ref=e265] [cursor=pointer]:
+              - /url: https://wa.me/79000000000
+              - img [ref=e266]
+              - text: WhatsApp
+            - link "Telegram" [ref=e268] [cursor=pointer]:
+              - /url: https://t.me/yourid
+              - img [ref=e269]
+              - text: Telegram
+          - paragraph [ref=e273]: Бесплатная консультация
+  - contentinfo [ref=e274]:
+    - generic [ref=e275]:
+      - generic [ref=e276]:
+        - generic [ref=e277]:
+          - link "My Ossetia Tours Logo" [ref=e278] [cursor=pointer]:
+            - /url: /
+            - img "My Ossetia Tours Logo" [ref=e279]
+          - paragraph [ref=e280]: "Авторские маршруты по Северной Осетии с локальными гидами: горы, история, гастрономия и безопасные поездки в небольших группах."
+          - link "Подобрать тур" [ref=e281] [cursor=pointer]:
+            - /url: /tours
+            - text: Подобрать тур
+            - img [ref=e282]
+        - generic [ref=e284]:
+          - heading "Навигация" [level=3] [ref=e285]
+          - navigation [ref=e286]:
+            - link "Главная" [ref=e287] [cursor=pointer]:
+              - /url: /
+            - link "О компании" [ref=e288] [cursor=pointer]:
+              - /url: /about
+            - link "Туры" [ref=e289] [cursor=pointer]:
+              - /url: /tours
+            - link "Контакты" [ref=e290] [cursor=pointer]:
+              - /url: /contacts
+        - generic [ref=e291]:
+          - heading "Контакты" [level=3] [ref=e292]
+          - generic [ref=e293]:
+            - link "+7 (999) 123-45-67" [ref=e294] [cursor=pointer]:
+              - /url: tel:+79991234567
+              - img [ref=e295]
+              - text: +7 (999) 123-45-67
+            - link "hello@myossetia.tours" [ref=e297] [cursor=pointer]:
+              - /url: mailto:hello@myossetia.tours
+              - img [ref=e298]
+              - text: hello@myossetia.tours
+            - generic [ref=e301]:
+              - img [ref=e302]
+              - text: Владикавказ, Республика Северная Осетия
+          - generic [ref=e305]:
+            - link [ref=e306] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e307]
+            - link [ref=e310] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e311]
+            - link [ref=e314] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e315]
+      - generic [ref=e317]:
+        - paragraph [ref=e318]: © 2026 My Ossetia Tours. Все права защищены.
+        - paragraph [ref=e319]: Сделано с любовью к Кавказу.
