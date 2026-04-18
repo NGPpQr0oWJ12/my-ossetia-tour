@@ -324,6 +324,40 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Popular Tours - Elegant Catalog */}
+      <section className="py-36 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <span className="h-px w-8 bg-amber-600/40" />
+                <span className="text-xs font-bold tracking-[0.4em] uppercase text-stone-400">Маршруты</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-tight">
+                Популярные <br />
+                <span className="italic font-light text-stone-400">направления</span>
+              </h2>
+            </div>
+            <Link
+              to="/tours"
+              className="group flex flex-col items-end gap-2"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-900 transition-colors group-hover:text-amber-600">Смотреть все туры</span>
+              <div className="flex items-center">
+                <div className="w-24 h-px bg-stone-200 group-hover:bg-amber-600 group-hover:w-32 transition-all duration-700"></div>
+                <ArrowRight className="w-3 h-3 text-stone-300 group-hover:text-amber-600 group-hover:translate-x-1 transition-all duration-700" />
+              </div>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+            {popularTours.map((tour, index) => (
+              <TourCard key={tour.id} tour={tour} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* About Teaser — Stitch "Alanian Heights" Design System */}
       <section className="relative py-36 overflow-hidden" style={{ backgroundColor: '#f8f9ff' }}>
         {/* Summit Blur — декоративные размытые круги */}
@@ -466,40 +500,6 @@ export default function Home() {
               </motion.div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Tours - Elegant Catalog */}
-      <section className="py-36 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="h-px w-8 bg-amber-600/40" />
-                <span className="text-xs font-bold tracking-[0.4em] uppercase text-stone-400">Маршруты</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-tight">
-                Популярные <br />
-                <span className="italic font-light text-stone-400">направления</span>
-              </h2>
-            </div>
-            <Link
-              to="/tours"
-              className="group flex flex-col items-end gap-2"
-            >
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-900 transition-colors group-hover:text-amber-600">Смотреть все туры</span>
-              <div className="flex items-center">
-                <div className="w-24 h-px bg-stone-200 group-hover:bg-amber-600 group-hover:w-32 transition-all duration-700"></div>
-                <ArrowRight className="w-3 h-3 text-stone-300 group-hover:text-amber-600 group-hover:translate-x-1 transition-all duration-700" />
-              </div>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
-            {popularTours.map((tour, index) => (
-              <TourCard key={tour.id} tour={tour} index={index} />
-            ))}
           </div>
         </div>
       </section>
