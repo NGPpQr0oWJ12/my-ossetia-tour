@@ -227,7 +227,7 @@ export default function Home() {
                     <div>
                       <Link
                         to="/tours/1"
-                        className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-2xl bg-white/10 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs min-[1700px]:tracking-[0.3em]"
+                        className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-[2.5rem] border border-white/20 bg-white/10 backdrop-blur-md px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 min-[1700px]:rounded-[3rem] min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs min-[1700px]:tracking-[0.3em]"
                       >
                         Смотреть <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
                       </Link>
