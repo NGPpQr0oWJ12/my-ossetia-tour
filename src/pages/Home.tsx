@@ -130,7 +130,7 @@ export default function Home() {
   return (
     <div className="w-full bg-white">
       {/* Hero Section - Airy Editorial Layout */}
-      <section className="relative overflow-hidden w-full pt-24 sm:pt-20 xl:h-[95vh] xl:min-h-[850px] xl:pt-0">
+      <section className="relative overflow-hidden w-full pt-24 sm:pt-20 min-[1700px]:h-[95vh] min-[1700px]:min-h-[850px] min-[1700px]:pt-0">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
             src={heroImage}
@@ -143,8 +143,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/20 to-transparent opacity-30" />
         </motion.div>
 
-        <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-center xl:h-full xl:min-h-0">
-            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-5 pb-0 sm:py-10 lg:py-16 xl:py-20">
+        <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
+            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
               <div className="grid items-center gap-10 min-[1700px]:grid-cols-[minmax(0,1fr)_28rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
@@ -166,7 +166,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.75rem,8vw,6.4rem)] xl:text-[clamp(5.2rem,7vw,6.9rem)] min-[1700px]:max-w-[10ch] min-[1700px]:text-[8.25rem]"
+                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.4rem,7vw,5.8rem)] xl:text-[clamp(4.8rem,6vw,6.1rem)] min-[1700px]:max-w-[10ch] min-[1700px]:text-[8.25rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -221,7 +221,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.2, ease: "circOut" }}
-                    className="hidden mt-8 rounded-[2rem] border border-white/20 bg-stone-900/18 p-5 text-white shadow-[0_30px_70px_rgba(0,0,0,0.28)] backdrop-blur-3xl lg:block min-[1700px]:hidden"
+                    className="hidden"
                   >
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                       <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
