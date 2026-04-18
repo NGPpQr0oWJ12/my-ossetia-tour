@@ -157,7 +157,7 @@ export default function Home() {
                     className="mb-6 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(5rem,7vw,6.5rem)] xl:mb-12 2xl:mb-16 xl:max-w-[12ch] xl:text-[clamp(6rem,6.5vw,7.5rem)] min-[1700px]:text-[9.5rem]"
                   >
                     Открой <br />
-                    <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
+                    <span className="text-accent-500">настоящий</span> <br /> Кавказ
                   </motion.h1>
 
                   <motion.p
@@ -234,7 +234,7 @@ export default function Home() {
 
                     <div className="mt-5 flex flex-wrap gap-3">
                       {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
-                        <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase italic text-white/70">
+                        <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase text-white/70">
                           {tag}
                         </span>
                       ))}
@@ -278,7 +278,7 @@ export default function Home() {
                         <div className="mb-2 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-4 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
                         <div className="flex flex-wrap gap-2.5 min-[1700px]:gap-3">
                           {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
-                            <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase italic text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
+                            <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
                               {tag}
                             </span>
                           ))}
@@ -333,9 +333,9 @@ export default function Home() {
                 <span className="h-px w-8 bg-amber-600/40" />
                 <span className="text-xs font-bold tracking-[0.4em] uppercase text-stone-400">Маршруты</span>
               </div>
-              <h2 className="text-5xl md:text-6xl font-serif text-stone-900 leading-tight">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-tight">
                 Популярные <br />
-                <span className="italic font-light text-stone-400">направления</span>
+                <span className="font-light text-stone-400">направления</span>
               </h2>
             </div>
             <Link
@@ -430,11 +430,10 @@ export default function Home() {
                   </span>
                 </div>
 
-                {/* Display heading — serif + italic contrast */}
-                <h2 className="font-serif mb-10 leading-[1.05]" style={{ color: '#121c28', fontSize: 'clamp(2.25rem, 5vw, 4.5rem)' }}>
-                  Мы знаем горы<br />
-                  <span className="italic font-light" style={{ color: '#887364' }}>как свои пять пальцев</span>
-                </h2>
+              <h2 className="font-serif mb-10 leading-[1.05] text-4xl md:text-5xl lg:text-6xl text-[#121c28]">
+                Мы знаем горы<br />
+                <span className="font-light text-[#887364]">как свои пять пальцев</span>
+              </h2>
 
                 <p className="text-lg font-light leading-relaxed mb-14 max-w-lg" style={{ color: '#554336' }}>
                   Наши гиды — коренные жители Осетии, влюблённые в каждый склон Кавказского хребта.
@@ -510,11 +509,11 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div className="max-w-2xl">
               <span className="text-amber-600 font-medium tracking-widest uppercase text-sm mb-4 block">Галерея</span>
-              <h2 className="text-4xl md:text-5xl font-extralight text-stone-800 leading-tight">
-                Атмосфера <span className="font-serif italic text-stone-500">Осетии</span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-stone-800 leading-tight">
+                Атмосфера <span className="font-serif text-stone-500">Осетии</span>
               </h2>
             </div>
-            <p className="text-stone-500 max-w-sm font-light text-lg italic">
+            <p className="text-stone-500 max-w-sm font-light text-lg lg:text-xl">
               «В горах нет времени, есть только вечность и вы.»
             </p>
           </div>
@@ -530,7 +529,7 @@ export default function Home() {
               <ParallaxImage src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200" alt="Масштаб гор" speed={0.05} />
               <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
               <div className="absolute bottom-10 left-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                <p className="text-white font-serif italic text-2xl">Величие хребтов</p>
+                <p className="text-white font-serif text-2xl">Величие хребтов</p>
               </div>
             </motion.div>
 
@@ -547,7 +546,7 @@ export default function Home() {
                 <ParallaxImage src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200" alt="Цейский ледник" speed={0.1} />
                 <div className="absolute inset-0 bg-stone-900/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
                 <div className="absolute top-10 left-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                  <p className="text-white font-serif italic text-2xl">Ледовые вершины</p>
+                  <p className="text-white font-serif text-2xl">Ледовые вершины</p>
                 </div>
               </motion.div>
 
@@ -581,14 +580,17 @@ export default function Home() {
 
       {/* CTA Section - The Horizon Escape */}
       <section className="relative overflow-hidden bg-stone-950">
-        <div className="absolute inset-0 z-0">
-          <ParallaxImage
-            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
-            alt="Закат в горах"
-            speed={0.12}
-          />
-          {/* Transition Gradient */}
-          <div className="absolute inset-0 bg-stone-950/80 md:bg-gradient-to-r md:from-stone-950 md:via-stone-950/60 md:to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-0 flex">
+          <div className="h-full w-full bg-stone-950 md:w-1/2" />
+          <div className="relative h-full w-full md:w-1/2">
+            <ParallaxImage
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
+              alt="Закат в горах"
+              speed={0.12}
+            />
+            {/* Gradient Mask between black and image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/40 to-transparent" />
+          </div>
         </div>
 
         <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col px-6 py-12 lg:px-8 xl:py-24">
@@ -603,12 +605,12 @@ export default function Home() {
                 </div>
 
                 <h2 className="mb-6 font-serif text-4xl leading-[1.05] text-white md:text-5xl lg:text-6xl">
-                  Готовы к <span className="italic text-stone-400">незабываемому</span> путешествию?
+                  Готовы к <span className="text-stone-400">незабываемому</span> путешествию?
                 </h2>
 
                 <p className="mb-10 text-lg font-light leading-relaxed text-stone-400 lg:text-xl">
                   Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.
-                  <span className="mt-4 block font-serif italic text-stone-500">— Ваш гид, Тимур</span>
+                  <span className="mt-4 block font-serif text-stone-500">— Ваш гид, Тимур</span>
                 </p>
               </div>
 
@@ -637,17 +639,17 @@ export default function Home() {
 
             {/* RIGHT Form Container - Liquid Glass */}
             <div className="flex w-full flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10">
-              <h3 className="mb-8 font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+              <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
               
-              <form className="flex h-full flex-col justify-between space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <form className="flex h-full flex-col justify-between" onSubmit={(e) => e.preventDefault()}>
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div>
                       <label htmlFor="name" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
                       <input
                         type="text"
                         id="name"
-                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
                         placeholder="Иван Иванов"
                       />
                     </div>
@@ -656,7 +658,7 @@ export default function Home() {
                       <input
                         type="tel"
                         id="phone"
-                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
                         placeholder="+7 (___) ___-__-__"
                       />
                     </div>
@@ -666,7 +668,7 @@ export default function Home() {
                     <label htmlFor="tour" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Интересующий тур</label>
                     <select
                       id="tour"
-                      className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white transition-colors focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
+                      className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-base text-white transition-colors focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
                     >
                       <option value="">Выберите тур из списка</option>
                       <option value="karmadon">Кармадонское ущелье и Даргавс</option>
@@ -678,10 +680,10 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-6">
                   <button
                     type="submit"
-                    className="inline-flex w-full items-center justify-center rounded-full bg-accent-500 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-accent-400"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-accent-500 px-10 py-5 text-sm font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-accent-400"
                   >
                     Отправить
                   </button>
