@@ -216,6 +216,50 @@ export default function Home() {
                       Наша история
                     </Link>
                   </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.2, ease: "circOut" }}
+                    className="mt-8 hidden rounded-[2rem] border border-white/20 bg-stone-900/18 p-5 text-white shadow-[0_30px_70px_rgba(0,0,0,0.28)] backdrop-blur-3xl lg:block min-[1700px]:hidden"
+                  >
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
+                        <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
+                        Р‘РµСЃС‚СЃРµР»Р»РµСЂ
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55">
+                        <Clock className="h-3 w-3" /> 12 С‡Р°СЃРѕРІ
+                      </div>
+                    </div>
+
+                    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
+                      <div>
+                        <h3 className="mb-3 font-serif text-3xl font-bold leading-[1.05] text-white xl:text-[2.6rem]">
+                          РљР°СЂРјР°РґРѕРЅ &amp; Р”Р°СЂРіР°РІСЃ
+                        </h3>
+                        <p className="max-w-2xl text-base font-light leading-relaxed text-white/78">
+                          Р”СЂРµРІРЅРёРµ РЅРµРєСЂРѕРїРѕР»Рё, Р·Р°СЃС‚С‹РІС€РµРµ РІСЂРµРјСЏ Рё РјРѕС‰СЊ Р»РµРґРЅРёРєРѕРІ РІ СЃР°РјРѕРј РЅР°СЃС‹С‰РµРЅРЅРѕРј РјР°СЂС€СЂСѓС‚Рµ СЃРµР·РѕРЅР°.
+                        </p>
+                      </div>
+
+                      <Link
+                        to="/tours/1"
+                        className="group/compact inline-flex min-h-12 items-center justify-between gap-4 rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 xl:min-w-[15rem]"
+                      >
+                        РЎРјРѕС‚СЂРµС‚СЊ
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover/compact:translate-x-1" />
+                      </Link>
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      {['РќРµРєСЂРѕРїРѕР»СЊ', 'РљР°СЂРјР°РґРѕРЅ', 'РљР°С‡РµР»Рё', 'РђСЂС‚-РѕР±СЉРµРєС‚С‹'].map((tag) => (
+                        <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase italic text-white/70">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
                 </div>
               </div>
 
