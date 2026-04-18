@@ -116,7 +116,7 @@ export default function Layout() {
                     to={link.path}
                     className={cn(
                       "text-3xl font-serif text-stone-900 tracking-tight",
-                      location.pathname === link.path && "text-accent-500 italic"
+                      location.pathname === link.path && "text-accent-500"
                     )}
                   >
                     {link.name}

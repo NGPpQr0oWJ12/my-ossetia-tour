@@ -30,13 +30,7 @@ const ParallaxImage = ({ src, alt, speed = 0.1 }: { src: string; alt: string; sp
 
 const TourCard = ({ tour, index }: any) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.03, duration: 0.3, ease: "circOut" }}
-      className="group"
-    >
+    <div className="group">
       <Link to={`/tours/${tour.id}`} className="block relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-stone-100 shadow-sm hover:shadow-2xl transition-all duration-700">
         {/* Background Image */}
         <div className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-110">
@@ -76,7 +70,7 @@ const TourCard = ({ tour, index }: any) => {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
@@ -84,21 +78,6 @@ export default function Home() {
   const scrollRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const yHero = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-
-  const stats = [
-    { number: "10+", label: "Лет опыта" },
-    { number: "5000+", label: "Довольных туристов" },
-    { number: "15", label: "Авторских маршрутов" },
-    { number: "4000м", label: "Максимальная высота" },
-    { number: "120+", label: "Скрытых локаций" },
-    { number: "4.9/5", label: "Рейтинг туров" }
-  ];
-
-  const mobileHighlights = [
-    { value: "10+", label: "лет опыта" },
-    { value: "15", label: "маршрутов" },
-    { value: "4.9/5", label: "рейтинг" }
-  ];
 
   const popularTours = [
     {
@@ -130,7 +109,7 @@ export default function Home() {
   return (
     <div className="w-full bg-white">
       {/* Hero Section - Airy Editorial Layout */}
-      <section className="relative overflow-hidden w-full pt-28 pb-0 sm:pt-32 sm:pb-4 min-[1700px]:pt-0">
+      <section className="relative overflow-hidden w-full flex flex-col items-center pt-24 pb-8 sm:pt-32 sm:pb-16">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
             src={heroImage}
@@ -143,148 +122,109 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/20 to-transparent opacity-30" />
         </motion.div>
 
-        <div className="relative z-10 flex min-h-[auto] items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
-          <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-8 sm:pb-0 lg:pt-10 lg:pb-2 min-[1700px]:py-16">
-            <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:justify-between xl:gap-8 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-16 min-[1700px]:grid-cols-[minmax(0,1fr)_27rem] min-[1700px]:gap-24">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center py-8 md:py-12">
+          {/* Main Content Grid */}
+          <div className="w-full grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 items-center">
+            {/* Left Column: Main Impact */}
+            <div className="grid min-w-0">
+              <div className="flex flex-col">
+                <h1 className="mb-8 font-serif text-[clamp(3.15rem,10vw,6.5rem)] leading-[0.95] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(5rem,7vw,7.5rem)]">
+                  Открой <br />
+                  <span className="text-accent-500">настоящий</span> <br /> Кавказ
+                </h1>
 
-              {/* Left Column: Main Impact */}
-              <div className="grid min-w-0">
-                <div className="flex max-w-[38rem] min-w-0 flex-col xl:max-w-[42rem] min-[1700px]:max-w-[50rem]">
-                  <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-6 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(5rem,7vw,6.5rem)] xl:mb-12 2xl:mb-16 xl:max-w-[12ch] xl:text-[clamp(6rem,6.5vw,7.5rem)] min-[1700px]:text-[9.5rem]"
-                  >
-                    Открой <br />
-                    <span className="text-accent-500">настоящий</span> <br /> Кавказ
-                  </motion.h1>
+                <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl">
+                  Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.
+                </p>
 
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1, ease: "circOut" }}
-                    className="mb-8 max-w-[19rem] text-[1.15rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:max-w-lg sm:text-xl md:max-w-2xl md:text-2xl xl:mb-16 xl:max-w-3xl xl:text-3xl 2xl:mb-20 min-[1700px]:mb-24 min-[1700px]:text-4xl min-[1700px]:max-w-4xl"
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <Link
+                    to="/tours"
+                    className="group relative inline-flex min-h-16 w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 px-12 py-6 text-xs font-bold uppercase tracking-[0.35em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-[4.5rem] sm:w-[26rem] sm:text-sm xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base min-[1700px]:rounded-[3rem]"
                   >
-                    Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.
-                  </motion.p>
+                    <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
+                  </Link>
+                </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.12, ease: "circOut" }}
-                    className="mb-6 grid grid-cols-3 gap-2 sm:hidden"
-                  >
-                    {mobileHighlights.map((item) => (
-                      <div key={item.label} className="rounded-2xl border border-white/10 bg-white/8 px-3 py-3 text-white backdrop-blur-md">
-                        <div className="mb-1 text-base font-semibold leading-none text-accent-400">{item.value}</div>
-                        <div className="text-[9px] uppercase tracking-[0.18em] text-white/65">{item.label}</div>
-                      </div>
-                    ))}
-                  </motion.div>
+                <div className="hidden">
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
+                      <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
+                      Популярный маршрут
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55">
+                      <Clock className="h-3 w-3" /> 12 часов
+                    </div>
+                  </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.15, ease: "circOut" }}
-                    className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
-                  >
+                  <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
+                    <div>
+                      <h3 className="mb-3 font-serif text-3xl font-bold leading-[1.05] text-white xl:text-[2.6rem]">
+                        Кармадон &amp; Даргавс
+                      </h3>
+                      <p className="max-w-2xl text-base font-light leading-relaxed text-white/78">
+                        Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
+                      </p>
+                    </div>
+
                     <Link
-                      to="/tours"
-                      className="group relative inline-flex min-h-16 w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 px-12 py-6 text-xs font-bold uppercase tracking-[0.35em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-[4.5rem] sm:w-[26rem] sm:text-sm xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base min-[1700px]:rounded-[3rem]"
+                      to="/tours/1"
+                      className="group/compact inline-flex min-h-12 items-center justify-between gap-4 rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 xl:min-w-[15rem]"
                     >
-                      <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
+                      Смотреть
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover/compact:translate-x-1" />
                     </Link>
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.2, ease: "circOut" }}
-                    className="hidden"
-                  >
-                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                      <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
+                      <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase text-white/70">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Right Column: Featured Tour Card */}
+            <div className="hidden lg:grid justify-items-end self-end">
+              <div className="relative w-full max-w-[24rem] xl:max-w-[26rem]">
+                <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-6 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-7 2xl:p-8 min-[1700px]:rounded-[40px] min-[1700px]:p-9">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
+
+                  <div className="relative z-10">
+                    <div className="mb-4 flex items-center justify-between 2xl:mb-5 min-[1700px]:mb-8">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-accent-300 min-[1700px]:px-5 min-[1700px]:py-2 min-[1700px]:text-[9px] min-[1700px]:tracking-[0.3em]">
                         <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
                         Популярный маршрут
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55">
+                      <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.18em] text-white/40 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.2em]">
                         <Clock className="h-3 w-3" /> 12 часов
                       </div>
                     </div>
 
-                    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
-                      <div>
-                        <h3 className="mb-3 font-serif text-3xl font-bold leading-[1.05] text-white xl:text-[2.6rem]">
-                          Кармадон &amp; Даргавс
-                        </h3>
-                        <p className="max-w-2xl text-base font-light leading-relaxed text-white/78">
-                          Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
-                        </p>
-                      </div>
+                    <h3 className="mb-3 font-serif text-[2.5rem] font-bold leading-[0.98] text-white xl:text-[2.75rem] 2xl:text-[3rem] min-[1700px]:mb-6 min-[1700px]:text-5xl">
+                      Кармадон <br />& Даргавс
+                    </h3>
 
-                      <Link
-                        to="/tours/1"
-                        className="group/compact inline-flex min-h-12 items-center justify-between gap-4 rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 xl:min-w-[15rem]"
-                      >
-                        Смотреть
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover/compact:translate-x-1" />
-                      </Link>
+                    <p className="mb-4 text-sm font-light leading-relaxed text-white/80 2xl:text-base min-[1700px]:mb-8 min-[1700px]:text-lg">
+                      Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
+                    </p>
+
+                    <div className="mb-5 space-y-3 min-[1700px]:mb-10 min-[1700px]:space-y-4">
+                      <div className="mb-1 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-3 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
+                      <div className="flex flex-wrap gap-2.5 min-[1700px]:gap-3">
+                        {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
+                          <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="mt-5 flex flex-wrap gap-3">
-                      {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
-                        <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase text-white/70">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                </div>
-              </div>
-
-              {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden xl:grid justify-items-center self-end">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, x: 40 }}
-                  animate={{ opacity: 1, scale: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }}
-                  className="relative w-full max-w-[22.5rem] 2xl:max-w-[24rem] min-[1700px]:max-w-[27rem]"
-                >
-                  <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-6 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-7 2xl:p-8 min-[1700px]:rounded-[40px] min-[1700px]:p-9">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
-
-                    <div className="relative z-10">
-                      <div className="mb-5 flex items-center justify-between 2xl:mb-6 min-[1700px]:mb-10">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-accent-300 min-[1700px]:px-5 min-[1700px]:py-2 min-[1700px]:text-[9px] min-[1700px]:tracking-[0.3em]">
-                          <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
-                          Популярный маршрут
-                        </div>
-                        <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.18em] text-white/40 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.2em]">
-                          <Clock className="h-3 w-3" /> 12 часов
-                        </div>
-                      </div>
-
-                      <h3 className="mb-4 font-serif text-[2.5rem] font-bold leading-[0.98] text-white xl:text-[2.75rem] 2xl:text-[3rem] min-[1700px]:mb-8 min-[1700px]:text-5xl">
-                        Кармадон <br />& Даргавс
-                      </h3>
-
-                      <p className="mb-5 text-sm font-light leading-relaxed text-white/80 2xl:text-base min-[1700px]:mb-10 min-[1700px]:text-lg">
-                        Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
-                      </p>
-
-                      <div className="mb-6 space-y-3 min-[1700px]:mb-12 min-[1700px]:space-y-4">
-                        <div className="mb-2 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-4 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
-                        <div className="flex flex-wrap gap-2.5 min-[1700px]:gap-3">
-                          {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
-                            <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
+                    <div>
                       <Link
                         to="/tours/1"
                         className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-2xl bg-white/10 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs min-[1700px]:tracking-[0.3em]"
@@ -293,35 +233,11 @@ export default function Home() {
                       </Link>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Global Stats Glass Banner - Edge-to-Edge Format */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }}
-          className="hidden sm:block relative inset-x-0 z-20 mt-4 px-5 pb-8 sm:mt-6 sm:px-6 sm:pb-10 max-w-7xl mx-auto"
-        >
-          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
-            <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-5 px-1 sm:grid-cols-3 sm:gap-8 sm:px-2 xl:grid-cols-6 xl:gap-4 xl:divide-x xl:divide-white/10 xl:px-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="flex flex-col items-center text-center xl:px-4">
-                  <div className="mb-2 flex items-end justify-center gap-1">
-                    <span className="font-serif text-3xl leading-none text-accent-400 sm:text-4xl xl:text-5xl">{stat.number.replace('+', '')}</span>
-                    {stat.number.includes('+') && <span className="mb-1 font-serif text-xl text-accent-500 sm:text-2xl">+</span>}
-                  </div>
-                  <div className="max-w-[120px] text-[9px] font-bold leading-tight text-white/55 uppercase tracking-[0.24em] sm:text-[10px] sm:tracking-[0.3em]">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </section>
 
       {/* Popular Tours - Elegant Catalog */}
@@ -371,11 +287,7 @@ export default function Home() {
             <div className="relative">
               <div className="relative z-10 grid grid-cols-12 grid-rows-12 h-[520px] md:h-[640px]">
                 {/* Main Image — Capsule Shape */}
-                <motion.div
-                  initial={{ opacity: 0, x: -40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.9, ease: 'easeOut' }}
+                <div
                   className="col-start-1 col-span-10 row-start-1 row-span-11 overflow-hidden rounded-[3rem] relative group"
                   style={{ boxShadow: '0 10px 40px rgba(18,28,40,0.04)' }}
                 >
@@ -385,14 +297,10 @@ export default function Home() {
                     className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent group-hover:from-transparent transition-all duration-700" />
-                </motion.div>
+                </div>
 
                 {/* Overlapping Portrait */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, y: 60 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.35, ease: 'easeOut' }}
+                <div
                   className="col-start-6 col-span-7 row-start-6 row-span-7 z-20 overflow-hidden rounded-[2rem]"
                   style={{
                     border: '10px solid white',
@@ -404,7 +312,7 @@ export default function Home() {
                     alt="Основатель My Ossetia Tours"
                     className="w-full h-full object-cover"
                   />
-                </motion.div>
+                </div>
 
                 {/* Decorative thin golden outline — asymmetric offset */}
                 <div
@@ -416,12 +324,7 @@ export default function Home() {
 
             {/* Right: Editorial Content */}
             <div className="relative">
-              <motion.div
-                initial={{ opacity: 0, y: 45 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-              >
+              <div>
                 {/* Editorial Cap — label with accent line */}
                 <div className="flex items-center gap-4 mb-10">
                   <span className="h-px w-12" style={{ backgroundColor: '#D97706' }} />
@@ -430,10 +333,10 @@ export default function Home() {
                   </span>
                 </div>
 
-              <h2 className="font-serif mb-10 leading-[1.05] text-4xl md:text-5xl lg:text-6xl text-[#121c28]">
-                Мы знаем горы<br />
-                <span className="font-light text-[#887364]">как свои пять пальцев</span>
-              </h2>
+                <h2 className="font-serif mb-10 leading-[1.05] text-4xl md:text-5xl lg:text-6xl text-[#121c28]">
+                  Мы знаем горы<br />
+                  <span className="font-light text-[#887364]">как свои пять пальцев</span>
+                </h2>
 
                 <p className="text-lg font-light leading-relaxed mb-14 max-w-lg" style={{ color: '#554336' }}>
                   Наши гиды — коренные жители Осетии, влюблённые в каждый склон Кавказского хребта.
@@ -496,90 +399,15 @@ export default function Home() {
                     <ArrowRight className="h-4 w-4 text-white transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </Link>
-              </motion.div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Section - Asymmetric Modern Design */}
-      <section className="py-24 bg-[#fdfaf6]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div className="max-w-2xl">
-              <span className="text-amber-600 font-medium tracking-widest uppercase text-sm mb-4 block">Галерея</span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-stone-800 leading-tight">
-                Атмосфера <span className="font-serif text-stone-500">Осетии</span>
-              </h2>
-            </div>
-            <p className="text-stone-500 max-w-sm font-light text-lg lg:text-xl">
-              «В горах нет времени, есть только вечность и вы.»
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-4 lg:gap-8">
-            {/* vertical large */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-5 h-[400px] md:h-[700px] relative overflow-hidden group rounded-3xl"
-            >
-              <ParallaxImage src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200" alt="Масштаб гор" speed={0.05} />
-              <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
-              <div className="absolute bottom-10 left-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                <p className="text-white font-serif text-2xl">Величие хребтов</p>
               </div>
-            </motion.div>
-
-            {/* Right side group */}
-            <div className="md:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 lg:gap-8">
-              {/* horizontal big top */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="md:col-span-2 h-[350px] relative overflow-hidden group rounded-3xl"
-              >
-                <ParallaxImage src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200" alt="Цейский ледник" speed={0.1} />
-                <div className="absolute inset-0 bg-stone-900/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
-                <div className="absolute top-10 left-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                  <p className="text-white font-serif text-2xl">Ледовые вершины</p>
-                </div>
-              </motion.div>
-
-              {/* small square 1 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="h-[318px] relative overflow-hidden group rounded-3xl"
-              >
-                <ParallaxImage src="https://images.unsplash.com/photo-1540390769625-2fc3f8b1d50c?q=80&w=1000" alt="Дигория" speed={0.15} />
-                <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
-              </motion.div>
-
-              {/* small square 2 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="h-[318px] relative overflow-hidden group rounded-3xl"
-              >
-                <ParallaxImage src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1000" alt="Куртатинское ущелье" speed={0.08} />
-                <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
-              </motion.div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* CTA Section - The Horizon Escape */}
-      <section className="relative overflow-hidden bg-stone-950">
+    {/* CTA Section - The Horizon Escape */ }
+    < section className = "relative overflow-hidden bg-stone-950" >
         <div className="absolute inset-0 z-0 flex">
           <div className="h-full w-full bg-stone-950 md:w-1/2" />
           <div className="relative h-full w-full md:w-1/2">
@@ -595,7 +423,7 @@ export default function Home() {
 
         <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col px-6 py-12 lg:px-8 xl:py-24">
           <div className="grid grid-cols-1 items-stretch gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
-            
+
             {/* LEFT Info */}
             <div className="flex flex-col justify-between">
               <div>
@@ -640,7 +468,7 @@ export default function Home() {
             {/* RIGHT Form Container - Liquid Glass */}
             <div className="flex w-full flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10">
               <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
-              
+
               <form className="flex h-full flex-col justify-between" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -678,6 +506,16 @@ export default function Home() {
                       <option value="other">Индивидуальный маршрут</option>
                     </select>
                   </div>
+
+                  <div>
+                    <label htmlFor="message" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Комментарий к заявке</label>
+                    <textarea
+                      id="message"
+                      rows={2}
+                      className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none resize-none"
+                      placeholder="Расскажите о ваших пожеланиях..."
+                    ></textarea>
+                  </div>
                 </div>
 
                 <div className="mt-6">
@@ -695,7 +533,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }

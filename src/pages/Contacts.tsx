@@ -7,29 +7,21 @@ export default function Contacts() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <h1
             className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
           >
-            Свяжитесь с <span className="italic">нами</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            Свяжитесь с <span className="font-light text-stone-500">нами</span>
+          </h1>
+          <p
             className="text-xl text-stone-600"
           >
             Мы готовы ответить на любые вопросы и организовать тур вашей мечты
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Info */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+          <div
             className="bg-stone-50 p-10 rounded-3xl"
           >
             <h3 className="text-2xl font-serif mb-8">Контактная информация</h3>
@@ -75,13 +67,10 @@ export default function Contacts() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Contact Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
           >
             <h3 className="text-2xl font-serif mb-8">Оставить заявку</h3>
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
@@ -143,7 +132,7 @@ export default function Contacts() {
                 Нажимая кнопку «Отправить заявку», вы соглашаетесь с политикой обработки персональных данных.
               </p>
             </form>
-          </motion.div>
+          </div>
         </div>
 
       </div>

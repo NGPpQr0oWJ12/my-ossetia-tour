@@ -160,12 +160,8 @@ export default function TourDetail() {
             {timeline.map((item, index) => {
               const isEven = index % 2 === 0;
               return (
-                <motion.div 
+                <div 
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.5 }}
                   className={`relative flex items-center justify-between md:justify-normal mb-12 ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'}`}
                 >
                   {/* Circle */}
@@ -185,7 +181,7 @@ export default function TourDetail() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -199,12 +195,8 @@ export default function TourDetail() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {infoCards.map((card, index) => (
-              <motion.div 
+              <div 
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
                 className="bg-stone-100 p-8 rounded-2xl"
               >
                 <div className="text-stone-700 mb-4">
@@ -212,18 +204,15 @@ export default function TourDetail() {
                 </div>
                 <h3 className="font-bold text-stone-900 mb-3">{card.title}</h3>
                 <p className="text-stone-600 text-sm leading-relaxed">{card.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
             className="bg-stone-50 p-6 rounded-2xl border border-stone-200 text-stone-800 text-sm leading-relaxed"
           >
             <span className="font-bold">Рекомендуем взять с собой:</span> Наличные средства, если планируете обедать или покупать сувениры по маршруту. Так как в горах не везде используют безналичный способ оплаты.
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -232,10 +221,7 @@ export default function TourDetail() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-12">Ваш гид</h2>
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+          <div
             className="mb-8 inline-block"
           >
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
@@ -246,13 +232,9 @@ export default function TourDetail() {
                 referrerPolicy="no-referrer"
               />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+          <div
             className="space-y-6 text-stone-700 leading-relaxed text-left md:text-center"
           >
             <p>
@@ -261,7 +243,7 @@ export default function TourDetail() {
             <p>
               По окончанию экскурсии мы дарим каждому гостю небольшой набор сувениров от нашего магазина My Ossetia Store.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
