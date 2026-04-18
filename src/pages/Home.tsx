@@ -145,10 +145,10 @@ export default function Home() {
 
         <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
             <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
-              <div className="grid items-center gap-10 min-[1700px]:grid-cols-[minmax(0,1fr)_28rem] min-[1700px]:gap-24">
+              <div className="grid items-center gap-10 xl:grid-cols-[minmax(0,1fr)_26rem] xl:gap-14 min-[1700px]:grid-cols-[minmax(0,1fr)_28rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
-              <div className="grid min-w-0 min-[1700px]:pr-12">
+              <div className="grid min-w-0 xl:pr-8 min-[1700px]:pr-12">
                 <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -261,54 +261,11 @@ export default function Home() {
                     </div>
                   </motion.div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.2, ease: "circOut" }}
-                    className="mt-8 hidden rounded-[2rem] border border-white/20 bg-stone-900/18 p-5 text-white shadow-[0_30px_70px_rgba(0,0,0,0.28)] backdrop-blur-3xl lg:block min-[1700px]:hidden"
-                  >
-                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                      <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
-                        <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
-                        Бестселлер
-                      </div>
-                      <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55">
-                        <Clock className="h-3 w-3" /> 12 часов
-                      </div>
-                    </div>
-
-                    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
-                      <div>
-                        <h3 className="mb-3 font-serif text-3xl font-bold leading-[1.05] text-white xl:text-[2.6rem]">
-                          Кармадон &amp; Даргавс
-                        </h3>
-                        <p className="max-w-2xl text-base font-light leading-relaxed text-white/78">
-                          Древние некрополи, застывшее время и мощь ледников в самом насыщенном маршруте сезона.
-                        </p>
-                      </div>
-
-                      <Link
-                        to="/tours/1"
-                        className="group/compact inline-flex min-h-12 items-center justify-between gap-4 rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 xl:min-w-[15rem]"
-                      >
-                        Смотреть
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover/compact:translate-x-1" />
-                      </Link>
-                    </div>
-
-                    <div className="mt-5 flex flex-wrap gap-3">
-                      {["Некрополь", "Кармадон", "Качели", "Арт-объекты"].map((tag) => (
-                        <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase italic text-white/70">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
                 </div>
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden min-[1700px]:grid justify-items-end min-[1700px]:pl-10">
+              <div className="hidden xl:grid justify-items-end xl:pl-8 min-[1700px]:pl-10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
