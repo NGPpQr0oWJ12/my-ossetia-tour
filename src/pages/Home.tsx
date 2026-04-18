@@ -130,7 +130,7 @@ export default function Home() {
   return (
     <div className="w-full bg-white">
       {/* Hero Section - Airy Editorial Layout */}
-      <section className="relative overflow-hidden w-full pt-24 sm:pt-20 lg:h-[95vh] lg:min-h-[850px] lg:pt-0">
+      <section className="relative overflow-hidden w-full pt-24 sm:pt-20 xl:h-[95vh] xl:min-h-[850px] xl:pt-0">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
             src={heroImage}
@@ -143,13 +143,13 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/20 to-transparent opacity-30" />
         </motion.div>
 
-        <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-center lg:h-full lg:min-h-0">
-            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-5 pb-0 sm:py-10 lg:py-20">
-              <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,25rem)] xl:gap-16 2xl:grid-cols-[minmax(0,1fr)_28rem] 2xl:gap-24">
+        <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-center xl:h-full xl:min-h-0">
+            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 2xl:px-16 pt-5 pb-0 sm:py-10 lg:py-16 xl:py-20">
+              <div className="grid items-center gap-10 2xl:grid-cols-[minmax(0,1fr)_28rem] 2xl:gap-24">
 
               {/* Left Column: Main Impact */}
-              <div className="grid min-w-0 lg:pr-6 xl:pr-8 2xl:pr-12">
-                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[42rem] 2xl:max-w-[46rem]">
+              <div className="grid min-w-0 2xl:pr-12">
+                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] 2xl:max-w-[46rem]">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -166,7 +166,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 max-w-[10ch] font-serif text-[clamp(3.15rem,15vw,5.5rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.75rem,12vw,6.75rem)] sm:leading-[0.85] lg:text-[clamp(5.5rem,8vw,7.4rem)] 2xl:text-[8.25rem]"
+                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.75rem,8vw,6.4rem)] xl:text-[clamp(5.2rem,7vw,6.9rem)] 2xl:max-w-[10ch] 2xl:text-[8.25rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -176,7 +176,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1, ease: "circOut" }}
-                    className="mb-6 max-w-[19rem] text-[1.05rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-14 sm:max-w-md sm:text-xl md:max-w-xl md:text-2xl"
+                    className="mb-6 max-w-[19rem] text-[1.05rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-10 sm:max-w-md sm:text-xl md:max-w-xl md:text-2xl xl:mb-14"
                   >
                     Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.
                   </motion.p>
@@ -220,7 +220,7 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden lg:grid justify-items-end lg:pl-4 xl:pl-6 2xl:pl-10">
+              <div className="hidden 2xl:grid justify-items-end 2xl:pl-10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -280,15 +280,15 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }}
-          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 lg:absolute lg:bottom-0 lg:mt-0 lg:px-0 lg:pb-0"
+          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 2xl:absolute 2xl:bottom-0 2xl:mt-0 2xl:px-0 2xl:pb-0"
         >
-          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8 lg:rounded-t-[4rem] lg:rounded-b-none lg:border-t lg:border-x lg:border-b-0 lg:p-12">
+          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8 2xl:rounded-t-[4rem] 2xl:rounded-b-none 2xl:border-t 2xl:border-x 2xl:border-b-0 2xl:p-12">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
-            <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-5 px-1 sm:grid-cols-3 sm:gap-8 sm:px-2 lg:grid-cols-6 lg:gap-4 lg:divide-x lg:divide-white/10 lg:px-8">
+            <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-5 px-1 sm:grid-cols-3 sm:gap-8 sm:px-2 xl:grid-cols-6 xl:gap-4 xl:divide-x xl:divide-white/10 xl:px-8">
               {stats.map((stat, index) => (
-                <div key={index} className="flex flex-col items-center text-center lg:px-4">
+                <div key={index} className="flex flex-col items-center text-center xl:px-4">
                   <div className="mb-2 flex items-end justify-center gap-1">
-                    <span className="font-serif text-3xl leading-none text-accent-400 sm:text-4xl lg:text-5xl">{stat.number.replace('+', '')}</span>
+                    <span className="font-serif text-3xl leading-none text-accent-400 sm:text-4xl xl:text-5xl">{stat.number.replace('+', '')}</span>
                     {stat.number.includes('+') && <span className="mb-1 font-serif text-xl text-accent-500 sm:text-2xl">+</span>}
                   </div>
                   <div className="max-w-[120px] text-[9px] font-bold leading-tight text-white/55 uppercase tracking-[0.24em] sm:text-[10px] sm:tracking-[0.3em]">{stat.label}</div>
