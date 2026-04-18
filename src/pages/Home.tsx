@@ -144,17 +144,17 @@ export default function Home() {
         </motion.div>
 
         <div className="relative z-10 flex min-h-[auto] items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
-          <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
+          <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-8 sm:pb-0 lg:pt-10 lg:pb-2 min-[1700px]:py-16">
             <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:justify-between xl:gap-8 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-16 min-[1700px]:grid-cols-[minmax(0,1fr)_27rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
               <div className="grid min-w-0">
-                <div className="flex max-w-[38rem] min-w-0 flex-col xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
+                <div className="flex max-w-[38rem] min-w-0 flex-col xl:max-w-[42rem] min-[1700px]:max-w-[50rem]">
                   <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.4rem,7vw,5.8rem)] xl:mb-7 xl:max-w-[10ch] xl:text-[clamp(4.55rem,5.8vw,5.7rem)] min-[1700px]:text-[8.25rem]"
+                    className="mb-6 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(5rem,7vw,6.5rem)] xl:mb-12 2xl:mb-16 xl:max-w-[12ch] xl:text-[clamp(6rem,6.5vw,7.5rem)] min-[1700px]:text-[9.5rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -164,7 +164,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1, ease: "circOut" }}
-                    className="mb-6 max-w-[19rem] text-[1.05rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-10 sm:max-w-md sm:text-xl md:max-w-xl md:text-2xl xl:mb-14"
+                    className="mb-8 max-w-[19rem] text-[1.15rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:max-w-lg sm:text-xl md:max-w-2xl md:text-2xl xl:mb-16 xl:max-w-3xl xl:text-3xl 2xl:mb-20 min-[1700px]:mb-24 min-[1700px]:text-4xl min-[1700px]:max-w-4xl"
                   >
                     Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.
                   </motion.p>
@@ -191,9 +191,9 @@ export default function Home() {
                   >
                     <Link
                       to="/tours"
-                      className="group relative inline-flex min-h-14 w-full items-center justify-center overflow-hidden rounded-[2rem] border border-white/20 bg-white/10 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-0 sm:w-[22rem]"
+                      className="group relative inline-flex min-h-16 w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 px-12 py-6 text-xs font-bold uppercase tracking-[0.35em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-[4.5rem] sm:w-[26rem] sm:text-sm xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base min-[1700px]:rounded-[3rem]"
                     >
-                      <span className="relative z-10 flex items-center gap-3">Выбрать тур <ArrowRight className="h-4 w-4" /></span>
+                      <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
                     </Link>
                   </motion.div>
 
@@ -245,37 +245,37 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden xl:grid justify-items-center">
+              <div className="hidden xl:grid justify-items-center self-end">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }}
                   className="relative w-full max-w-[22.5rem] 2xl:max-w-[24rem] min-[1700px]:max-w-[27rem]"
                 >
-                  <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-7 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-8 2xl:p-9 min-[1700px]:rounded-[40px] min-[1700px]:p-10">
+                  <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-6 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-7 2xl:p-8 min-[1700px]:rounded-[40px] min-[1700px]:p-9">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
 
                     <div className="relative z-10">
-                      <div className="mb-7 flex items-center justify-between 2xl:mb-8 min-[1700px]:mb-10">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.24em] text-accent-300 min-[1700px]:px-5 min-[1700px]:py-2 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">
+                      <div className="mb-5 flex items-center justify-between 2xl:mb-6 min-[1700px]:mb-10">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-accent-300 min-[1700px]:px-5 min-[1700px]:py-2 min-[1700px]:text-[9px] min-[1700px]:tracking-[0.3em]">
                           <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
-                          Бестселлер
+                          Популярный маршрут
                         </div>
                         <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.18em] text-white/40 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.2em]">
                           <Clock className="h-3 w-3" /> 12 часов
                         </div>
                       </div>
 
-                      <h3 className="mb-6 font-serif text-[2.75rem] font-bold leading-[0.98] text-white xl:text-[3rem] 2xl:text-[3.35rem] min-[1700px]:mb-8 min-[1700px]:text-5xl">
+                      <h3 className="mb-4 font-serif text-[2.5rem] font-bold leading-[0.98] text-white xl:text-[2.75rem] 2xl:text-[3rem] min-[1700px]:mb-8 min-[1700px]:text-5xl">
                         Кармадон <br />& Даргавс
                       </h3>
 
-                      <p className="mb-7 text-base font-light leading-relaxed text-white/80 2xl:text-[1.05rem] min-[1700px]:mb-10 min-[1700px]:text-lg">
+                      <p className="mb-5 text-sm font-light leading-relaxed text-white/80 2xl:text-base min-[1700px]:mb-10 min-[1700px]:text-lg">
                         Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
                       </p>
 
-                      <div className="mb-9 space-y-3 min-[1700px]:mb-12 min-[1700px]:space-y-4">
-                        <div className="mb-3 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-4 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
+                      <div className="mb-6 space-y-3 min-[1700px]:mb-12 min-[1700px]:space-y-4">
+                        <div className="mb-2 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-4 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
                         <div className="flex flex-wrap gap-2.5 min-[1700px]:gap-3">
                           {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
                             <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase italic text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
@@ -305,7 +305,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }}
-          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 max-w-7xl mx-auto"
+          className="hidden sm:block relative inset-x-0 z-20 mt-4 px-5 pb-8 sm:mt-6 sm:px-6 sm:pb-10 max-w-7xl mx-auto"
         >
           <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
