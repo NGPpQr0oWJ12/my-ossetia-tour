@@ -130,7 +130,7 @@ export default function Home() {
   return (
     <div className="w-full bg-white">
       {/* Hero Section - Airy Editorial Layout */}
-      <section className="relative overflow-hidden w-full pt-24 sm:pt-20 min-[1700px]:h-[95vh] min-[1700px]:min-h-[850px] min-[1700px]:pt-0">
+      <section className="relative overflow-hidden w-full pt-24 pb-0 sm:pt-28 sm:pb-4 min-[1700px]:pt-0">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
             src={heroImage}
@@ -143,12 +143,12 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/20 to-transparent opacity-30" />
         </motion.div>
 
-        <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
-            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
-              <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:items-start xl:gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-12 min-[1700px]:grid-cols-[minmax(0,1fr)_27rem] min-[1700px]:items-center min-[1700px]:gap-20">
+        <div className="relative z-10 flex min-h-[auto] items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
+            <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
+              <div className="grid gap-10 xl:grid-cols-[minmax(0,auto)_22.5rem] justify-center xl:gap-8 2xl:grid-cols-[minmax(0,auto)_24rem] 2xl:gap-16 min-[1700px]:grid-cols-[minmax(0,auto)_27rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
-              <div className="grid min-w-0 xl:pr-8 min-[1700px]:pr-12">
+              <div className="grid min-w-0">
                 <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
                   <motion.h1
                     initial={{ opacity: 0, y: 20 }}
@@ -253,12 +253,12 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden xl:grid justify-items-end xl:pl-4 2xl:pl-6 min-[1700px]:pl-10">
+              <div className="hidden xl:grid justify-items-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }}
-                  className="relative w-full max-w-[21.5rem] xl:max-w-[22.5rem] 2xl:max-w-[24rem] min-[1700px]:max-w-[27rem]"
+                  className="relative w-full max-w-[22.5rem] 2xl:max-w-[24rem] min-[1700px]:max-w-[27rem]"
                 >
                   <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-7 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-8 2xl:p-9 min-[1700px]:rounded-[40px] min-[1700px]:p-10">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
@@ -313,9 +313,9 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }}
-          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 min-[1700px]:absolute min-[1700px]:bottom-0 min-[1700px]:mt-0 min-[1700px]:px-0 min-[1700px]:pb-0"
+          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 max-w-7xl mx-auto"
         >
-          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8 min-[1700px]:rounded-t-[4rem] min-[1700px]:rounded-b-none min-[1700px]:border-t min-[1700px]:border-x min-[1700px]:border-b-0 min-[1700px]:p-12">
+          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
             <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-5 px-1 sm:grid-cols-3 sm:gap-8 sm:px-2 xl:grid-cols-6 xl:gap-4 xl:divide-x xl:divide-white/10 xl:px-8">
               {stats.map((stat, index) => (
