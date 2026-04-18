@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Footprints, ShieldAlert, HeartHandshake, HeartPulse, Waves, IdCard, Clock, Mountain, Users, Calendar, MapPin } from "lucide-react";
+const guideImage = "/gid.png";
 
 export default function TourDetail() {
   const { id } = useParams();
@@ -239,7 +240,7 @@ export default function TourDetail() {
           >
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
               <img 
-                src="/gid.png" 
+                src={guideImage} 
                 alt="Гид Тимур" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"

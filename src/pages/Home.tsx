@@ -2,6 +2,9 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { ArrowRight, Compass, Camera, Calendar, Users, Star, Phone, Send, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+const heroImage = "/12476587.jpg";
+const founderImage = "/gid.png";
+const storyImage = "/onas.webp";
 
 const ParallaxImage = ({ src, alt, speed = 0.1 }: { src: string; alt: string; speed?: number }) => {
   const ref = useRef(null);
@@ -130,7 +133,7 @@ export default function Home() {
       <section className="relative overflow-hidden w-full pt-24 sm:pt-20 lg:h-[95vh] lg:min-h-[850px] lg:pt-0">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
-            src="/12476587.jpg"
+            src={heroImage}
             alt="Кавказские горы"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -141,12 +144,12 @@ export default function Home() {
         </motion.div>
 
         <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-center lg:h-full lg:min-h-0">
-          <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-5 pb-0 sm:py-10 lg:py-20">
-            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,38rem)_minmax(20rem,24rem)] lg:gap-32 xl:grid-cols-[minmax(0,42rem)_28rem] xl:gap-44 2xl:grid-cols-[minmax(0,44rem)_28rem] 2xl:gap-52">
+            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-5 pb-0 sm:py-10 lg:py-20">
+              <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,25rem)] xl:gap-16 2xl:grid-cols-[minmax(0,1fr)_28rem] 2xl:gap-24">
 
               {/* Left Column: Main Impact */}
-              <div className="grid lg:pr-12 xl:pr-16 2xl:pr-20">
-                <div className="flex max-w-[38rem] flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[42rem] 2xl:max-w-[44rem]">
+              <div className="grid min-w-0 lg:pr-6 xl:pr-8 2xl:pr-12">
+                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[42rem] 2xl:max-w-[46rem]">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -163,7 +166,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 font-serif text-[3.15rem] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-7xl sm:leading-[0.85] md:text-9xl lg:text-[7.5rem] xl:text-[8.75rem]"
+                    className="mb-4 max-w-[10ch] font-serif text-[clamp(3.15rem,15vw,5.5rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.75rem,12vw,6.75rem)] sm:leading-[0.85] lg:text-[clamp(5.5rem,8vw,7.4rem)] 2xl:text-[8.25rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -217,12 +220,12 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden lg:grid justify-items-end lg:pl-12 xl:pl-16 2xl:pl-20">
+              <div className="hidden lg:grid justify-items-end lg:pl-4 xl:pl-6 2xl:pl-10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }}
-                  className="relative w-full max-w-[28rem]"
+                  className="relative w-full max-w-[24rem] xl:max-w-[26rem] 2xl:max-w-[28rem]"
                 >
                   <div className="group relative overflow-hidden rounded-[40px] border border-white/30 bg-stone-900/10 p-10 text-white shadow-[0_50px_100px_rgba(0,0,0,0.4)] backdrop-blur-3xl xl:p-12">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
@@ -318,7 +321,7 @@ export default function Home() {
                   style={{ boxShadow: '0 10px 40px rgba(18,28,40,0.04)' }}
                 >
                   <img
-                    src="/onas.webp"
+                    src={storyImage}
                     alt="Горы и сторожевые башни Осетии"
                     className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
                   />
@@ -338,7 +341,7 @@ export default function Home() {
                   }}
                 >
                   <img
-                    src="/gid.png"
+                    src={founderImage}
                     alt="Основатель My Ossetia Tours"
                     className="w-full h-full object-cover"
                   />

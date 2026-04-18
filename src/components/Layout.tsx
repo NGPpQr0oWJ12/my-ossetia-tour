@@ -1,8 +1,9 @@
-﻿import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Mountain, Menu, X, MapPin, Phone, Mail, Instagram, Facebook, Send } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../lib/utils";
+const logoImage = "/logo.3fa4429.png";
 
 export default function Layout() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -50,8 +51,8 @@ export default function Layout() {
         
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2 group relative z-10">
-            <img 
-              src="/logo.3fa4429.png" 
+              <img 
+                src={logoImage} 
               alt="My Ossetia Tours Logo" 
               className={cn(
                 "h-10 md:h-12 w-auto transition-all duration-500",
@@ -144,7 +145,7 @@ export default function Layout() {
             <div>
               <Link to="/" className="inline-flex items-center mb-5">
                 <img
-                  src="/logo.3fa4429.png"
+                  src={logoImage}
                   alt="My Ossetia Tours Logo"
                   className="h-8 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
                 />

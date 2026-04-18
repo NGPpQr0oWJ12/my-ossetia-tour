@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+const guideImage = "/gid.png";
 
 export default function About() {
   return (
@@ -40,8 +41,8 @@ export default function About() {
             transition={{ delay: 0.3 }}
             className="h-[500px] rounded-2xl overflow-hidden"
           >
-            <img 
-              src="/gid.png" 
+              <img 
+                src={guideImage} 
               alt="Гид в горах" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
