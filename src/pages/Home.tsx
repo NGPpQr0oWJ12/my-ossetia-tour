@@ -130,7 +130,7 @@ export default function Home() {
               <div className="flex flex-col">
                 <h1 className="mb-8 font-serif text-[clamp(3.15rem,10vw,6.5rem)] leading-[0.95] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(5rem,7vw,7.5rem)]">
                   Открой <br />
-                  <span className="text-accent-500">настоящий</span> <br /> Кавказ
+                  <span className="text-accent-500">настоящую</span> <br /> Аланию
                 </h1>
 
                 <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl">
@@ -406,8 +406,8 @@ export default function Home() {
         </div>
       </section>
 
-    {/* CTA Section - The Horizon Escape */ }
-    < section className = "relative overflow-hidden bg-stone-950" >
+      {/* CTA Section - The Horizon Escape */}
+      < section className="relative overflow-hidden bg-stone-950" >
         <div className="absolute inset-0 z-0 flex">
           <div className="h-full w-full bg-stone-950 md:w-1/2" />
           <div className="relative h-full w-full md:w-1/2">

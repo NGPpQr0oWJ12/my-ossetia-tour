@@ -39,8 +39,8 @@ export default function Layout() {
       <header
         className={cn(
           "fixed top-0 w-full z-50 transition-all duration-500",
-          isScrolled 
-            ? "bg-white/80 backdrop-blur-xl border-b border-stone-200/50 py-3 shadow-lg shadow-black/5" 
+          isScrolled
+            ? "bg-white/80 backdrop-blur-xl border-b border-stone-200/50 py-3 shadow-lg shadow-black/5"
             : "bg-transparent py-5"
         )}
       >
@@ -48,16 +48,16 @@ export default function Layout() {
         {!isScrolled && isHome && (
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent -z-10 h-24" />
         )}
-        
+
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2 group relative z-10">
-              <img 
-                src={logoImage} 
-              alt="My Ossetia Tours Logo" 
+            <img
+              src={logoImage}
+              alt="My Ossetia Tours Logo"
               className={cn(
                 "h-10 md:h-12 w-auto transition-all duration-500",
                 lightHeader && "brightness-0 invert"
-              )} 
+              )}
             />
           </Link>
 
@@ -69,8 +69,8 @@ export default function Layout() {
                 to={link.path}
                 className={cn(
                   "text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:scale-110",
-                  lightHeader 
-                    ? "text-white/90 hover:text-white" 
+                  lightHeader
+                    ? "text-white/90 hover:text-white"
                     : "text-stone-800 hover:text-accent-600",
                   location.pathname === link.path && (lightHeader ? "text-white underline underline-offset-8" : "text-accent-600 underline underline-offset-8")
                 )}
@@ -212,8 +212,8 @@ export default function Layout() {
           </div>
 
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-xs tracking-wide text-stone-500">
-            <p>© {new Date().getFullYear()} My Ossetia Tours. Все права защищены.</p>
-            <p>Сделано с любовью к Кавказу.</p>
+            <p>© {new Date().getFullYear()} My Ossetia Travel. Все права защищены.</p>
+            <p>Сделано с любовью к горам.</p>
           </div>
         </div>
       </footer>
