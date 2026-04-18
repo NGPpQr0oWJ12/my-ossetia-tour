@@ -145,28 +145,16 @@ export default function Home() {
 
         <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
             <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
-              <div className="grid items-center gap-10 xl:grid-cols-[minmax(0,1fr)_26rem] xl:gap-14 min-[1700px]:grid-cols-[minmax(0,1fr)_28rem] min-[1700px]:gap-24">
+              <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:items-start xl:gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-12 min-[1700px]:grid-cols-[minmax(0,1fr)_27rem] min-[1700px]:items-center min-[1700px]:gap-20">
 
               {/* Left Column: Main Impact */}
               <div className="grid min-w-0 xl:pr-8 min-[1700px]:pr-12">
                 <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, ease: "circOut" }}
-                    className="mb-4 flex items-center gap-3 sm:mb-8 sm:gap-4"
-                  >
-                    <div className="h-px w-7 bg-accent-500 sm:w-12"></div>
-                    <span className="text-[9px] font-bold uppercase tracking-[0.24em] text-white/90 drop-shadow-md sm:text-xs sm:tracking-[0.4em]">
-                      EST. 2014 • My Ossetia
-                    </span>
-                  </motion.div>
-
                   <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.4rem,7vw,5.8rem)] xl:text-[clamp(4.8rem,6vw,6.1rem)] min-[1700px]:max-w-[10ch] min-[1700px]:text-[8.25rem]"
+                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.4rem,7vw,5.8rem)] xl:mb-7 xl:max-w-[10ch] xl:text-[clamp(4.55rem,5.8vw,5.7rem)] min-[1700px]:text-[8.25rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -265,40 +253,40 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden xl:grid justify-items-end xl:pl-8 min-[1700px]:pl-10">
+              <div className="hidden xl:grid justify-items-end xl:pl-4 2xl:pl-6 min-[1700px]:pl-10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2, ease: "circOut" }}
-                  className="relative w-full max-w-[24rem] xl:max-w-[26rem] 2xl:max-w-[28rem]"
+                  className="relative w-full max-w-[21.5rem] xl:max-w-[22.5rem] 2xl:max-w-[24rem] min-[1700px]:max-w-[27rem]"
                 >
-                  <div className="group relative overflow-hidden rounded-[40px] border border-white/30 bg-stone-900/10 p-10 text-white shadow-[0_50px_100px_rgba(0,0,0,0.4)] backdrop-blur-3xl xl:p-12">
+                  <div className="group relative overflow-hidden rounded-[34px] border border-white/30 bg-stone-900/10 p-7 text-white shadow-[0_40px_80px_rgba(0,0,0,0.36)] backdrop-blur-3xl xl:p-8 2xl:p-9 min-[1700px]:rounded-[40px] min-[1700px]:p-10">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-60" />
 
                     <div className="relative z-10">
-                      <div className="mb-10 flex items-center justify-between">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-300">
+                      <div className="mb-7 flex items-center justify-between 2xl:mb-8 min-[1700px]:mb-10">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.24em] text-accent-300 min-[1700px]:px-5 min-[1700px]:py-2 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">
                           <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
                           Бестселлер
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+                        <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.18em] text-white/40 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.2em]">
                           <Clock className="h-3 w-3" /> 12 часов
                         </div>
                       </div>
 
-                      <h3 className="mb-8 font-serif text-5xl leading-tight font-bold text-white">
+                      <h3 className="mb-6 font-serif text-[2.75rem] font-bold leading-[0.98] text-white xl:text-[3rem] 2xl:text-[3.35rem] min-[1700px]:mb-8 min-[1700px]:text-5xl">
                         Кармадон <br />& Даргавс
                       </h3>
 
-                      <p className="mb-10 text-lg font-light leading-relaxed text-white/80">
+                      <p className="mb-7 text-base font-light leading-relaxed text-white/80 2xl:text-[1.05rem] min-[1700px]:mb-10 min-[1700px]:text-lg">
                         Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
                       </p>
 
-                      <div className="mb-12 space-y-4">
-                        <div className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-400/80">На маршруте:</div>
-                        <div className="flex flex-wrap gap-3">
+                      <div className="mb-9 space-y-3 min-[1700px]:mb-12 min-[1700px]:space-y-4">
+                        <div className="mb-3 text-[9px] font-bold uppercase tracking-[0.26em] text-accent-400/80 min-[1700px]:mb-4 min-[1700px]:text-[10px] min-[1700px]:tracking-[0.3em]">На маршруте:</div>
+                        <div className="flex flex-wrap gap-2.5 min-[1700px]:gap-3">
                           {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
-                            <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase italic text-white/70">
+                            <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] uppercase italic text-white/70 min-[1700px]:px-3 min-[1700px]:text-[11px]">
                               {tag}
                             </span>
                           ))}
@@ -307,7 +295,7 @@ export default function Home() {
 
                       <Link
                         to="/tours/1"
-                        className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-2xl bg-white/10 px-8 py-5 text-xs font-bold uppercase tracking-[0.3em] text-white transition-all duration-300 hover:bg-accent-500"
+                        className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-2xl bg-white/10 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs min-[1700px]:tracking-[0.3em]"
                       >
                         Смотреть <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
                       </Link>
