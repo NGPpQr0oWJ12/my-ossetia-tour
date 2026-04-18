@@ -8,37 +8,26 @@ export default function About() {
 
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="block text-accent-500 font-sans tracking-widest uppercase text-sm mb-4"
           >
             О компании
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          </span>
+          <h1
             className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
           >
-            Мы открываем <span className="italic">настоящий Кавказ</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            Мы открываем <span className="font-light text-stone-500">настоящий Кавказ</span>
+          </h1>
+          <p
             className="text-xl text-stone-600 leading-relaxed"
           >
             My Ossetia Travel — это команда местных жителей, влюбленных в свои горы. Мы не просто возим туристов по достопримечательностям, мы погружаем вас в культуру, историю и природу Северной Осетии.
-          </motion.p>
+          </p>
         </div>
 
         {/* Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
             className="h-[500px] rounded-2xl overflow-hidden"
           >
             <img
@@ -47,12 +36,9 @@ export default function About() {
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
-          </motion.div>
+          </div>
           <div className="flex flex-col gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+            <div
               className="h-[234px] rounded-2xl overflow-hidden"
             >
               <img
@@ -61,11 +47,8 @@ export default function About() {
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
+            </div>
+            <div
               className="h-[234px] rounded-2xl overflow-hidden"
             >
               <img
@@ -74,33 +57,26 @@ export default function About() {
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Text Content */}
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
           >
             <h3 className="text-2xl font-serif mb-4">Наша миссия</h3>
             <p className="text-stone-600 leading-relaxed">
               Показать красоту Северной Осетии так, чтобы каждый гость захотел вернуться. Мы стремимся развивать экологичный и ответственный туризм, сохраняя природу и уважая местные традиции.
             </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+          </div>
+          <div
           >
             <h3 className="text-2xl font-serif mb-4">Безопасность</h3>
             <p className="text-stone-600 leading-relaxed">
               Горы не терпят легкомыслия. Все наши маршруты проверены, автомобили проходят регулярное ТО, а гиды имеют сертификаты оказания первой помощи и огромный опыт работы в горной местности.
             </p>
-          </motion.div>
+          </div>
         </div>
 
       </div>

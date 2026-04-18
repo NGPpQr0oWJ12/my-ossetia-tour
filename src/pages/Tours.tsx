@@ -71,31 +71,22 @@ export default function Tours() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <h1
             className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
           >
-            Наши <span className="italic">маршруты</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            Наши <span className="font-light text-stone-500">маршруты</span>
+          </h1>
+          <p
             className="text-xl text-stone-600"
           >
             Выберите свое идеальное приключение в горах Кавказа
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {tours.map((tour, index) => (
-            <motion.div 
+            <div 
               key={tour.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
               className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col sm:flex-row"
             >
               <div className="sm:w-2/5 h-64 sm:h-auto relative">
@@ -136,7 +127,7 @@ export default function Tours() {
                   </Link>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
