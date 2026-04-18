@@ -130,7 +130,7 @@ export default function Home() {
   return (
     <div className="w-full bg-white">
       {/* Hero Section - Airy Editorial Layout */}
-      <section className="relative overflow-hidden w-full pt-24 pb-0 sm:pt-28 sm:pb-4 min-[1700px]:pt-0">
+      <section className="relative overflow-hidden w-full pt-28 pb-0 sm:pt-32 sm:pb-4 min-[1700px]:pt-0">
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 w-full h-[140%] -top-[20%]">
           <img
             src={heroImage}
@@ -144,12 +144,12 @@ export default function Home() {
         </motion.div>
 
         <div className="relative z-10 flex min-h-[auto] items-start min-[1700px]:items-center min-[1700px]:h-full min-[1700px]:min-h-0">
-            <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
-              <div className="grid gap-10 xl:grid-cols-[minmax(0,auto)_22.5rem] justify-center xl:gap-8 2xl:grid-cols-[minmax(0,auto)_24rem] 2xl:gap-16 min-[1700px]:grid-cols-[minmax(0,auto)_27rem] min-[1700px]:gap-24">
+          <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-8 pb-0 sm:pt-10 sm:pb-4 lg:pt-14 lg:pb-8 min-[1700px]:py-20">
+            <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22.5rem] xl:justify-between xl:gap-8 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-16 min-[1700px]:grid-cols-[minmax(0,1fr)_27rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
               <div className="grid min-w-0">
-                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
+                <div className="flex max-w-[38rem] min-w-0 flex-col xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
                   <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -187,21 +187,13 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.15, ease: "circOut" }}
-                    className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-8 lg:gap-10"
+                    className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
                   >
                     <Link
                       to="/tours"
-                      className="group relative inline-flex min-h-14 w-full items-center justify-between overflow-hidden rounded-[1.4rem] bg-accent-500 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white shadow-[0_20px_50px_rgba(217,119,6,0.3)] transition-all duration-500 hover:-translate-y-1 sm:min-h-0 sm:w-auto sm:justify-center sm:rounded-none sm:px-14 sm:py-6 sm:text-sm sm:tracking-[0.3em]"
+                      className="group relative inline-flex min-h-14 w-full items-center justify-center overflow-hidden rounded-[2rem] border border-white/20 bg-white/10 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-0 sm:w-[22rem]"
                     >
-                      <span className="absolute inset-0 translate-y-full bg-accent-600 transition-transform duration-300 ease-out group-hover:translate-y-0"></span>
-                      <span className="relative z-10 flex items-center gap-3">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
-                    </Link>
-
-                    <Link
-                      to="/about"
-                      className="group inline-flex min-h-12 w-full items-center justify-between rounded-[1.15rem] border border-white/15 bg-white/8 px-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all hover:border-accent-500 hover:text-accent-500 sm:min-h-0 sm:w-fit sm:justify-start sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:pb-1 sm:border-b-2 sm:border-white/40 sm:text-xs sm:tracking-[0.3em]"
-                    >
-                      Наша история
+                      <span className="relative z-10 flex items-center gap-3">Выбрать тур <ArrowRight className="h-4 w-4" /></span>
                     </Link>
                   </motion.div>
 
@@ -214,20 +206,20 @@ export default function Home() {
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                       <div className="inline-flex items-center gap-2 rounded-full border border-accent-400/30 bg-accent-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-accent-300">
                         <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
-                        Р‘РµСЃС‚СЃРµР»Р»РµСЂ
+                        Популярный маршрут
                       </div>
                       <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55">
-                        <Clock className="h-3 w-3" /> 12 С‡Р°СЃРѕРІ
+                        <Clock className="h-3 w-3" /> 12 часов
                       </div>
                     </div>
 
                     <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
                       <div>
                         <h3 className="mb-3 font-serif text-3xl font-bold leading-[1.05] text-white xl:text-[2.6rem]">
-                          РљР°СЂРјР°РґРѕРЅ &amp; Р”Р°СЂРіР°РІСЃ
+                          Кармадон &amp; Даргавс
                         </h3>
                         <p className="max-w-2xl text-base font-light leading-relaxed text-white/78">
-                          Р”СЂРµРІРЅРёРµ РЅРµРєСЂРѕРїРѕР»Рё, Р·Р°СЃС‚С‹РІС€РµРµ РІСЂРµРјСЏ Рё РјРѕС‰СЊ Р»РµРґРЅРёРєРѕРІ РІ СЃР°РјРѕРј РЅР°СЃС‹С‰РµРЅРЅРѕРј РјР°СЂС€СЂСѓС‚Рµ СЃРµР·РѕРЅР°.
+                          Древние некрополи, застывшее время и мощь ледников в одном самом насыщенном путешествии сезона.
                         </p>
                       </div>
 
@@ -235,13 +227,13 @@ export default function Home() {
                         to="/tours/1"
                         className="group/compact inline-flex min-h-12 items-center justify-between gap-4 rounded-2xl bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 xl:min-w-[15rem]"
                       >
-                        РЎРјРѕС‚СЂРµС‚СЊ
+                        Смотреть
                         <ArrowRight className="h-4 w-4 transition-transform group-hover/compact:translate-x-1" />
                       </Link>
                     </div>
 
                     <div className="mt-5 flex flex-wrap gap-3">
-                      {['РќРµРєСЂРѕРїРѕР»СЊ', 'РљР°СЂРјР°РґРѕРЅ', 'РљР°С‡РµР»Рё', 'РђСЂС‚-РѕР±СЉРµРєС‚С‹'].map((tag) => (
+                      {['Некрополь', 'Кармадон', 'Качели', 'Арт-объекты'].map((tag) => (
                         <span key={tag} className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] uppercase italic text-white/70">
                           {tag}
                         </span>
