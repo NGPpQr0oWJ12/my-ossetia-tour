@@ -144,12 +144,12 @@ export default function Home() {
         </motion.div>
 
         <div className="relative z-10 flex min-h-[auto] items-start sm:min-h-[calc(100svh-5rem)] sm:items-center xl:h-full xl:min-h-0">
-            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 2xl:px-16 pt-5 pb-0 sm:py-10 lg:py-16 xl:py-20">
-              <div className="grid items-center gap-10 2xl:grid-cols-[minmax(0,1fr)_28rem] 2xl:gap-24">
+            <div className="w-full max-w-[96rem] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 min-[1700px]:px-16 pt-5 pb-0 sm:py-10 lg:py-16 xl:py-20">
+              <div className="grid items-center gap-10 min-[1700px]:grid-cols-[minmax(0,1fr)_28rem] min-[1700px]:gap-24">
 
               {/* Left Column: Main Impact */}
-              <div className="grid min-w-0 2xl:pr-12">
-                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] 2xl:max-w-[46rem]">
+              <div className="grid min-w-0 min-[1700px]:pr-12">
+                <div className="flex max-w-[38rem] min-w-0 flex-col rounded-[2rem] bg-black/10 px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-[3px] sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-0 xl:max-w-[34rem] min-[1700px]:max-w-[46rem]">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -166,7 +166,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05, ease: "circOut" }}
-                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.75rem,8vw,6.4rem)] xl:text-[clamp(5.2rem,7vw,6.9rem)] 2xl:max-w-[10ch] 2xl:text-[8.25rem]"
+                    className="mb-4 max-w-[9ch] font-serif text-[clamp(3.15rem,15vw,5.2rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl sm:mb-8 sm:text-[clamp(4.5rem,11vw,6rem)] sm:leading-[0.85] lg:text-[clamp(4.75rem,8vw,6.4rem)] xl:text-[clamp(5.2rem,7vw,6.9rem)] min-[1700px]:max-w-[10ch] min-[1700px]:text-[8.25rem]"
                   >
                     Открой <br />
                     <span className="italic text-accent-500">настоящий</span> <br /> Кавказ
@@ -220,7 +220,7 @@ export default function Home() {
               </div>
 
               {/* Right Column: Expanded Featured Tour */}
-              <div className="hidden 2xl:grid justify-items-end 2xl:pl-10">
+              <div className="hidden min-[1700px]:grid justify-items-end min-[1700px]:pl-10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -280,9 +280,9 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1, ease: "circOut" }}
-          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 2xl:absolute 2xl:bottom-0 2xl:mt-0 2xl:px-0 2xl:pb-0"
+          className="hidden sm:block relative inset-x-0 z-20 mt-8 px-5 pb-8 sm:mt-12 sm:px-6 sm:pb-10 min-[1700px]:absolute min-[1700px]:bottom-0 min-[1700px]:mt-0 min-[1700px]:px-0 min-[1700px]:pb-0"
         >
-          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8 2xl:rounded-t-[4rem] 2xl:rounded-b-none 2xl:border-t 2xl:border-x 2xl:border-b-0 2xl:p-12">
+          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-stone-900/20 p-6 text-white shadow-2xl backdrop-blur-3xl sm:rounded-[2.75rem] sm:bg-white/5 sm:p-8 min-[1700px]:rounded-t-[4rem] min-[1700px]:rounded-b-none min-[1700px]:border-t min-[1700px]:border-x min-[1700px]:border-b-0 min-[1700px]:p-12">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
             <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-5 px-1 sm:grid-cols-3 sm:gap-8 sm:px-2 xl:grid-cols-6 xl:gap-4 xl:divide-x xl:divide-white/10 xl:px-8">
               {stats.map((stat, index) => (
