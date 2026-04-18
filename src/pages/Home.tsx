@@ -580,123 +580,118 @@ export default function Home() {
       </section>
 
       {/* CTA Section - The Horizon Escape */}
-      <section className="relative flex flex-col overflow-hidden bg-stone-950 md:min-h-[600px] md:flex-row">
-        {/* Visual Part (Right on desktop) */}
-        {/* Visual Part with CRM Form (Right on desktop) */}
-        <div className="relative order-1 flex min-h-[500px] w-full items-center justify-center p-6 sm:p-12 md:order-2 md:w-1/2 md:min-h-[600px] lg:p-16">
-          {/* Background image in the absolute wrapper so it spans correctly */}
-          <div className="absolute inset-0 z-0">
-            <ParallaxImage
-              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
-              alt="Закат в горах"
-              speed={0.12}
-            />
-            {/* Transition Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/20 to-transparent z-10 hidden md:block pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent z-10 md:hidden pointer-events-none" />
-          </div>
-
-          {/* CRM Form Container - Liquid Glass */}
-          <div className="relative z-20 w-full max-w-[26rem] overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/20 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto md:mr-10">
-            <h3 className="mb-8 font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Ваше имя</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
-                    placeholder="Иван Иванов"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Телефон</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
-                    placeholder="+7 (___) ___-__-__"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="tour" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Интересующий тур</label>
-                <select
-                  id="tour"
-                  className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white transition-colors focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
-                >
-                  <option value="">Выберите тур из списка</option>
-                  <option value="karmadon">Кармадонское ущелье и Даргавс</option>
-                  <option value="tsey">Цейское ущелье</option>
-                  <option value="digoria">Дигория</option>
-                  <option value="kurtat">Куртатинское ущелье</option>
-                  <option value="other">Индивидуальный маршрут</option>
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                className="mt-2 inline-flex w-full items-center justify-center overflow-hidden rounded-full bg-accent-500 px-8 py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-accent-400"
-              >
-                Отправить
-              </button>
-
-              <p className="mt-4 text-center text-[9px] uppercase leading-relaxed tracking-wider text-white/40">
-                Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.
-              </p>
-            </form>
-          </div>
+      <section className="relative overflow-hidden bg-stone-950">
+        <div className="absolute inset-0 z-0">
+          <ParallaxImage
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
+            alt="Закат в горах"
+            speed={0.12}
+          />
+          {/* Transition Gradient */}
+          <div className="absolute inset-0 bg-stone-950/80 md:bg-gradient-to-r md:from-stone-950 md:via-stone-950/60 md:to-transparent pointer-events-none" />
         </div>
 
-        {/* Info Part (Left on desktop) */}
-        <div className="relative z-20 order-2 flex items-center justify-center px-8 py-7 md:order-1 md:w-1/2 md:p-16 lg:p-24">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="max-w-xl"
-          >
-            <div className="mb-4 flex items-center gap-4 sm:mb-8">
-              <span className="text-amber-500 font-mono text-xs tracking-widest uppercase">42°50′21″N 44°24′15″E</span>
-              <div className="h-px w-12 bg-stone-800"></div>
+        <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col px-6 py-12 lg:px-8 xl:py-24">
+          <div className="grid grid-cols-1 items-stretch gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
+            
+            {/* LEFT Info */}
+            <div className="flex flex-col justify-between">
+              <div>
+                <div className="mb-4 flex items-center gap-4 sm:mb-8">
+                  <span className="font-mono text-[10px] tracking-widest text-amber-500 uppercase">42°50′21″N 44°24′15″E</span>
+                  <div className="h-px w-12 bg-stone-800"></div>
+                </div>
+
+                <h2 className="mb-6 font-serif text-4xl leading-[1.05] text-white md:text-5xl lg:text-6xl">
+                  Готовы к <span className="italic text-stone-400">незабываемому</span> путешествию?
+                </h2>
+
+                <p className="mb-10 text-lg font-light leading-relaxed text-stone-400 lg:text-xl">
+                  Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.
+                  <span className="mt-4 block font-serif italic text-stone-500">— Ваш гид, Тимур</span>
+                </p>
+              </div>
+
+              {/* Big Buttons */}
+              <div className="mt-auto flex flex-col gap-4 sm:flex-row">
+                <a
+                  href="https://wa.me/79000000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex w-full items-center justify-center rounded-full bg-amber-600 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-amber-500 shadow-[0_0_30px_rgba(217,119,6,0.15)] sm:w-auto"
+                >
+                  <Phone className="mr-3 h-5 w-5 transition-transform group-hover:rotate-12" />
+                  WhatsApp
+                </a>
+                <a
+                  href="https://t.me/yourid"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex w-full items-center justify-center rounded-full border border-stone-700/50 bg-white/5 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase backdrop-blur-md transition-all duration-300 hover:bg-white/10 sm:w-auto"
+                >
+                  <Send className="mr-3 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  Telegram
+                </a>
+              </div>
             </div>
 
-            <h2 className="mb-4 text-4xl font-serif leading-[1.1] text-white sm:mb-8 md:text-6xl">
-              Готовы к <span className="italic text-stone-400">незабываемому</span> путешествию?
-            </h2>
+            {/* RIGHT Form Container - Liquid Glass */}
+            <div className="flex w-full flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10">
+              <h3 className="mb-8 font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+              
+              <form className="flex h-full flex-col justify-between space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                      <label htmlFor="name" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
+                      <input
+                        type="text"
+                        id="name"
+                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                        placeholder="Иван Иванов"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="phone" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                        placeholder="+7 (___) ___-__-__"
+                      />
+                    </div>
+                  </div>
 
-            <p className="mb-6 text-lg font-light leading-relaxed text-stone-400 sm:mb-12 md:text-xl">
-              Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.
-              <span className="block mt-4 text-stone-500 italic">— Ваш гид, Тимур</span>
-            </p>
+                  <div>
+                    <label htmlFor="tour" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Интересующий тур</label>
+                    <select
+                      id="tour"
+                      className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white transition-colors focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
+                    >
+                      <option value="">Выберите тур из списка</option>
+                      <option value="karmadon">Кармадонское ущелье и Даргавс</option>
+                      <option value="tsey">Цейское ущелье</option>
+                      <option value="digoria">Дигория</option>
+                      <option value="kurtat">Куртатинское ущелье</option>
+                      <option value="other">Индивидуальный маршрут</option>
+                    </select>
+                  </div>
+                </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                href="https://wa.me/79000000000"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-4 bg-amber-600 text-white rounded-full font-medium hover:bg-amber-700 transition-all duration-300 group"
-              >
-                <Phone className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
-                WhatsApp
-              </a>
-              <a
-                href="https://t.me/yourid"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-4 bg-stone-800 text-white rounded-full font-medium hover:bg-stone-700 border border-stone-700 transition-all duration-300 group"
-              >
-                <Send className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                Telegram
-              </a>
+                <div className="mt-8">
+                  <button
+                    type="submit"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-accent-500 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-accent-400"
+                  >
+                    Отправить
+                  </button>
+                  <p className="mt-4 text-center text-[9px] leading-relaxed tracking-wider text-white/40 uppercase">
+                    Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.
+                  </p>
+                </div>
+              </form>
             </div>
-
-            <div className="mt-6 flex items-center gap-6 border-t border-stone-900 pt-6 sm:mt-12 sm:pt-12">
-              <p className="text-stone-600 text-sm uppercase tracking-widest font-medium">Бесплатная консультация</p>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
