@@ -582,15 +582,72 @@ export default function Home() {
       {/* CTA Section - The Horizon Escape */}
       <section className="relative flex flex-col overflow-hidden bg-stone-950 md:min-h-[600px] md:flex-row">
         {/* Visual Part (Right on desktop) */}
-        <div className="relative order-1 min-h-[140px] sm:min-h-[220px] md:order-2 md:w-1/2 md:min-h-[400px]">
-          <ParallaxImage
-            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
-            alt="Закат в горах"
-            speed={0.12}
-          />
-          {/* Transition Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/20 to-transparent z-10 hidden md:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent z-10 md:hidden" />
+        {/* Visual Part with CRM Form (Right on desktop) */}
+        <div className="relative order-1 flex min-h-[500px] w-full items-center justify-center p-6 sm:p-12 md:order-2 md:w-1/2 md:min-h-[600px] lg:p-16">
+          {/* Background image in the absolute wrapper so it spans correctly */}
+          <div className="absolute inset-0 z-0">
+            <ParallaxImage
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
+              alt="Закат в горах"
+              speed={0.12}
+            />
+            {/* Transition Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/20 to-transparent z-10 hidden md:block pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent z-10 md:hidden pointer-events-none" />
+          </div>
+
+          {/* CRM Form Container - Liquid Glass */}
+          <div className="relative z-20 w-full max-w-[26rem] overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/20 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto md:mr-10">
+            <h3 className="mb-8 font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Ваше имя</label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                    placeholder="Иван Иванов"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Телефон</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                    placeholder="+7 (___) ___-__-__"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="tour" className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-white/50">Интересующий тур</label>
+                <select
+                  id="tour"
+                  className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-sm text-white transition-colors focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
+                >
+                  <option value="">Выберите тур из списка</option>
+                  <option value="karmadon">Кармадонское ущелье и Даргавс</option>
+                  <option value="tsey">Цейское ущелье</option>
+                  <option value="digoria">Дигория</option>
+                  <option value="kurtat">Куртатинское ущелье</option>
+                  <option value="other">Индивидуальный маршрут</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="mt-2 inline-flex w-full items-center justify-center overflow-hidden rounded-full bg-accent-500 px-8 py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-accent-400"
+              >
+                Отправить
+              </button>
+
+              <p className="mt-4 text-center text-[9px] uppercase leading-relaxed tracking-wider text-white/40">
+                Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.
+              </p>
+            </form>
+          </div>
         </div>
 
         {/* Info Part (Left on desktop) */}
