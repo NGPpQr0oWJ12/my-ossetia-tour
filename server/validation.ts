@@ -54,8 +54,11 @@ export function parseLeadUpdate(payload: unknown): LeadUpdateDto {
   }
   const body = payload as Record<string, unknown>;
   const result: LeadUpdateDto = {};
-  if (typeof body.stage_id === "number" && Number.isFinite(body.stage_id)) {
-    result.stage_id = body.stage_id;
+  if (body.stage_id !== undefined) {
+    const sid = Number(body.stage_id);
+    if (!isNaN(sid)) {
+      result.stage_id = sid;
+    }
   }
   if (typeof body.manager_comment === "string" || body.manager_comment === null) {
     result.manager_comment = body.manager_comment as string | null;

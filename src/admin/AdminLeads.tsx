@@ -16,7 +16,14 @@ import {
   MessageSquare,
   ChevronRight,
   ExternalLink,
+  Columns2,
+  LayoutList,
+  Download,
+  Search,
+  ArrowUpDown,
+  Filter,
 } from "lucide-react";
+import * as XLSX from "xlsx";
 import {
   DndContext,
   DragOverlay,
@@ -29,6 +36,10 @@ import {
   DragOverEvent,
   DragEndEvent,
   defaultDropAnimationSideEffects,
+  rectIntersection,
+  pointerWithin,
+  getFirstCollision,
+  CollisionDetection,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -55,9 +66,35 @@ import {
 } from "./components/AdminUI";
 import { cn } from "../lib/utils";
 
+// --- Mapping Helpers ---
+
+const SOURCE_MAP: Record<string, string> = {
+  "/": "Главная страница",
+  "/contacts": "Страница контактов",
+  "/tours": "Каталог всех туров",
+};
+
+function getSourceName(source: string | null, tourTitle?: string) {
+  if (!source) return "Неизвестный источник";
+  if (SOURCE_MAP[source]) return SOURCE_MAP[source];
+  if (tourTitle) return `Тур: ${tourTitle}`;
+  return source;
+}
+
 // --- Components ---
 
-function KanbanCard({ lead, onClick, ...props }: { lead: Lead; onClick: () => void; [key: string]: any }) {
+function KanbanCard({ 
+  lead, 
+  tourTitle, 
+  isSaving,
+  onClick 
+}: { 
+  lead: Lead; 
+  tourTitle?: string; 
+  isSaving?: boolean;
+  onClick: () => void;
+  [key: string]: any;
+}) {
   const {
     attributes,
     listeners,
@@ -76,56 +113,80 @@ function KanbanCard({ lead, onClick, ...props }: { lead: Lead; onClick: () => vo
   const style = {
     transition,
     transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.3 : (isSaving ? 0.7 : 1),
+    filter: isSaving ? 'grayscale(0.5)' : 'none',
   };
-
-  if (isDragging) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        className="relative h-[120px] rounded-2xl border-2 border-dashed border-stone-200 bg-stone-50/50"
-      />
-    );
-  }
+  const tour = lead.tour_id ? lead.tour_id : null;
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative flex flex-col gap-3 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm transition-all hover:border-accent-500/30 hover:shadow-md cursor-default"
-      onClick={onClick}
+      {...attributes}
+      {...listeners}
+      className={cn(
+        "group relative flex flex-col gap-4 rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm transition-all hover:border-accent-500/40 hover:shadow-2xl cursor-grab active:cursor-grabbing",
+        isDragging && "z-50 shadow-2xl scale-[1.02] border-accent-500",
+        isSaving && "animate-pulse"
+      )}
+      onClick={(e) => {
+        if (transform && (Math.abs(transform.x) > 5 || Math.abs(transform.y) > 5)) return;
+        onClick();
+      }}
     >
-      <div className="flex items-start justify-between gap-2">
-        <h4 className="font-serif text-lg font-bold text-stone-900 line-clamp-1">{lead.name}</h4>
-        <div 
-          {...attributes} 
-          {...listeners}
-          className="p-1 text-stone-300 hover:text-stone-500 cursor-grab active:cursor-grabbing transition-colors"
-        >
-          <GripVertical className="h-4 w-4" />
+      {/* Quick Move Trigger */}
+      <div className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 text-white shadow-lg border-2 border-white">
+          <ChevronRight className="h-4 w-4" />
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-2 text-xs text-stone-500">
-          <Phone className="h-3 w-3" />
-          <span>{lead.phone}</span>
+      <div className="flex items-start justify-between gap-3">
+        <h4 className="font-serif text-xl font-black text-stone-900 tracking-tight leading-none line-clamp-1">
+          {lead.name}
+        </h4>
+        <div className="flex items-center gap-2">
+          {isSaving && <RefreshCcw className="h-3 w-3 animate-spin text-accent-500" />}
+          <div className="text-stone-300 group-hover:text-stone-500 transition-colors shrink-0">
+            <GripVertical className="h-4 w-4" />
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-[10px] text-stone-400 uppercase tracking-wider">
-          <CalendarClock className="h-3 w-3" />
-          <span>{new Date(lead.created_at).toLocaleDateString("ru-RU")}</span>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-2 rounded-xl bg-stone-100/80 px-3 py-1.5 text-[10px] font-black text-stone-600 border border-stone-200/40 shadow-sm">
+            <ExternalLink className="h-3.5 w-3.5 text-stone-400" />
+            <span className="uppercase tracking-widest">{getSourceName(lead.source_page, tourTitle)}</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 text-base font-bold text-stone-800">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 border border-stone-200/50 shadow-sm">
+            <Phone className="h-4 w-4 text-stone-500" />
+          </div>
+          <span className="tracking-tight">{lead.phone}</span>
         </div>
       </div>
 
       {lead.manager_comment && (
-        <div className="mt-1 flex items-start gap-2 rounded-lg bg-stone-50 p-2 text-[11px] text-stone-600 line-clamp-2">
-          <MessageSquare className="h-3 w-3 mt-0.5 shrink-0" />
-          <span>{lead.manager_comment}</span>
+        <div className="mt-2 flex flex-col gap-2 rounded-2xl bg-stone-50/50 border border-stone-100 p-4 text-[11px] text-stone-700 shadow-sm">
+          <div className="flex items-center gap-2 font-black text-stone-900/40 uppercase tracking-[0.1em] text-[9px]">
+            <MessageSquare className="h-3 w-3" />
+            Заметка
+          </div>
+          <p className="line-clamp-3 leading-relaxed font-medium opacity-90">{lead.manager_comment}</p>
         </div>
       )}
       
-      <div className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity">
-        <ChevronRight className="h-4 w-4 text-accent-500" />
+      <div className="flex items-center justify-between mt-2 pt-4 border-t border-stone-100/50">
+         <div className="flex items-center gap-2 text-[10px] text-stone-400 font-black uppercase tracking-[0.2em]">
+          <CalendarClock className="h-3.5 w-3.5" />
+          <span>{new Date(lead.created_at).toLocaleDateString("ru-RU")}</span>
+        </div>
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-accent-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-accent-500/20 transition-all">
+          <ChevronRight className="h-4 w-4" />
+        </div>
       </div>
     </div>
   );
@@ -134,16 +195,20 @@ function KanbanCard({ lead, onClick, ...props }: { lead: Lead; onClick: () => vo
 function KanbanColumn({ 
   stage, 
   leads, 
+  tours,
+  savingIds,
   onLeadClick,
-  ...props
 }: { 
   stage: LeadStage; 
   leads: Lead[]; 
+  tours: any[];
+  savingIds: Set<number>;
   onLeadClick: (lead: Lead) => void;
   [key: string]: any;
 }) {
   const {
     setNodeRef,
+    isOver,
   } = useSortable({
     id: `column-${stage.id}`,
     data: {
@@ -153,40 +218,143 @@ function KanbanColumn({
   });
 
   return (
-    <div className="flex h-full w-80 shrink-0 flex-col gap-4">
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-3">
-          <div 
-            className="h-2 w-2 rounded-full ring-4 ring-white shadow-sm" 
-            style={{ backgroundColor: stage.color }} 
-          />
-          <h3 className="font-serif text-xl font-extrabold text-stone-900">{stage.title}</h3>
-          <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-bold text-stone-500">
+    <div className="flex h-full w-[420px] shrink-0 flex-col gap-6">
+      <div className="flex flex-col gap-2 px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div 
+              className="h-4 w-4 rounded-full ring-[10px] ring-white shadow-xl border border-black/5" 
+              style={{ backgroundColor: stage.color }} 
+            />
+            <h3 className="font-serif text-3xl font-black text-stone-900 tracking-tighter">{stage.title}</h3>
+          </div>
+          <span className="rounded-xl bg-white border border-stone-200 px-3.5 py-1.5 text-xs font-black text-stone-900 shadow-sm">
             {leads.length}
           </span>
         </div>
+        <div 
+          className="h-1.5 w-full rounded-full opacity-10 transition-opacity group-hover:opacity-30" 
+          style={{ backgroundColor: stage.color }}
+        />
       </div>
 
       <div
         ref={setNodeRef}
-        className="flex min-h-[500px] flex-1 flex-col gap-3 rounded-[2rem] bg-stone-100/50 p-3 transition-colors"
+        className={cn(
+          "flex min-h-[750px] flex-1 flex-col gap-6 rounded-[4rem] border-2 border-transparent p-6 transition-all duration-300",
+          isOver ? "bg-accent-500/5 border-accent-500/20 scale-[1.01] shadow-2xl ring-4 ring-accent-500/10" : "bg-stone-100/30 shadow-inner"
+        )}
       >
         <SortableContext items={leads.map(l => l.id)} strategy={verticalListSortingStrategy}>
-          {leads.map((lead) => (
-            <KanbanCard key={lead.id} lead={lead} onClick={() => onLeadClick(lead)} />
-          ))}
-        </SortableContext>
-        
-        {leads.length === 0 && (
-          <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
-            <div className="mb-2 h-10 w-10 rounded-full bg-white flex items-center justify-center text-stone-300">
-              <Plus className="h-5 w-5" />
-            </div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-stone-400">
-              Пусто
-            </p>
+          <div className="flex flex-col gap-5 min-h-full pb-32 relative">
+            {leads.map((lead) => {
+              const tour = tours.find(t => t.id === lead.tour_id);
+              return (
+                <KanbanCard 
+                  key={lead.id} 
+                  lead={lead} 
+                  tourTitle={tour?.title}
+                  isSaving={savingIds.has(lead.id)}
+                  onClick={() => onLeadClick(lead)} 
+                />
+              );
+            })}
+            
+            {/* Visual Drop Area / Placeholder */}
+            {isOver && leads.length === 0 && (
+              <div className="h-32 w-full rounded-[2rem] border-2 border-dashed border-accent-500/30 bg-accent-500/5 animate-pulse" />
+            )}
+            
+            {leads.length === 0 && !isOver && (
+              <div className="flex flex-1 flex-col items-center justify-center p-12 text-center opacity-30 mt-20">
+                <div className="mb-6 h-20 w-20 rounded-full border-4 border-dashed border-stone-300 flex items-center justify-center text-stone-300">
+                  <Plus className="h-8 w-8" />
+                </div>
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-stone-400">
+                  Ожидание заявок
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </SortableContext>
+      </div>
+    </div>
+  );
+}
+
+function LeadTableView({ 
+  leads, 
+  stages, 
+  tours, 
+  onLeadClick 
+}: { 
+  leads: Lead[]; 
+  stages: LeadStage[]; 
+  tours: any[]; 
+  onLeadClick: (lead: Lead) => void;
+}) {
+  return (
+    <div className="admin-soft-surface overflow-hidden border border-stone-200/60 shadow-xl rounded-[2.5rem] bg-white">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            <tr className="border-b border-stone-100 bg-stone-50/50">
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Дата</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Клиент</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Тур / Услуга</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Стадия</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Источник</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 text-right">Действия</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-stone-50">
+            {leads.map((lead) => {
+              const stage = stages.find(s => s.id === lead.stage_id);
+              const tour = tours.find(t => t.id === lead.tour_id);
+              return (
+                <tr 
+                  key={lead.id} 
+                  className="group hover:bg-accent-500/5 transition-colors cursor-pointer"
+                  onClick={() => onLeadClick(lead)}
+                >
+                  <td className="whitespace-nowrap px-6 py-6">
+                    <div className="flex items-center gap-2 text-stone-400">
+                      <CalendarClock className="h-3.5 w-3.5" />
+                      <span className="text-xs font-bold font-mono">{new Date(lead.created_at).toLocaleDateString("ru-RU")}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-6 font-serif text-lg font-black text-stone-900">
+                    <div className="flex flex-col">
+                      <span>{lead.name}</span>
+                      <span className="text-xs font-sans font-bold text-stone-400 tracking-tight">{lead.phone}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-6">
+                    <div className="flex items-center gap-2">
+                       <Badge tone={tour ? "accent" : "default"} className="py-1 px-3">
+                        {tour?.title || "Общий запрос"}
+                       </Badge>
+                    </div>
+                  </td>
+                  <td className="px-6 py-6">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-2.5 w-2.5 rounded-full shadow-sm" style={{ backgroundColor: stage?.color }} />
+                      <span className="text-[11px] font-black uppercase tracking-wider text-stone-600">{stage?.title}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-6">
+                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{getSourceName(lead.source_page || null, tour?.title)}</span>
+                  </td>
+                  <td className="px-6 py-6 text-right">
+                    <button className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-white group-hover:text-accent-600 group-hover:shadow-md transition-all">
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -197,6 +365,7 @@ function KanbanColumn({
 export default function AdminLeads() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [stages, setStages] = useState<LeadStage[]>([]);
+  const [tours, setTours] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
@@ -206,6 +375,11 @@ export default function AdminLeads() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeId, setActiveId] = useState<number | string | null>(null);
   const [activeLead, setActiveLead] = useState<Lead | null>(null);
+  const [savingIds, setSavingIds] = useState<Set<number>>(new Set());
+
+  // View & Filter States
+  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Edit states
   const [editComment, setEditComment] = useState("");
@@ -214,7 +388,7 @@ export default function AdminLeads() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 10, // Increased to prevent accidental drags when clicking
       },
     }),
     useSensor(KeyboardSensor, {
@@ -222,15 +396,37 @@ export default function AdminLeads() {
     })
   );
 
+  // Improved Collision Detection for 100% hit rate
+  const customCollisionStrategy: CollisionDetection = (args) => {
+    // 1. First, check for rect intersections (the most reliable way for Kanban)
+    const intersections = rectIntersection(args);
+    
+    // 2. If no direct rect intersections, fallback to closest corners
+    const collisions = intersections.length > 0 ? intersections : closestCorners(args);
+    
+    // Find the first collision that is a column or a lead
+    const overId = getFirstCollision(collisions, 'id');
+    
+    if (overId != null) {
+      // If we're over a lead, we might want to return that to sort within the column
+      // If we're over an empty column, this will return the column ID
+      return collisions;
+    }
+
+    return [];
+  };
+
   async function loadData() {
     setLoading(true);
     try {
-      const [leadsData, stagesData] = await Promise.all([
+      const [leadsData, stagesData, toursData] = await Promise.all([
         adminApi.getLeads(),
         adminApi.getLeadStages(),
+        adminApi.getTours(),
       ]);
       setLeads(leadsData);
       setStages(stagesData);
+      setTours(toursData);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
     } finally {
@@ -257,16 +453,29 @@ export default function AdminLeads() {
 
     if (activeId === overId) return;
 
-    // Find if over is a column
+    const activeData = active.data.current;
     const overData = over.data.current;
-    if (overData?.type === "Column") {
-      const stageId = overData.stage.id;
-      setLeads(prev => {
-        const activeLead = prev.find(l => l.id === activeId);
-        if (activeLead && activeLead.stage_id !== stageId) {
-          return prev.map(l => l.id === activeId ? { ...l, stage_id: stageId } : l);
-        }
-        return prev;
+
+    if (!activeData || !overData) return;
+
+    const activeLead = activeData.lead as Lead;
+    let overStageId: number;
+
+    if (overData.type === 'Column') {
+      overStageId = overData.stage.id;
+    } else {
+      overStageId = (overData.lead as Lead).stage_id;
+    }
+
+    // If moving to a different stage, update state immediately for smooth UI
+    if (activeLead.stage_id !== overStageId) {
+      setLeads((prev) => {
+        return prev.map((l) => {
+          if (l.id === activeId) {
+            return { ...l, stage_id: overStageId };
+          }
+          return l;
+        });
       });
     }
   };
@@ -279,9 +488,6 @@ export default function AdminLeads() {
     if (!over) return;
 
     const activeId = active.id as number;
-    const overId = over.id;
-
-    // If over a card, find its stage
     const overData = over.data.current;
     let targetStageId: number | null = null;
     
@@ -292,17 +498,25 @@ export default function AdminLeads() {
     }
 
     if (targetStageId !== null) {
-      const lead = leads.find(l => l.id === activeId);
-      if (lead && lead.stage_id !== targetStageId) {
-        try {
-          await adminApi.updateLead(activeId, { stage_id: targetStageId });
-          setStatus("Статус заявки обновлен");
-          setTimeout(() => setStatus(""), 3000);
-        } catch (err) {
-          setError("Не удалось сохранить статус на сервере");
-          // Rollback
-          void loadData();
+      // Sync with server only at the end
+      setSavingIds(prev => new Set(prev).add(activeId as number));
+      
+      try {
+        const updated = await adminApi.updateLead(activeId as number, { stage_id: targetStageId });
+        if (updated) {
+          setLeads(prev => prev.map(l => l.id === updated.id ? { ...l, ...updated } : l));
         }
+        setStatus("Сохранено");
+        setTimeout(() => setStatus(""), 2000);
+      } catch (err) {
+        setError("Ошибка синхронизации. Пожалуйста, обновите страницу.");
+        setTimeout(() => setError(""), 4000);
+      } finally {
+        setSavingIds(prev => {
+          const next = new Set(prev);
+          next.delete(activeId as number);
+          return next;
+        });
       }
     }
   };
@@ -330,87 +544,187 @@ export default function AdminLeads() {
     }
   };
 
+  const handleExport = () => {
+    try {
+      const dataToExport = leads.map(lead => {
+        const tour = tours.find(t => t.id === lead.tour_id);
+        const stage = stages.find(s => s.id === lead.stage_id);
+        return {
+          "Дата": new Date(lead.created_at).toLocaleDateString("ru-RU"),
+          "Имя клиента": lead.name,
+          "Телефон": lead.phone,
+          "Тур": tour?.title || "Общий запрос",
+          "Этап воронки": stage?.title || "Не определен",
+          "Источник": getSourceName(lead.source_page || null, tour?.title),
+          "Сообщение": lead.message || "",
+          "Заметка менеджера": lead.manager_comment || ""
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(dataToExport);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Заявки");
+      
+      if (dataToExport.length > 0) {
+        const maxWidths = Object.keys(dataToExport[0]).map(key => {
+           return Math.max(
+             key.length, 
+             ...dataToExport.map(row => String(row[key as keyof typeof row]).length)
+           );
+        });
+        ws['!cols'] = maxWidths.map(w => ({ wch: w + 5 }));
+      }
+
+      XLSX.writeFile(wb, `leads_report_${new Date().toISOString().split('T')[0]}.xlsx`);
+      setStatus("Отчет Excel успешно сформирован");
+      setTimeout(() => setStatus(""), 3000);
+    } catch (err) {
+      setError("Не удалось создать Excel файл");
+    }
+  };
+
+  const filteredLeads = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return leads;
+    return leads.filter(l => 
+      l.name.toLowerCase().includes(q) || 
+      l.phone.includes(q) || 
+      (l.manager_comment || "").toLowerCase().includes(q)
+    );
+  }, [leads, searchQuery]);
+
   if (loading) {
     return <LoadingState title="Загрузка CRM" description="Синхронизируем воронку продаж..." />;
   }
 
   return (
-    <div className="h-full flex flex-col gap-8">
+    <div className="h-full flex flex-col gap-10">
       <AdminPageHeader
-        eyebrow="CRM"
-        title="Воронка заявок"
-        description="Управляйте клиентами с помощью канбан-доски. Перетаскивайте карточки для смены этапа."
+        eyebrow="CRM Система"
+        title="Управление заявками"
+        description="Переключайтесь между видами для эффективной работы с клиентской базой."
         actions={
-          <div className="flex items-center gap-3">
-            <button onClick={() => setIsSettingsOpen(true)} className="admin-button-secondary">
-              <Settings2 className="h-4 w-4" />
-              Настроить стадии
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-1.5 rounded-2xl bg-stone-100 p-1.5 shadow-inner">
+               <button 
+                onClick={() => setViewMode('kanban')} 
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                  viewMode === 'kanban' ? "bg-white text-stone-900 shadow-md" : "text-stone-400 hover:text-stone-600"
+                )}
+              >
+                <Columns2 className="h-4 w-4" />
+                Канбан
+              </button>
+               <button 
+                onClick={() => setViewMode('table')} 
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                  viewMode === 'table' ? "bg-white text-stone-900 shadow-md" : "text-stone-400 hover:text-stone-600"
+                )}
+              >
+                <LayoutList className="h-4 w-4" />
+                Список
+              </button>
+            </div>
+
+            <div className="h-8 w-px bg-stone-200 hidden sm:block" />
+
+            <button onClick={handleExport} className="admin-button-primary bg-emerald-600 border-emerald-700/20 hover:bg-emerald-700">
+              <Download className="h-4 w-4" />
+              Экспорт Excel
             </button>
-            <button onClick={() => void loadData()} className="admin-button-secondary bg-white">
-              <RefreshCcw className="h-4 w-4" />
-              Обновить
+            
+            <button onClick={() => setIsSettingsOpen(true)} className="admin-button-secondary bg-white">
+              <Settings2 className="h-4 w-4" />
+              Воронка
             </button>
           </div>
         }
       />
 
-      {error ? <Notice tone="danger" className="mx-8">{error}</Notice> : null}
-      {status ? <Notice tone="success" className="mx-8">{status}</Notice> : null}
-
-      <div className="flex-1 overflow-x-auto pb-8">
-        <div className="flex gap-6 h-full min-h-[600px] px-2">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCorners}
-            onDragStart={onDragStart}
-            onDragOver={onDragOver}
-            onDragEnd={onDragEnd}
-          >
-            {stages.map((stage) => (
-              <KanbanColumn
-                key={stage.id}
-                stage={stage}
-                leads={leads.filter((l) => l.stage_id === stage.id)}
-                onLeadClick={handleLeadClick}
-              />
-            ))}
-
-            <DragOverlay dropAnimation={{
-              sideEffects: defaultDropAnimationSideEffects({
-                styles: {
-                  active: {
-                    opacity: '0.5',
-                  },
-                },
-              }),
-            }}>
-              {activeLead ? (
-                <div className="flex flex-col gap-3 rounded-2xl border border-accent-500/50 bg-white p-4 shadow-xl rotate-3 scale-105 cursor-grabbing w-80">
-                   <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-serif text-lg font-bold text-stone-900">{activeLead.name}</h4>
-                    <GripVertical className="h-4 w-4 text-accent-500" />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-stone-500">
-                    <Phone className="h-3 w-3" />
-                    <span>{activeLead.phone}</span>
-                  </div>
-                </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
-
-          {/* Add Column Button */}
-          <button 
-            onClick={() => setIsSettingsOpen(true)}
-            className="flex h-full w-80 shrink-0 flex-col items-center justify-center gap-4 rounded-[2rem] border-2 border-dashed border-stone-200 bg-stone-50/30 text-stone-400 transition-all hover:border-stone-300 hover:text-stone-600 hover:bg-stone-50"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
-              <Plus className="h-6 w-6" />
-            </div>
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Новая стадия</span>
-          </button>
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="w-full md:max-w-md">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-300 group-focus-within:text-accent-500 transition-colors" />
+            <TextInput
+              placeholder="Поиск по имени, телефону или заметкам..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 bg-white/50 focus:bg-white transition-all shadow-sm rounded-2xl border-stone-200/60"
+            />
+          </div>
         </div>
       </div>
+
+      {error ? <Notice tone="danger">{error}</Notice> : null}
+      {status ? <Notice tone="success">{status}</Notice> : null}
+
+      {viewMode === 'kanban' ? (
+        <div className="flex-1 overflow-x-auto pb-12 pt-2 scrollbar-hide">
+          <div className="flex gap-8 h-full min-h-[700px] px-2 outline-none">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={customCollisionStrategy}
+              onDragStart={onDragStart}
+              onDragOver={onDragOver}
+              onDragEnd={onDragEnd}
+            >
+              {stages.map((stage) => (
+                <KanbanColumn
+                  key={stage.id}
+                  stage={stage}
+                  leads={leads.filter((l) => l.stage_id === stage.id)}
+                  tours={tours}
+                  savingIds={savingIds}
+                  onLeadClick={handleLeadClick}
+                />
+              ))}
+
+              <DragOverlay 
+                dropAnimation={{
+                  sideEffects: defaultDropAnimationSideEffects({
+                    styles: {
+                      active: { opacity: '0.4' },
+                    },
+                  }),
+                }}
+                style={{ pointerEvents: 'none' }}
+              >
+                {activeLead ? (
+                  <div className="flex flex-col gap-4 rounded-[2.5rem] border-2 border-accent-500 bg-white p-7 shadow-2xl rotate-2 scale-105 cursor-grabbing w-[380px]">
+                     <div className="flex items-start justify-between gap-3">
+                      <h4 className="font-serif text-2xl font-black text-stone-900 tracking-tighter line-clamp-1">{activeLead.name}</h4>
+                      <GripVertical className="h-5 w-5 text-accent-500" />
+                    </div>
+                    <div className="flex items-center gap-3 text-stone-500">
+                      <Phone className="h-4 w-4" />
+                      <span className="font-bold">{activeLead.phone}</span>
+                    </div>
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex h-full w-96 shrink-0 flex-col items-center justify-center gap-5 rounded-[4rem] border-[3px] border-dashed border-stone-200/50 bg-stone-50/20 text-stone-300 transition-all hover:border-accent-500/30 hover:text-accent-600 hover:bg-accent-500/5 group"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-xl group-hover:scale-110 transition-transform">
+                <Plus className="h-8 w-8 text-stone-300 group-hover:text-accent-500" />
+              </div>
+              <span className="text-xs font-black uppercase tracking-[0.3em] opacity-60">Добавить стадию</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <LeadTableView 
+          leads={filteredLeads}
+          stages={stages}
+          tours={tours}
+          onLeadClick={handleLeadClick}
+        />
+      )}
 
       {/* Lead Details Modal */}
       <AdminModal
@@ -446,16 +760,16 @@ export default function AdminLeads() {
               <p className="text-xl font-serif font-extrabold">{selectedLead?.phone}</p>
             </div>
             <div className="admin-subtle-panel p-5">
-              <div className="admin-kicker mb-3">Источник</div>
+              <div className="admin-kicker mb-3">Заявка на тур</div>
               <p className="text-sm font-bold flex items-center gap-2">
-                {selectedLead?.source_page}
-                <ExternalLink className="h-3 w-3 text-stone-400" />
+                {selectedLead?.tour_id 
+                  ? tours.find(t => t.id === selectedLead.tour_id)?.title || `ID: ${selectedLead.tour_id}`
+                  : "Общая заявка"}
               </p>
-              {selectedLead?.tour_id && (
-                <p className="mt-1 text-xs text-stone-500">
-                  Интересует тур ID #{selectedLead.tour_id}
-                </p>
-              )}
+              <div className="mt-2 flex items-center gap-1 text-[10px] text-stone-500">
+                <ExternalLink className="h-3 w-3" />
+                Источник: {getSourceName(selectedLead?.source_page || null, tours.find(t => t.id === selectedLead?.tour_id)?.title)}
+              </div>
             </div>
           </div>
 
@@ -477,7 +791,6 @@ export default function AdminLeads() {
         </div>
       </AdminModal>
 
-      {/* Stages Settings Modal */}
       <StagesSettingsModal
         isOpen={isSettingsOpen}
         onClose={() => {
@@ -510,7 +823,7 @@ function StagesSettingsModal({
 
   const addStage = () => {
     const newStage: LeadStage = {
-      id: Date.now(), // Temp ID
+      id: Date.now(),
       title: "Новая стадия",
       sort_order: stages.length + 1,
       color: "#78716c",
@@ -530,8 +843,7 @@ function StagesSettingsModal({
     }
     if (!confirm("Вы уверены? Заявки из этой стадии могут остаться без привязки.")) return;
     
-    // If it's a real stage (not temp), call API
-    if (id > 1000000000) { // Simple check for temp ID (Date.now())
+    if (id > 1000000000) {
       setStages(prev => prev.filter(s => s.id !== id));
     } else {
       try {

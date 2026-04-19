@@ -564,6 +564,7 @@ app.patch(
       return;
     }
     const patch = parseLeadUpdate(req.body);
+    console.log(`[API] Updating lead ${id}:`, patch);
     const rows = await supabaseRest("/rest/v1/leads", {
       method: "PATCH",
       query: { id: `eq.${id}`, select: "*" },
