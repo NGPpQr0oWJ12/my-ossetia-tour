@@ -237,12 +237,12 @@ function KanbanColumn({
       <div
         ref={setNodeRef}
         className={cn(
-          "flex min-h-[500px] flex-1 flex-col gap-4 rounded-3xl border-2 border-transparent p-4 transition-all duration-300",
+          "flex h-[560px] flex-1 flex-col gap-4 rounded-3xl border-2 border-transparent p-4 transition-all duration-300",
           isOver ? "bg-accent-500/5 border-accent-500/20 scale-[1.01] shadow-xl ring-2 ring-accent-500/5" : "bg-stone-100/30 shadow-inner"
         )}
       >
         <SortableContext items={leads.map(l => l.id)} strategy={verticalListSortingStrategy}>
-          <div className="flex flex-col gap-5 min-h-full pb-32 relative">
+          <div className="flex flex-col gap-4 min-h-full pb-10 relative overflow-y-auto pr-2 scrollbar-hide">
             {leads.map((lead) => {
               const tour = tours.find(t => t.id === lead.tour_id);
               return (
@@ -263,11 +263,11 @@ function KanbanColumn({
             
             {leads.length === 0 && !isOver && (
               <div className="flex flex-1 flex-col items-center justify-center p-12 text-center opacity-30 mt-20">
-                <div className="mb-6 h-20 w-20 rounded-full border-4 border-dashed border-stone-300 flex items-center justify-center text-stone-300">
-                  <Plus className="h-8 w-8" />
+                <div className="mb-6 h-12 w-12 rounded-full border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-300">
+                  <Plus className="h-5 w-5" />
                 </div>
-                <p className="text-xs font-black uppercase tracking-[0.3em] text-stone-400">
-                  Ожидание заявок
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">
+                  Ожидание
                 </p>
               </div>
             )}
@@ -290,17 +290,17 @@ function LeadTableView({
   onLeadClick: (lead: Lead) => void;
 }) {
   return (
-    <div className="admin-soft-surface overflow-hidden border border-stone-200/60 shadow-xl rounded-[2.5rem] bg-white">
+    <div className="admin-soft-surface overflow-hidden border border-stone-200/60 shadow-xl rounded-3xl bg-white">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-stone-100 bg-stone-50/50">
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Дата</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Клиент</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Тур / Услуга</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Стадия</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Источник</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 text-right">Действия</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Дата</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Клиент</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Тур / Услуга</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Стадия</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Источник</th>
+              <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 text-right">Действия</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-stone-50">
@@ -313,37 +313,37 @@ function LeadTableView({
                   className="group hover:bg-accent-500/5 transition-colors cursor-pointer"
                   onClick={() => onLeadClick(lead)}
                 >
-                  <td className="whitespace-nowrap px-6 py-6">
+                  <td className="whitespace-nowrap px-6 py-4">
                     <div className="flex items-center gap-2 text-stone-400">
                       <CalendarClock className="h-3.5 w-3.5" />
                       <span className="text-xs font-bold font-mono">{new Date(lead.created_at).toLocaleDateString("ru-RU")}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-6 font-serif text-lg font-black text-stone-900">
+                  <td className="px-6 py-4 font-serif text-base font-black text-stone-900">
                     <div className="flex flex-col">
                       <span>{lead.name}</span>
-                      <span className="text-xs font-sans font-bold text-stone-400 tracking-tight">{lead.phone}</span>
+                      <span className="text-[11px] font-sans font-bold text-stone-400 tracking-tight">{lead.phone}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-6">
+                  <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                       <Badge tone={tour ? "accent" : "default"} className="py-1 px-3">
+                       <Badge tone={tour ? "accent" : "default"} className="py-0.5 px-2.5 text-[10px]">
                         {tour?.title || "Общий запрос"}
                        </Badge>
                     </div>
                   </td>
-                  <td className="px-6 py-6">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-2.5 w-2.5 rounded-full shadow-sm" style={{ backgroundColor: stage?.color }} />
-                      <span className="text-[11px] font-black uppercase tracking-wider text-stone-600">{stage?.title}</span>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: stage?.color }} />
+                      <span className="text-[10px] font-black uppercase tracking-wider text-stone-600">{stage?.title}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-6">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{getSourceName(lead.source_page || null, tour?.title)}</span>
+                  <td className="px-6 py-4">
+                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">{getSourceName(lead.source_page || null, tour?.title)}</span>
                   </td>
-                  <td className="px-6 py-6 text-right">
-                    <button className="h-10 w-10 flex items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-white group-hover:text-accent-600 group-hover:shadow-md transition-all">
-                      <ChevronRight className="h-5 w-5" />
+                  <td className="px-6 py-4 text-right">
+                    <button className="h-8 w-8 flex items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-white group-hover:text-accent-600 group-hover:shadow-md transition-all">
+                      <ChevronRight className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>
@@ -594,14 +594,22 @@ export default function AdminLeads() {
   }
 
   return (
-    <div className="h-full flex flex-col gap-10">
+    <div className="h-full flex flex-col gap-6">
       <AdminPageHeader
-        eyebrow="CRM Система"
         title="Управление заявками"
-        description="Переключайтесь между видами для эффективной работы с клиентской базой."
         actions={
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-1.5 rounded-2xl bg-stone-100 p-1.5 shadow-inner">
+             <div className="relative group w-64 text-stone-900 font-bold">
+              <Search className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-bold text-stone-900 group-focus-within:text-accent-500 transition-colors" />
+              <TextInput
+                placeholder="Быстрый поиск..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 bg-stone-50/50 focus:bg-white text-xs py-2 transition-all shadow-sm rounded-xl border-stone-200/50"
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5 rounded-xl bg-stone-100 p-1 shadow-inner">
                <button 
                 onClick={() => setViewMode('kanban')} 
                 className={cn(
@@ -624,14 +632,14 @@ export default function AdminLeads() {
               </button>
             </div>
 
-            <div className="h-8 w-px bg-stone-200 hidden sm:block" />
+            <div className="h-6 w-px bg-stone-200 hidden sm:block" />
 
-            <button onClick={handleExport} className="admin-button-primary bg-emerald-600 border-emerald-700/20 hover:bg-emerald-700">
+            <button onClick={handleExport} className="admin-button-primary bg-emerald-600 border-emerald-700/20 hover:bg-emerald-700 py-2">
               <Download className="h-4 w-4" />
-              Экспорт Excel
+              Экспорт
             </button>
             
-            <button onClick={() => setIsSettingsOpen(true)} className="admin-button-secondary bg-white">
+            <button onClick={() => setIsSettingsOpen(true)} className="admin-button-secondary bg-white py-2">
               <Settings2 className="h-4 w-4" />
               Воронка
             </button>
@@ -639,26 +647,12 @@ export default function AdminLeads() {
         }
       />
 
-      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div className="w-full md:max-w-md">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-300 group-focus-within:text-accent-500 transition-colors" />
-            <TextInput
-              placeholder="Поиск по имени, телефону или заметкам..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 bg-white/50 focus:bg-white transition-all shadow-sm rounded-2xl border-stone-200/60"
-            />
-          </div>
-        </div>
-      </div>
-
       {error ? <Notice tone="danger">{error}</Notice> : null}
       {status ? <Notice tone="success">{status}</Notice> : null}
 
       {viewMode === 'kanban' ? (
-        <div className="flex-1 overflow-x-auto pb-12 pt-2 scrollbar-hide">
-          <div className="flex gap-8 h-full min-h-[700px] px-2 outline-none">
+        <div className="flex-1 w-full overflow-hidden pb-4">
+          <div className="flex gap-6 h-full min-h-[580px] w-full overflow-x-auto pr-4 scrollbar-hide">
             <DndContext
               sensors={sensors}
               collisionDetection={customCollisionStrategy}
@@ -704,12 +698,12 @@ export default function AdminLeads() {
 
             <button 
               onClick={() => setIsSettingsOpen(true)}
-              className="flex h-full w-80 shrink-0 flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-stone-200/50 bg-stone-50/20 text-stone-300 transition-all hover:border-accent-500/30 hover:text-accent-600 hover:bg-accent-500/5 group"
+              className="flex h-[560px] w-48 shrink-0 flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-stone-200/50 bg-stone-50/20 text-stone-300 transition-all hover:border-accent-500/30 hover:text-accent-600 hover:bg-accent-500/5 group mt-9"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg group-hover:scale-110 transition-transform">
-                <Plus className="h-6 w-6 text-stone-300 group-hover:text-accent-500" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg group-hover:scale-110 transition-transform">
+                <Plus className="h-5 w-5 text-stone-300 group-hover:text-accent-500" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Добавить стадию</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 text-center px-4">Новая стадия</span>
             </button>
           </div>
         </div>
