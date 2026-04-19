@@ -1,6 +1,7 @@
 import { Clock, MapPin, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { publicApi } from "../lib/api";
 import type { Tour } from "../lib/types";
 
@@ -15,44 +16,11 @@ type CardTour = {
   price: string;
 };
 
-const FALLBACK_TOURS: CardTour[] = [
-  {
-    id: 1,
-    title: "Кармадонское ущелье и Даргавс",
-    description:
-      "Путешествие по местам силы. Вы увидите печально известное Кармадонское ущелье, древний некрополь Даргавс и Мидаграбинские водопады.",
-    image: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200",
-    duration: "1 день",
-    groupSize: "до 6 человек",
-    location: "Северная Осетия",
-    price: "от 3 500 ₽",
-  },
-  {
-    id: 2,
-    title: "Цейское ущелье и Сказский ледник",
-    description:
-      "Жемчужина Северной Осетии. Подъем по канатной дороге к Сказскому леднику, посещение святилища Реком и купание в источниках.",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200",
-    duration: "1 день",
-    groupSize: "до 6 человек",
-    location: "Северная Осетия",
-    price: "от 4 000 ₽",
-  },
-  {
-    id: 3,
-    title: "Дигория — край тысячи водопадов",
-    description:
-      "Двухдневное погружение в самую отдаленную и живописную часть республики.",
-    image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1200",
-    duration: "2 дня",
-    groupSize: "до 4 человек",
-    location: "Нац. парк Алания",
-    price: "от 9 000 ₽",
-  },
-];
+const FALLBACK_TOURS: CardTour[] = [];
 
 export default function Tours() {
   const [tours, setTours] = useState<CardTour[]>(FALLBACK_TOURS);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     void (async () => {
@@ -74,6 +42,8 @@ export default function Tours() {
         }
       } catch {
         // fallback content stays visible
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
@@ -90,7 +60,12 @@ export default function Tours() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: loading ? 0 : 1 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+        >
           {tours.map((tour) => (
             <div
               key={tour.id}
@@ -136,7 +111,7 @@ export default function Tours() {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -46,7 +46,8 @@ export default function AdminHome() {
         hero_title: homeData.hero_title,
         hero_subtitle: homeData.hero_subtitle,
         hero_image_url: homeData.hero_image_url,
-        featured_tour_ids: homeData.featured_tour_ids,
+        featured_tour_ids: (homeData.featured_tour_ids || []).map(Number),
+        hero_tour_id: homeData.hero_tour_id ? Number(homeData.hero_tour_id) : null,
         cta_title: homeData.cta_title,
         cta_text: homeData.cta_text,
         cta_primary_label: homeData.cta_primary_label,
@@ -83,23 +84,32 @@ export default function AdminHome() {
   function toggleFeaturedTour(tourId: number) {
     if (!home) return;
 
-    const isSelected = home.featured_tour_ids.includes(tourId);
+    const currentIds = home.featured_tour_ids.map(Number);
+    const isSelected = currentIds.includes(tourId);
 
     if (isSelected) {
       setHome({
         ...home,
-        featured_tour_ids: home.featured_tour_ids.filter((id) => id !== tourId),
+        featured_tour_ids: currentIds.filter((id) => id !== tourId),
       });
       return;
     }
 
-    if (home.featured_tour_ids.length >= FEATURED_LIMIT) {
+    if (currentIds.length >= FEATURED_LIMIT) {
       return;
     }
 
     setHome({
       ...home,
-      featured_tour_ids: [...home.featured_tour_ids, tourId],
+      featured_tour_ids: [...currentIds, tourId],
+    });
+  }
+
+  function setHeroTour(tourId: number | null) {
+    if (!home) return;
+    setHome({
+      ...home,
+      hero_tour_id: tourId === home.hero_tour_id ? null : tourId,
     });
   }
 
@@ -108,8 +118,13 @@ export default function AdminHome() {
   }, []);
 
   const featuredTours = useMemo(
-    () => allTours.filter((tour) => home?.featured_tour_ids.includes(tour.id)),
+    () => allTours.filter((tour) => home?.featured_tour_ids.map(Number).includes(tour.id)),
     [allTours, home?.featured_tour_ids],
+  );
+
+  const heroTour = useMemo(
+    () => allTours.find((tour) => tour.id === home?.hero_tour_id),
+    [allTours, home?.hero_tour_id],
   );
 
   if (loading) {
@@ -167,9 +182,9 @@ export default function AdminHome() {
             <StatCard
               icon={Star}
               label="Популярные туры"
-              value={`${home.featured_tour_ids.length}/${FEATURED_LIMIT}`}
+              value={`${featuredTours.length}/${FEATURED_LIMIT}`}
               description="До трёх карточек в основном каталожном блоке."
-              tone={home.featured_tour_ids.length > 0 ? "accent" : "default"}
+              tone={featuredTours.length > 0 ? "accent" : "default"}
             />
             <StatCard
               icon={Sparkles}
@@ -180,9 +195,10 @@ export default function AdminHome() {
             />
             <StatCard
               icon={CheckCircle2}
-              label="Подборка"
-              value={featuredTours.length > 0 ? featuredTours[0]?.title ?? "Выбрано" : "Не выбрана"}
-              description="Первый выбранный тур будет особенно заметен в подборке."
+              label="Hero-тур"
+              value={heroTour?.title ?? "Не выбран"}
+              description="Тур, который будет закреплен на первом экране."
+              tone={heroTour ? "success" : "default"}
             />
           </>
         }
@@ -268,17 +284,15 @@ export default function AdminHome() {
             const limitReached = !isSelected && home.featured_tour_ids.length >= FEATURED_LIMIT;
 
             return (
-              <button
+              <div
                 key={tour.id}
-                type="button"
-                onClick={() => toggleFeaturedTour(tour.id)}
-                disabled={limitReached}
+                onClick={() => !limitReached && toggleFeaturedTour(tour.id)}
                 className={cn(
-                  "overflow-hidden rounded-[1.5rem] border text-left transition-all duration-300",
+                  "group relative overflow-hidden rounded-[1.5rem] border text-left transition-all duration-300",
                   isSelected
                     ? "border-accent-500/30 bg-accent-500/10 shadow-[0_18px_35px_rgba(188,141,89,0.12)]"
                     : "border-stone-200/80 bg-white/85 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-[0_16px_32px_rgba(28,25,23,0.07)]",
-                  limitReached && "cursor-not-allowed opacity-50 hover:translate-y-0",
+                  limitReached && !isSelected ? "cursor-not-allowed opacity-50" : "cursor-pointer",
                 )}
               >
                 <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
@@ -304,15 +318,33 @@ export default function AdminHome() {
                     <div className="font-serif text-2xl font-extrabold leading-tight text-stone-900">
                       {tour.title}
                     </div>
-                    <div
-                      className={cn(
-                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold",
-                        isSelected
-                          ? "border-accent-500 bg-accent-500 text-white"
-                          : "border-stone-200 bg-white text-stone-500",
-                      )}
-                    >
-                      {isSelected ? "✓" : "+"}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setHeroTour(tour.id);
+                        }}
+                        className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-full border transition-colors",
+                          home.hero_tour_id === tour.id
+                            ? "border-emerald-500 bg-emerald-500 text-white"
+                            : "border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-500",
+                        )}
+                        title={home.hero_tour_id === tour.id ? "Убрать из Hero" : "Сделать Hero-туром"}
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                      </button>
+                      <div
+                        className={cn(
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold",
+                          isSelected
+                            ? "border-accent-500 bg-accent-500 text-white"
+                            : "border-stone-200 bg-white text-stone-500",
+                        )}
+                      >
+                        {isSelected ? "✓" : "+"}
+                      </div>
                     </div>
                   </div>
                   <p className="line-clamp-2 text-sm leading-relaxed text-stone-500">
@@ -323,7 +355,7 @@ export default function AdminHome() {
                     {tour.price_from ? <Badge>{tour.price_from}</Badge> : null}
                   </div>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>

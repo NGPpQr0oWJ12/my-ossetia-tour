@@ -12,16 +12,16 @@ const storyImage = "/onas.webp";
 
 const INITIAL_DATA: HomeContent = {
   id: 1,
-  hero_title: "Открой настоящую Аланию",
-  hero_subtitle: "Авторские экспедиции по горной Осетии. Влюбляем в горы тех, кто видит их впервые.",
+  hero_title: "",
+  hero_subtitle: "",
   hero_image_url: defaultHeroImage,
   featured_tour_ids: [],
-  cta_title: "Готовы к незабываемому путешествию?",
-  cta_text: "Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.",
-  cta_primary_label: "WhatsApp",
-  cta_primary_url: "https://wa.me/79000000000",
-  cta_secondary_label: "Telegram",
-  cta_secondary_url: "https://t.me/yourid",
+  cta_title: "",
+  cta_text: "",
+  cta_primary_label: "",
+  cta_primary_url: "",
+  cta_secondary_label: "",
+  cta_secondary_url: "",
   hero_tour_id: null,
   updated_at: new Date().toISOString(),
   featured_tours: []
@@ -118,21 +118,17 @@ export default function Home() {
 
   const featuredTours = data.featured_tours || [];
 
-  // Определяем тур для Hero-блока ( Popular Route )
+  // Определяем тур для Hero-блока
   const primaryFeatured = useMemo(() => {
     if (data?.hero_tour_id) {
-      const found = featuredTours.find((t) => t.id === data.hero_tour_id);
+      const found = featuredTours.find((t) => Number(t.id) === Number(data.hero_tour_id));
       if (found) return found;
     }
     return featuredTours[0] || null;
   }, [featuredTours, data?.hero_tour_id]);
 
-  const otherFeatured = useMemo(() => {
-    if (!primaryFeatured) return featuredTours;
-    return featuredTours.filter((t) => t.id !== primaryFeatured.id);
-  }, [featuredTours, primaryFeatured]);
-
   const renderTitle = (title: string) => {
+    if (!title) return null;
     const parts = title.split(/(настоящую)/i);
     return parts.map((part, i) => 
       part.toLowerCase() === "настоящую" 
@@ -160,12 +156,17 @@ export default function Home() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center py-8 md:py-12">
           <div className="w-full grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 items-center">
             <div className="grid min-w-0">
-              <div className="flex flex-col">
-                <h1 className="mb-8 font-serif text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.95] text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(4.5rem,6vw,6.5rem)] whitespace-pre-line">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: loading ? 0 : 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col"
+              >
+                <h1 className="mb-8 font-serif text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.95] text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(4.5rem,6vw,6.5rem)] whitespace-pre-line min-h-[1.2em]">
                   {renderTitle(data.hero_title)}
                 </h1>
 
-                <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl">
+                <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl min-h-[2em]">
                   {data.hero_subtitle}
                 </p>
 
@@ -177,7 +178,7 @@ export default function Home() {
                     <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* Popular Route Sticky Sidebar Style */}
@@ -224,40 +225,37 @@ export default function Home() {
       </section>
 
       {/* Popular Tours Catalog */}
-      <section className="py-36 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="h-px w-8 bg-amber-600/40" />
-                <span className="text-xs font-bold tracking-[0.4em] uppercase text-stone-400">Маршруты</span>
+      {featuredTours.length > 0 && (
+        <section className="py-36 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="h-px w-8 bg-amber-600/40" />
+                  <span className="text-xs font-bold tracking-[0.4em] uppercase text-stone-400">Маршруты</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-tight">
+                  Популярные <br />
+                  <span className="font-light text-stone-400">направления</span>
+                </h2>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-tight">
-                Популярные <br />
-                <span className="font-light text-stone-400">направления</span>
-              </h2>
+              <Link to="/tours" className="group flex flex-col items-end gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-900 transition-colors group-hover:text-amber-600">Смотреть все туры</span>
+                <div className="flex items-center">
+                  <div className="w-24 h-px bg-stone-200 group-hover:bg-amber-600 group-hover:w-32 transition-all duration-700"></div>
+                  <ArrowRight className="w-3 h-3 text-stone-300 group-hover:text-amber-600 group-hover:translate-x-1 transition-all duration-700" />
+                </div>
+              </Link>
             </div>
-            <Link to="/tours" className="group flex flex-col items-end gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-900 transition-colors group-hover:text-amber-600">Смотреть все туры</span>
-              <div className="flex items-center">
-                <div className="w-24 h-px bg-stone-200 group-hover:bg-amber-600 group-hover:w-32 transition-all duration-700"></div>
-                <ArrowRight className="w-3 h-3 text-stone-300 group-hover:text-amber-600 group-hover:translate-x-1 transition-all duration-700" />
-              </div>
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
-            {otherFeatured.map((tour: Tour) => (
-              <TourCard key={tour.id} tour={tour} />
-            ))}
-            {otherFeatured.length === 0 && Array.from({ length: 3 }).map((_, i) => (
-               <div key={i} className="aspect-[4/5] bg-stone-50 rounded-[2.5rem] border border-dashed border-stone-200 flex items-center justify-center text-stone-400 text-xs uppercase tracking-widest">
-                 Тур не выбран
-               </div>
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+              {featuredTours.map((tour: Tour) => (
+                <TourCard key={tour.id} tour={tour} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* About Section */}
       <section className="relative py-36 overflow-hidden" style={{ backgroundColor: '#f8f9ff' }}>
