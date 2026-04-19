@@ -24,7 +24,8 @@
     "noEmit": true
   },
   "include": [
-    "src"
+    "src",
+    "server"
   ],
   "exclude": [
     "node_modules"

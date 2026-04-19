@@ -168,3 +168,53 @@ docker compose -f deploy/proxy/compose.yaml logs -f
 ## Ограничение
 
 Если другое приложение на сервере уже напрямую занимает `80/443`, сначала его нужно перевести под общий reverse proxy. Два независимых приложения с прямым bind на `80/443` на одном сервере нормально сосуществовать не смогут.
+
+## Admin + CRM v1 setup
+
+1. Create `.env` from `.env.example`.
+2. Start API server:
+
+```bash
+npm run dev:api
+```
+
+3. Start frontend in second terminal:
+
+```bash
+npm run dev
+```
+
+4. Apply Supabase SQL:
+- `supabase/migrations/20260419_admin_crm.sql`
+- `supabase/seed/seed_initial_content.sql`
+
+5. Open admin routes:
+- `/admin/login`
+- `/admin/leads`
+- `/admin/tours`
+- `/admin/home`
+
+### Implemented API
+
+- `POST /api/leads`
+- `GET /api/public/tours`
+- `GET /api/public/tours/:slug`
+- `GET /api/public/home`
+- `POST /api/admin/login`
+- `GET /api/admin/leads`
+- `PATCH /api/admin/leads/:id`
+- `GET /api/admin/tours`
+- `POST /api/admin/tours`
+- `PATCH /api/admin/tours/:id`
+- `GET /api/admin/home`
+- `PATCH /api/admin/home`
+
+### Integrations From Admin Panel
+
+Open `/admin/integrations` to configure:
+- Supabase API connection (`URL`, `anon key`, `service role key`, admin emails)
+- Telegram notifications (`bot token`, `chat id`, enabled flag)
+
+All values are saved by backend into local runtime file `server/.runtime-config.json` and can be updated from UI without editing `.env`.
+
+If Supabase is not configured yet, use `/admin/setup` for first-time bootstrap.

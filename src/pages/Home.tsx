@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "motion/react";
+﻿import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { ArrowRight, Compass, Camera, Calendar, Users, Star, Send, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
