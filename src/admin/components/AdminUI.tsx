@@ -120,17 +120,17 @@ export function Section({
   children,
 }: SectionProps) {
   return (
-    <section className={cn("admin-soft-surface p-6 md:p-8", className)}>
-      <div className="mb-6 flex flex-col gap-4 border-b border-stone-100 pb-5 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-1">
-          <h2 className="font-serif text-2xl font-extrabold text-stone-900">{title}</h2>
+    <section className={cn("admin-soft-surface p-6 md:p-10", className)}>
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-1.5">
+          <h2 className="font-serif text-3xl font-extrabold tracking-tight text-stone-900">{title}</h2>
           {description ? (
-            <p className="max-w-2xl text-xs leading-relaxed text-stone-500">{description}</p>
+            <p className="max-w-2xl text-sm leading-relaxed text-stone-500 opacity-80">{description}</p>
           ) : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
       </div>
-      <div className="grid gap-6">{children}</div>
+      <div className="grid gap-8">{children}</div>
     </section>
   );
 }
@@ -160,7 +160,7 @@ export function Badge({ tone = "default", className, children }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em]",
         toneClasses[tone],
         className,
       )}
@@ -201,24 +201,24 @@ export function AdminPageHeader({
   meta,
 }: AdminPageHeaderProps) {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+    <div className="space-y-8">
+      <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
         <div className="space-y-3">
           {eyebrow ? <div className="admin-kicker">{eyebrow}</div> : null}
           <div className="space-y-2">
-            <h1 className="max-w-3xl font-serif text-4xl font-extrabold leading-[0.95] text-stone-900 md:text-5xl">
+            <h1 className="max-w-4xl font-serif text-5xl font-extrabold leading-[0.9] tracking-tighter text-stone-900 md:text-6xl">
               {title}
             </h1>
             {description ? (
-              <p className="max-w-2xl text-sm leading-relaxed text-stone-500 md:text-base">
+              <p className="max-w-2xl text-base leading-relaxed text-stone-500 md:text-lg">
                 {description}
               </p>
             ) : null}
           </div>
         </div>
-        {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
+        {actions ? <div className="flex flex-wrap items-center gap-3 pb-2">{actions}</div> : null}
       </div>
-      {meta ? <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{meta}</div> : null}
+      {meta ? <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">{meta}</div> : null}
     </div>
   );
 }

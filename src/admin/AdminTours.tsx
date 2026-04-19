@@ -6,6 +6,7 @@ import {
 import {
   CheckCircle2,
   ChevronDown,
+  ChevronRight,
   ChevronUp,
   Clock,
   CreditCard,
@@ -13,7 +14,9 @@ import {
   ImagePlus,
   Layers,
   Loader2,
+  Map,
   MapPin,
+  Package2,
   Plus,
   RefreshCcw,
   Save,
@@ -143,6 +146,7 @@ export default function AdminTours() {
   const [form, setForm] = useState<AdminTourForm>(mapTourToForm());
   const [initialForm, setInitialForm] = useState<AdminTourForm>(mapTourToForm());
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState("");
@@ -153,6 +157,7 @@ export default function AdminTours() {
   const [galleryDraft, setGalleryDraft] = useState("");
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
+  const [activeTab, setActiveTab] = useState<"main" | "media" | "program" | "seo">("main");
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const selectedTour = useMemo(
@@ -270,6 +275,37 @@ export default function AdminTours() {
       setError(err instanceof Error ? err.message : "Не удалось сохранить тур.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (selectedId === "new") return;
+    
+    const confirmDelete = window.confirm(
+      `Вы уверены, что хотите навсегда удалить маршрут "${selectedTour?.title}"?\nЭто действие нельзя отменить.`
+    );
+    
+    if (!confirmDelete) return;
+
+    setDeleting(true);
+    setError("");
+
+    try {
+      await adminApi.deleteTour(selectedId);
+      
+      // Сброс состояния после удаления
+      const nextTours = await loadTours();
+      if (nextTours.length > 0) {
+        await selectTour(nextTours[0].id);
+      } else {
+        openNewTour();
+      }
+      
+      setStatus("Маршрут успешно удалён.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось удалить тур.");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -412,175 +448,143 @@ export default function AdminTours() {
   const publishedCount = tours.filter((tour) => tour.is_published).length;
   const draftCount = tours.length - publishedCount;
 
-  const editorTitle = selectedId === "new" ? "Новый маршрут" : form.title || "Редактирование маршрута";
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <AdminPageHeader
-        eyebrow="Каталог"
-        title="Туры"
-        description="Редактируйте карточки маршрутов, наполнение страниц и порядок публикации без риска потерять программу поездки."
+        eyebrow="Управление контентом"
+        title="Туры и маршруты"
+        description="Создавайте и редактируйте программы путешествий. Все изменения сохраняются в реальном времени."
         actions={
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button type="button" onClick={openNewTour} className="admin-button-secondary">
               <Plus className="h-4 w-4" />
-              Новый
+              Создать новый
             </button>
-            <button type="button" onClick={() => void save()} disabled={saving || loadingDetail} className="admin-button-primary">
-              <Save className="h-4 w-4" />
-              {saving ? "..." : "Сохранить"}
+            {selectedId !== "new" && (
+              <button 
+                type="button" 
+                onClick={() => void handleDelete()} 
+                disabled={deleting || loadingDetail} 
+                className="admin-button-secondary border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200"
+              >
+                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                Удалить
+              </button>
+            )}
+            <button type="button" onClick={() => void save()} disabled={saving || loadingDetail} className="admin-button-primary min-w-[140px]">
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {saving ? "Сохранение" : "Сохранить тур"}
             </button>
           </div>
         }
       />
 
-      {error ? <Notice tone="danger">{error}</Notice> : null}
-      {status ? <Notice tone="success">{status}</Notice> : null}
+      {error ? <Notice tone="danger" className="animate-in fade-in slide-in-from-top-4">{error}</Notice> : null}
+      {status ? <Notice tone="success" className="animate-in fade-in slide-in-from-top-4">{status}</Notice> : null}
 
-      <div className="grid gap-8 xl:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="space-y-5">
-          <div className="admin-soft-surface p-5">
-            <div className="space-y-4">
-              <div>
-                <div className="admin-kicker mb-2">Навигация по маршрутам</div>
-                <p className="text-sm leading-relaxed text-stone-500">
-                  Найдите нужный маршрут по названию, slug или локации и откройте его для редактирования.
-                </p>
-              </div>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                <TextInput
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Поиск по турам"
-                  className="pl-11"
-                />
+      <div className="grid gap-12 xl:grid-cols-[320px_1fr]">
+        <aside className="space-y-8">
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+              <TextInput
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Найти направление..."
+                className="pl-11"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between px-1">
+              <div className="admin-kicker">Всего маршрутов: {tours.length}</div>
+              <div className="flex gap-2">
+                <Badge tone="success">{publishedCount}</Badge>
+                <Badge tone="default">{draftCount}</Badge>
               </div>
             </div>
           </div>
 
-          <div className="max-h-[calc(100vh-17rem)] space-y-3 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-2">
             {loadingList ? (
-              <LoadingState title="Загрузка списка" description="Подтягиваем все маршруты." />
+              <div className="space-y-3 py-10 text-center">
+                <Loader2 className="mx-auto h-6 w-6 animate-spin text-stone-300" />
+                <p className="text-xs text-stone-400">Загрузка списка...</p>
+              </div>
             ) : filteredTours.length === 0 ? (
-              <EmptyState
-                icon={Search}
-                title="Маршруты не найдены"
-                description="Попробуйте изменить поисковый запрос или создайте новый тур."
-                action={
-                  <button type="button" onClick={openNewTour} className="admin-button-secondary">
-                    Создать тур
-                  </button>
-                }
-              />
+              <div className="rounded-3xl border border-dashed border-stone-200 p-8 text-center">
+                <p className="text-sm text-stone-500">Ничего не найдено</p>
+              </div>
             ) : (
-              <AnimatePresence mode="popLayout">
-                {filteredTours.map((tour) => (
-                  <motion.button
-                    key={tour.id}
-                    layout
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    type="button"
-                    onClick={() => void selectTour(tour.id)}
-                    className={cn(
-                      "w-full overflow-hidden rounded-[1.5rem] border text-left transition-all duration-300",
-                      selectedId === tour.id
-                        ? "border-accent-500/30 bg-accent-500/10 shadow-[0_18px_38px_rgba(188,141,89,0.16)]"
-                        : "border-stone-200/80 bg-white/90 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-[0_18px_32px_rgba(28,25,23,0.07)]",
+              filteredTours.map((tour) => (
+                <button
+                  key={tour.id}
+                  type="button"
+                  onClick={() => void selectTour(tour.id)}
+                  className={cn(
+                    "group flex w-full items-center gap-4 rounded-2xl border p-3 text-left transition-all duration-300",
+                    selectedId === tour.id
+                      ? "border-accent-500/30 bg-accent-500/10 shadow-sm"
+                      : "border-transparent bg-white/50 hover:bg-stone-100/80 hover:text-stone-900",
+                  )
+                }
+                >
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-stone-100">
+                    {tour.cover_image_url ? (
+                      <img src={tour.cover_image_url} alt="" className="h-full w-full object-cover grayscale transition-all group-hover:grayscale-0" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-stone-200">
+                        {/* Fallback pattern */}
+                        <div className="h-full w-full bg-stone-200 opacity-50" />
+                      </div>
                     )}
-                  >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
-                      {tour.cover_image_url ? (
-                        <img src={tour.cover_image_url} alt={tour.title} className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-sm text-stone-400">
-                          Нет обложки
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/10 to-transparent" />
-                      <div className="absolute left-4 top-4">
-                        <Badge tone={tour.is_published ? "success" : "default"}>
-                          {tour.is_published ? "Опубликован" : "Черновик"}
-                        </Badge>
-                      </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-bold tracking-tight text-stone-900">{tour.title}</div>
+                    <div className="mt-0.5 flex items-center gap-2">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", tour.is_published ? "bg-emerald-500" : "bg-stone-300")} />
+                      <span className="text-[10px] uppercase tracking-wider text-stone-500">
+                        {tour.is_published ? "Опубликован" : "Черновик"}
+                      </span>
                     </div>
-                    <div className="space-y-3 p-4">
-                      <div className="font-serif text-2xl font-extrabold leading-[1.05] text-stone-900">
-                        {tour.title}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {tour.duration ? <Badge>{tour.duration}</Badge> : null}
-                        {tour.location ? <Badge>{tour.location}</Badge> : null}
-                      </div>
-                      <div className="text-xs uppercase tracking-[0.22em] text-stone-400">{tour.slug}</div>
-                    </div>
-                  </motion.button>
-                ))}
-              </AnimatePresence>
+                  </div>
+                </button>
+              ))
             )}
           </div>
         </aside>
 
-        <div className="space-y-8">
-          <div className="admin-soft-surface overflow-hidden">
-            <div className="grid gap-6 p-5 lg:grid-cols-[1.15fr_0.85fr] lg:p-6">
-              <div className="space-y-4">
-                <div className="admin-kicker">Текущий редактор</div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="font-serif text-4xl font-extrabold leading-[0.95] text-stone-900">
-                    {editorTitle}
-                  </h2>
-                  <Badge tone={form.is_published ? "success" : "default"}>
-                    {form.is_published ? "Опубликован" : "Черновик"}
-                  </Badge>
-                  {isDirty ? <Badge tone="accent">Есть несохранённые правки</Badge> : null}
-                </div>
-                <p className="max-w-2xl text-sm leading-relaxed text-stone-500">
-                  {selectedId === "new"
-                    ? "Создайте новый маршрут, заполните обязательные поля и добавьте программу поездки."
-                    : "Изменения сохраняются вручную. Детали маршрута загружаются отдельно, поэтому программа тура не теряется при редактировании."}
-                </p>
-                {selectedTour?.updated_at ? (
-                  <div className="text-sm text-stone-500">
-                    Последнее обновление: {new Date(selectedTour.updated_at).toLocaleString("ru-RU")}
+        <div className="space-y-10">
+          {loadingDetail ? (
+            <LoadingState
+              title="Загрузка деталей"
+              description="Мы подтягиваем программу и медиа выбранного маршрута."
+            />
+          ) : (
+            <form onSubmit={(event) => void save(event)} className="space-y-10 pb-20">
+              <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <h2 className="font-serif text-4xl font-extrabold leading-none tracking-tight text-stone-900">
+                      {selectedId === "new" ? "Создание маршрута" : form.title || "Без названия"}
+                    </h2>
+                    {isDirty && <Badge tone="accent" className="animate-pulse">Черновик не сохранен</Badge>}
                   </div>
-                ) : null}
-              </div>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-stone-500">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-stone-900">{form.slug || "..."}</span>
+                      <span className="text-xs opacity-50 uppercase tracking-widest">(slug)</span>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="admin-subtle-panel grid gap-4 p-4 sm:grid-cols-2">
-                <div>
-                  <div className="admin-kicker mb-2">Карточка</div>
-                  <div className="space-y-2 text-sm text-stone-600">
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-4 w-4 text-accent-600" />
-                      {form.price_from || "Цена не указана"}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-accent-600" />
-                      {form.duration || "Длительность не указана"}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-accent-600" />
-                      {form.group_size || "Размер группы не указан"}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-accent-600" />
-                      {form.location || "Локация не указана"}
-                    </div>
-                  </div>
-                </div>
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="flex flex-wrap gap-4">
                   <Toggle
-                    label="Опубликовать"
-                    description="Тур будет виден всем посетителям."
+                    label="Публикация"
                     checked={form.is_published}
                     onChange={(val) => setForm({ ...form, is_published: val })}
                   />
                   <Toggle
-                    label="Популярный маршрут"
-                    description="Отображать этот тур в Hero-блоке на главной."
+                    label="В топе"
                     checked={form.hero_tour_id !== null}
                     onChange={(val) =>
                       setForm({
@@ -591,337 +595,217 @@ export default function AdminTours() {
                   />
                 </div>
               </div>
-            </div>
-          </div>
 
-          {loadingDetail ? (
-            <LoadingState
-              title="Загрузка маршрута"
-              description="Подтягиваем описание, галерею и программу выбранного тура."
-            />
-          ) : (
-            <form onSubmit={(event) => void save(event)} className="space-y-8 pb-20">
-              <Section
-                title="Основная информация"
-                description="Название, тексты и базовые параметры карточки маршрута."
-              >
-                <div className="grid gap-5 md:grid-cols-2">
-                  <FormField label="Название тура">
-                    <TextInput
-                      value={form.title}
-                      onChange={(event) => handleTitleChange(event.target.value)}
-                      placeholder="Цейское ущелье и Сказский ледник"
-                    />
-                  </FormField>
-
-                  <FormField label="Slug" hint="Используется в URL">
-                    <div className="flex gap-3">
-                      <TextInput
-                        value={form.slug}
-                        onChange={(event) => {
-                          setSlugTouched(true);
-                          updateField("slug", slugify(event.target.value));
-                        }}
-                        placeholder="tsey-gorge"
-                      />
-                      <button type="button" onClick={regenerateSlug} className="admin-button-secondary shrink-0 px-4">
-                        <Wand2 className="h-4 w-4" />
-                        Сгенерировать
-                      </button>
-                    </div>
-                  </FormField>
-                </div>
-
-                <FormField label="Краткое описание" hint="Показывается в карточке тура">
-                  <TextArea
-                    rows={3}
-                    value={form.short_description}
-                    onChange={(event) => updateField("short_description", event.target.value)}
-                    placeholder="Короткий текст, который быстро объясняет ценность маршрута."
-                  />
-                </FormField>
-
-                <FormField label="Полное описание">
-                  <TextArea
-                    rows={7}
-                    value={form.full_description}
-                    onChange={(event) => updateField("full_description", event.target.value)}
-                    placeholder="Подробно расскажите о впечатлениях, локациях и формате путешествия."
-                  />
-                </FormField>
-
-                <div className="grid gap-5 md:grid-cols-4">
-                  <FormField label="Цена от">
-                    <div className="relative">
-                      <CreditCard className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                      <TextInput
-                        value={form.price_from}
-                        onChange={(event) => updateField("price_from", event.target.value)}
-                        placeholder="от 4 000 ₽"
-                        className="pl-11"
-                      />
-                    </div>
-                  </FormField>
-                  <FormField label="Длительность">
-                    <div className="relative">
-                      <Clock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                      <TextInput
-                        value={form.duration}
-                        onChange={(event) => updateField("duration", event.target.value)}
-                        placeholder="1 день"
-                        className="pl-11"
-                      />
-                    </div>
-                  </FormField>
-                  <FormField label="Группа">
-                    <div className="relative">
-                      <Users className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                      <TextInput
-                        value={form.group_size}
-                        onChange={(event) => updateField("group_size", event.target.value)}
-                        placeholder="до 6 человек"
-                        className="pl-11"
-                      />
-                    </div>
-                  </FormField>
-                  <FormField label="Локация">
-                    <div className="relative">
-                      <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                      <TextInput
-                        value={form.location}
-                        onChange={(event) => updateField("location", event.target.value)}
-                        placeholder="Северная Осетия"
-                        className="pl-11"
-                      />
-                    </div>
-                  </FormField>
-                </div>
-              </Section>
-
-              <Section
-                title="Медиа и галерея"
-                description="Обложка влияет на первое впечатление, а галерея помогает раскрыть маршрут глубже."
-              >
-                <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-                  <FormField label="Обложка тура">
-                    <ImageUpload
-                      value={form.cover_image_url}
-                      onChange={(url) => updateField("cover_image_url", url)}
-                      label="Обложка маршрута"
-                      description="Используйте сильный атмосферный кадр, который хорошо читается в каталоге."
-                    />
-                  </FormField>
-
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-end justify-between gap-3">
-                      <div>
-                        <div className="admin-kicker mb-2">Галерея</div>
-                        <p className="text-sm text-stone-500">
-                          Добавляйте дополнительные фотографии через URL или загрузку в хранилище.
-                        </p>
-                      </div>
-                      <Badge tone="accent">{form.gallery.length} фото</Badge>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {form.gallery.map((image, index) => (
-                        <div key={`${image}-${index}`} className="group relative overflow-hidden rounded-[1.2rem] border border-stone-200 bg-stone-100">
-                          <div className="aspect-square">
-                            <img src={image} alt={`Gallery ${index + 1}`} className="h-full w-full object-cover" />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateField(
-                                "gallery",
-                                form.gallery.filter((_, imageIndex) => imageIndex !== index),
-                              )
-                            }
-                            className="absolute inset-0 flex items-center justify-center bg-stone-950/55 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                          >
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </div>
-                      ))}
-
-                      <button
-                        type="button"
-                        onClick={() => galleryInputRef.current?.click()}
-                        className="flex aspect-square flex-col items-center justify-center gap-3 rounded-[1.2rem] border-2 border-dashed border-stone-200 bg-white/70 text-stone-400 transition-colors hover:border-accent-500/40 hover:text-accent-600"
-                      >
-                        {galleryUploading ? (
-                          <Loader2 className="h-6 w-6 animate-spin" />
-                        ) : (
-                          <ImagePlus className="h-6 w-6" />
-                        )}
-                        <span className="text-[10px] font-bold uppercase tracking-[0.26em]">
-                          Загрузить фото
-                        </span>
-                      </button>
-                    </div>
-
-                    <input
-                      type="file"
-                      ref={galleryInputRef}
-                      onChange={uploadGalleryImage}
-                      accept="image/*"
-                      className="hidden"
-                    />
-
-                    <div className="flex flex-col gap-3 sm:flex-row">
-                      <TextInput
-                        value={galleryDraft}
-                        onChange={(event) => setGalleryDraft(event.target.value)}
-                        placeholder="Или вставьте ссылку на изображение"
-                      />
-                      <button type="button" onClick={() => addGalleryItem()} className="admin-button-secondary shrink-0">
-                        <Plus className="h-4 w-4" />
-                        Добавить
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </Section>
-
-              <Section
-                title="Программа тура"
-                description="Опишите шаги маршрута в нужном порядке. Каждый блок должен быть самостоятельным и понятным."
-                actions={
-                  <button type="button" onClick={addProgramItem} className="admin-button-secondary">
-                    <Plus className="h-4 w-4" />
-                    Добавить пункт
+              <div className="sticky top-0 z-20 flex gap-1 border-b border-stone-100 bg-white/80 py-2 backdrop-blur-md">
+                {[
+                  { key: "main", label: "Основные данные", icon: Package2 },
+                  { key: "media", label: "Галерея и медиа", icon: ImagePlus },
+                  { key: "program", label: "Описание программы", icon: Layers },
+                  { key: "seo", label: "Поисковая оптимизация", icon: Wand2 },
+                ].map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setActiveTab(key as typeof activeTab)}
+                    className={cn(
+                      "flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm font-bold transition-all",
+                      activeTab === key
+                        ? "bg-accent-500 text-white shadow-lg shadow-accent-500/20"
+                        : "text-stone-400 hover:bg-stone-50 hover:text-stone-700",
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className={cn(activeTab === key ? "block" : "hidden md:block")}>{label}</span>
                   </button>
-                }
-              >
-                {form.program_items.length === 0 ? (
-                  <EmptyState
-                    icon={Layers}
-                    title="Программа пока пустая"
-                    description="Добавьте хотя бы один пункт, если на странице маршрута нужен подробный сценарий поездки."
-                    action={
-                      <button type="button" onClick={addProgramItem} className="admin-button-secondary">
-                        Создать первый пункт
-                      </button>
-                    }
-                  />
-                ) : (
-                  <div className="space-y-4">
-                    <AnimatePresence mode="popLayout">
-                      {form.program_items.map((item, index) => (
-                        <motion.div
-                          key={`${index}-${item.title}`}
-                          layout
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -12 }}
-                          className="admin-subtle-panel p-5"
-                        >
-                          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 pb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
-                                {index + 1}
+                ))}
+              </div>
+
+              <div className="space-y-12">
+                {activeTab === "main" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <FormField label="Заголовок маршрута">
+                        <TextInput
+                          value={form.title}
+                          onChange={(event) => handleTitleChange(event.target.value)}
+                        />
+                      </FormField>
+
+                      <FormField label="URL-адрес (Slug)">
+                        <div className="flex gap-2">
+                          <TextInput
+                            value={form.slug}
+                            onChange={(event) => {
+                              setSlugTouched(true);
+                              updateField("slug", slugify(event.target.value));
+                            }}
+                          />
+                        </div>
+                      </FormField>
+                    </div>
+
+                    <div className="grid gap-8 md:grid-cols-4">
+                      <FormField label="Цена от">
+                        <TextInput
+                          value={form.price_from}
+                          onChange={(event) => updateField("price_from", event.target.value)}
+                        />
+                      </FormField>
+                      <FormField label="Длительность">
+                        <TextInput
+                          value={form.duration}
+                          onChange={(event) => updateField("duration", event.target.value)}
+                        />
+                      </FormField>
+                      <FormField label="Группа">
+                        <TextInput
+                          value={form.group_size}
+                          onChange={(event) => updateField("group_size", event.target.value)}
+                        />
+                      </FormField>
+                      <FormField label="Локация">
+                        <TextInput
+                          value={form.location}
+                          onChange={(event) => updateField("location", event.target.value)}
+                        />
+                      </FormField>
+                    </div>
+
+                    <FormField label="Краткое описание">
+                      <TextArea
+                        rows={3}
+                        value={form.short_description}
+                        onChange={(event) => updateField("short_description", event.target.value)}
+                      />
+                    </FormField>
+
+                    <FormField label="Полное описание тура">
+                      <TextArea
+                        rows={10}
+                        value={form.full_description}
+                        onChange={(event) => updateField("full_description", event.target.value)}
+                      />
+                    </FormField>
+                  </div>
+                )}
+
+                {activeTab === "media" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-12">
+                    <Section title="Визуальный контент">
+                      <div className="grid gap-10 xl:grid-cols-[1fr_1.5fr]">
+                        <FormField label="Главная обложка">
+                          <ImageUpload
+                            value={form.cover_image_url}
+                            onChange={(url) => updateField("cover_image_url", url)}
+                            label="Основное фото"
+                          />
+                        </FormField>
+
+                        <div className="space-y-6">
+                          <div className="grid gap-4 sm:grid-cols-3">
+                            {form.gallery.map((image, index) => (
+                              <div key={index} className="group relative aspect-square overflow-hidden rounded-2xl bg-stone-100">
+                                <img src={image} alt="" className="h-full w-full object-cover" />
+                                <button
+                                  type="button"
+                                  onClick={() => updateField("gallery", form.gallery.filter((_, i) => i !== index))}
+                                  className="absolute inset-0 flex items-center justify-center bg-red-600/80 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                >
+                                  <Trash2 className="h-6 w-6" />
+                                </button>
                               </div>
-                              <div>
-                                <div className="admin-kicker mb-1">Пункт программы</div>
-                                <div className="text-sm text-stone-500">Описание локации или этапа маршрута.</div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => moveProgramItem(index, "up")}
-                                disabled={index === 0}
-                                className="admin-button-secondary px-3 py-2 disabled:opacity-40"
-                              >
-                                <ChevronUp className="h-4 w-4" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => moveProgramItem(index, "down")}
-                                disabled={index === form.program_items.length - 1}
-                                className="admin-button-secondary px-3 py-2 disabled:opacity-40"
-                              >
-                                <ChevronDown className="h-4 w-4" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => removeProgramItem(index)}
-                                className="admin-button-secondary px-3 py-2 text-red-600 hover:border-red-500/30 hover:text-red-700"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </div>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={() => galleryInputRef.current?.click()}
+                              className="flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-200"
+                            >
+                              <Plus className="h-6 w-6" />
+                            </button>
                           </div>
+                          <input type="file" ref={galleryInputRef} onChange={uploadGalleryImage} accept="image/*" className="hidden" />
+                        </div>
+                      </div>
+                    </Section>
+                  </div>
+                )}
 
-                          <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-                            <FormField label="Изображение">
-                              <ImageUpload
-                                value={item.image_url}
-                                onChange={(url) => updateProgramItem(index, { image_url: url })}
-                                label={`Пункт ${index + 1}`}
-                                description="Подберите фото, которое визуально объясняет этот этап маршрута."
-                                aspectClassName="aspect-[16/12]"
-                              />
-                            </FormField>
+                {activeTab === "program" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-serif text-2xl font-extrabold text-stone-900">Программа по дням</h3>
+                      <button type="button" onClick={addProgramItem} className="admin-button-secondary">
+                        <Plus className="h-4 w-4" />
+                        Добавить день
+                      </button>
+                    </div>
 
-                            <div className="grid gap-5">
-                              <FormField label="Заголовок пункта">
+                    <div className="grid gap-6">
+                      {form.program_items.map((item, index) => (
+                        <div key={index} className="group relative rounded-[2rem] border border-stone-100 bg-white p-6 md:p-8">
+                          <div className="absolute -left-3 top-8 flex h-10 w-10 items-center justify-center rounded-2xl bg-stone-900 text-sm font-bold text-white shadow-xl">
+                            {index + 1}
+                          </div>
+                          <div className="grid gap-8 md:grid-cols-[200px_1fr]">
+                            <ImageUpload
+                              value={item.image_url}
+                              onChange={(url) => updateProgramItem(index, { image_url: url })}
+                              label="Фото локации"
+                            />
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between gap-4">
                                 <TextInput
                                   value={item.title}
                                   onChange={(event) => updateProgramItem(index, { title: event.target.value })}
-                                  placeholder="Например: Сказский ледник"
+                                  placeholder="Название дня"
+                                  className="border-none bg-stone-50 px-0 text-xl font-bold"
                                 />
-                              </FormField>
-                              <FormField label="Описание">
-                                <TextArea
-                                  rows={6}
-                                  value={item.description}
-                                  onChange={(event) =>
-                                    updateProgramItem(index, { description: event.target.value })
-                                  }
-                                  placeholder="Что увидит турист и зачем этот этап маршрута важен?"
-                                />
-                              </FormField>
+                                <div className="flex gap-1">
+                                  <button type="button" onClick={() => removeProgramItem(index)} className="p-2 text-red-300 hover:text-red-600"><Trash2 className="h-4 w-4" /></button>
+                                </div>
+                              </div>
+                              <TextArea
+                                value={item.description}
+                                onChange={(event) => updateProgramItem(index, { description: event.target.value })}
+                                placeholder="Описание дня"
+                              />
                             </div>
                           </div>
-                        </motion.div>
+                        </div>
                       ))}
-                    </AnimatePresence>
+                    </div>
                   </div>
                 )}
-              </Section>
 
-              <Section
-                title="SEO и порядок выдачи"
-                description="Метаданные помогают поиску, а порядок сортировки влияет на расположение тура в каталоге."
-              >
-                <div className="grid gap-5 md:grid-cols-2">
-                  <FormField label="SEO title">
-                    <TextInput
-                      value={form.seo_title}
-                      onChange={(event) => updateField("seo_title", event.target.value)}
-                      placeholder="Авторский тур в Цейское ущелье"
-                    />
-                  </FormField>
-                  <FormField label="Порядок сортировки">
-                    <TextInput
-                      type="number"
-                      value={String(form.sort_order)}
-                      onChange={(event) => updateField("sort_order", Number(event.target.value) || 0)}
-                      placeholder="0"
-                    />
-                  </FormField>
-                </div>
-
-                <FormField label="SEO description">
-                  <TextArea
-                    rows={4}
-                    value={form.seo_description}
-                    onChange={(event) => updateField("seo_description", event.target.value)}
-                    placeholder="Короткое описание для поисковой выдачи и социальных превью."
-                  />
-                </FormField>
-              </Section>
+                {activeTab === "seo" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+                    <Section title="SEO настройки">
+                      <div className="grid gap-8">
+                        <FormField label="Meta Title">
+                          <TextInput
+                            value={form.seo_title}
+                            onChange={(event) => updateField("seo_title", event.target.value)}
+                          />
+                        </FormField>
+                        <FormField label="Meta Description">
+                          <TextArea
+                            rows={4}
+                            value={form.seo_description}
+                            onChange={(event) => updateField("seo_description", event.target.value)}
+                          />
+                        </FormField>
+                        <FormField label="Порядковый номер">
+                          <TextInput
+                            type="number"
+                            value={String(form.sort_order)}
+                            onChange={(event) => updateField("sort_order", Number(event.target.value) || 0)}
+                          />
+                        </FormField>
+                      </div>
+                    </Section>
+                  </div>
+                )}
+              </div>
             </form>
           )}
         </div>

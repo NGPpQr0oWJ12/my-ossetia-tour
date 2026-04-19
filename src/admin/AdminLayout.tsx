@@ -88,79 +88,38 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <div className="relative grid w-full gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:px-8 lg:py-8">
+      <div className="relative grid w-full gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8 lg:py-8">
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <section className="admin-surface p-6">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(205,165,119,0.18),transparent_42%)]" />
-            <div className="relative space-y-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-accent-500/20 bg-accent-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-700">
-                <Sparkles className="h-3.5 w-3.5" />
-                Рабочая зона
-              </div>
-              <div className="space-y-2">
-                <h1 className="font-serif text-3xl font-extrabold leading-[0.95] text-stone-900">
-                  {activeItem?.label ?? "Панель управления"}
-                </h1>
-                <p className="text-sm leading-relaxed text-stone-500">
-                  {activeItem?.description ??
-                    "Организуйте контент, следите за заявками и поддерживайте сайт в актуальном состоянии."}
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                <div className="admin-subtle-panel p-4">
-                  <div className="admin-kicker mb-2">Подход</div>
-                  <p className="text-sm leading-relaxed text-stone-600">
-                    Основные действия выведены наверх, а формы разбиты на короткие смысловые блоки.
-                  </p>
-                </div>
-                <div className="admin-subtle-panel p-4">
-                  <div className="admin-kicker mb-2">Рекомендация</div>
-                  <p className="text-sm leading-relaxed text-stone-600">
-                    Держите в публикации только готовые маршруты, а черновики используйте для подготовки новых туров.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <nav className="admin-surface flex gap-3 overflow-x-auto p-3 lg:flex-col lg:overflow-visible">
+          <nav className="flex flex-col gap-2">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
                   cn(
-                    "group min-w-[15rem] rounded-[1.4rem] border px-4 py-4 transition-all duration-300 lg:min-w-0",
+                    "group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300",
                     isActive
-                      ? "border-stone-900 bg-stone-900 text-white shadow-[0_18px_35px_rgba(28,25,23,0.24)]"
-                      : "border-transparent bg-white/60 text-stone-500 hover:border-stone-200 hover:bg-white/90 hover:text-stone-900",
+                      ? "bg-stone-900 text-white shadow-[0_12px_24px_rgba(28,25,23,0.18)]"
+                      : "text-stone-500 hover:bg-stone-100 hover:text-stone-900",
                   )
                 }
               >
                 {({ isActive }) => (
-                  <div className="flex items-start gap-3">
+                  <>
                     <div
                       className={cn(
-                        "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border",
+                        "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors",
                         isActive
                           ? "border-white/20 bg-white/10 text-white"
-                          : "border-stone-200/80 bg-white text-accent-600 group-hover:border-accent-500/30",
+                          : "border-stone-200/80 bg-white text-stone-400 group-hover:border-accent-500/30 group-hover:text-accent-600",
                       )}
                     >
                       <item.icon className="h-[18px] w-[18px]" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold">{item.label}</div>
-                      <div
-                        className={cn(
-                          "mt-1 text-xs leading-relaxed",
-                          isActive ? "text-white/70" : "text-stone-400",
-                        )}
-                      >
-                        {item.description}
-                      </div>
+                      <div className="text-sm font-bold tracking-tight">{item.label}</div>
                     </div>
-                  </div>
+                  </>
                 )}
               </NavLink>
             ))}
@@ -171,7 +130,7 @@ export default function AdminLayout() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="admin-surface min-h-[70vh] p-5 sm:p-6 lg:p-8 xl:p-10"
+          className="admin-surface min-h-[80vh] p-6 sm:p-8 lg:p-10"
         >
           <Outlet />
         </motion.main>

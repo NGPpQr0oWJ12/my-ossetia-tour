@@ -234,6 +234,9 @@ app.post(
       res.status(400).json({ error: "Supabase is not configured" });
       return;
     }
+
+    await ensureBucketExists(config.supabaseUrl, config.supabaseServiceRoleKey);
+
     const contentType = (req.headers["content-type"] ?? "application/octet-stream") as string;
     const extension = contentType.startsWith("image/png") ? "png"
       : contentType.startsWith("image/gif") ? "gif"
@@ -648,6 +651,25 @@ app.patch(
   }),
 );
 
+app.delete(
+  "/api/admin/tours/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+
+    await supabaseRest("/rest/v1/tours", {
+      method: "DELETE",
+      query: { id: `eq.${id}` },
+    });
+
+    res.json({ ok: true });
+  }),
+);
+
 app.get(
   "/api/admin/home",
   requireAdmin,
@@ -712,4 +734,36 @@ async function sendTelegramLeadNotification(lead: Record<string, unknown> | unde
     `Message: ${String(lead.message ?? "")}`,
   ].join("\n");
   await sendTelegramMessage(text);
+}
+
+async function ensureBucketExists(supabaseUrl: string, serviceKey: string) {
+  const bucketId = "crm-media";
+  const checkRes = await fetch(
+    `${supabaseUrl}/storage/v1/bucket/${bucketId}`,
+    {
+      headers: {
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+      },
+    },
+  );
+  if (checkRes.ok) return;
+
+  const createRes = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
+    method: "POST",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: bucketId,
+      name: " CRM Media",
+      public: true,
+    }),
+  });
+  if (!createRes.ok) {
+    const err = await createRes.text();
+    console.error("Failed to create bucket:", err);
+  }
 }

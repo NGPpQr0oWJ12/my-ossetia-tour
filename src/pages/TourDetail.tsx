@@ -14,6 +14,7 @@ import {
   Calendar,
   MapPin,
   X,
+  Loader2,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { publicApi } from "../lib/api";
@@ -26,14 +27,25 @@ export default function TourDetail() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (!id) return;
+    setLoading(true);
+    
     void (async () => {
       try {
-        const data = await publicApi.getTourById(Number(id));
+        const isNumeric = /^\d+$/.test(id);
+        const data = isNumeric 
+          ? await publicApi.getTourById(Number(id))
+          : await publicApi.getTour(id);
+        
         setTour(data);
-      } catch {
+      } catch (err) {
+        console.error("Failed to load tour:", err);
         setTour(null);
+      } finally {
+        setLoading(false);
       }
     })();
   }, [id]);
@@ -105,6 +117,31 @@ export default function TourDetail() {
     } catch {
       // silent
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+        <div className="flex flex-col items-center gap-4 text-stone-400">
+          <Loader2 className="h-10 w-10 animate-spin text-accent-500" />
+          <span className="text-xs font-bold tracking-[0.2em] uppercase">Загрузка маршрута...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!tour) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 p-6">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-stone-100 italic font-serif">
+            <h1 className="text-3xl text-stone-900 mb-4">Маршрут не найден</h1>
+            <p className="text-stone-500 mb-8">Возможно, он был удален или перемещен.</p>
+            <Link to="/tours" className="btn-primary inline-flex">Вернуться к списку</Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

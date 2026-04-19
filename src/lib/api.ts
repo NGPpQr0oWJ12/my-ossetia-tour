@@ -11,7 +11,7 @@ import type {
 const ADMIN_TOKEN_KEY = "admin_access_token";
 
 interface RequestOptions {
-  method?: "GET" | "POST" | "PATCH";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   token?: string;
 }
@@ -101,6 +101,12 @@ export const adminApi = {
       method: "PATCH",
       token: authStorage.getToken() ?? "",
       body: payload,
+    });
+  },
+  deleteTour(id: number) {
+    return apiRequest<{ ok: boolean }>(`/api/admin/tours/${id}`, {
+      method: "DELETE",
+      token: authStorage.getToken() ?? "",
     });
   },
   getHome() {
