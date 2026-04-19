@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { authStorage, uploadToSupabaseStorage } from "../../lib/api";
 import { cn } from "../../lib/utils";
+import { AnimatePresence, motion } from "motion/react";
 
 type Tone = "default" | "accent" | "success" | "danger";
 
@@ -91,6 +92,16 @@ interface TabsProps {
   activeTab: string;
   onChange: (id: string) => void;
   className?: string;
+}
+
+interface AdminModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
 }
 
 const toneClasses: Record<Tone, string> = {
@@ -478,5 +489,77 @@ export function Select({ options, value, onChange, className, disabled, ...props
         </option>
       ))}
     </select>
+  );
+}
+
+export function AdminModal({
+  isOpen,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  maxWidth = "2xl",
+}: AdminModalProps) {
+  const maxWidthClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "2xl": "max-w-2xl",
+    "3xl": "max-w-3xl",
+    "4xl": "max-w-4xl",
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className={cn(
+              "relative w-full overflow-hidden rounded-[2rem] border border-white/20 bg-white shadow-2xl",
+              maxWidthClasses[maxWidth]
+            )}
+          >
+            <div className="flex items-start justify-between border-b border-stone-100 p-6 sm:p-8">
+              <div className="space-y-1">
+                <h3 className="font-serif text-3xl font-extrabold tracking-tight text-stone-900">
+                  {title}
+                </h3>
+                {description && (
+                  <p className="text-sm text-stone-500 opacity-80">{description}</p>
+                )}
+              </div>
+              <button
+                onClick={onClose}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-400 transition-colors hover:bg-stone-50 hover:text-stone-900"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="max-h-[70vh] overflow-y-auto p-6 sm:p-8">
+              {children}
+            </div>
+
+            {footer && (
+              <div className="flex items-center justify-end gap-3 border-t border-stone-100 bg-stone-50/50 p-6 sm:p-8">
+                {footer}
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -10,6 +10,7 @@ import {
   parseHomeContent,
   parseLeadInsert,
   parseLeadUpdate,
+  parseLeadStage,
   parseTourUpsert,
 } from "./validation.ts";
 import { authenticateAdmin, createAdminSession, verifyAdminSession } from "./adminAuth.ts";
@@ -479,6 +480,66 @@ app.get(
       });
     }
     res.json({ ...home, featured_tours: featuredTours ?? [] });
+  }),
+);
+
+app.get(
+  "/api/admin/lead-stages",
+  requireAdmin,
+  asyncHandler(async (_req, res) => {
+    const rows = await supabaseRest("/rest/v1/lead_stages", {
+      query: { select: "*", order: "sort_order.asc" },
+    });
+    res.json(rows ?? []);
+  }),
+);
+
+app.post(
+  "/api/admin/lead-stages",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const dto = parseLeadStage(req.body);
+    const rows = await supabaseRest("/rest/v1/lead_stages", {
+      method: "POST",
+      body: dto,
+    });
+    res.status(201).json(rows?.[0] ?? null);
+  }),
+);
+
+app.patch(
+  "/api/admin/lead-stages/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+    const dto = parseLeadStage(req.body);
+    const rows = await supabaseRest("/rest/v1/lead_stages", {
+      method: "PATCH",
+      query: { id: `eq.${id}`, select: "*" },
+      body: dto,
+    });
+    res.json(rows?.[0] ?? null);
+  }),
+);
+
+app.delete(
+  "/api/admin/lead-stages/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+    await supabaseRest("/rest/v1/lead_stages", {
+      method: "DELETE",
+      query: { id: `eq.${id}` },
+    });
+    res.status(204).end();
   }),
 );
 

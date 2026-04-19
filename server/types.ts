@@ -9,8 +9,14 @@ export interface LeadInsertDto {
 }
 
 export interface LeadUpdateDto {
-  status?: LeadStatus;
+  stage_id?: number;
   manager_comment?: string | null;
+}
+
+export interface LeadStageDto {
+  title: string;
+  sort_order: number;
+  color: string;
 }
 
 export interface TourProgramItemDto {

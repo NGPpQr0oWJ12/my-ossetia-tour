@@ -7,6 +7,7 @@ import type {
   TourUpsertInput,
   TourWithProgram,
   SiteSettings,
+  LeadStage,
 } from "./types";
 
 const ADMIN_TOKEN_KEY = "admin_access_token";
@@ -78,11 +79,34 @@ export const adminApi = {
   getLeads() {
     return apiRequest<Lead[]>("/api/admin/leads", { token: authStorage.getToken() ?? "" });
   },
-  updateLead(id: number, status: LeadStatus, managerComment: string) {
+  updateLead(id: number, payload: { stage_id?: number | null; manager_comment?: string | null }) {
     return apiRequest<Lead>(`/api/admin/leads/${id}`, {
       method: "PATCH",
       token: authStorage.getToken() ?? "",
-      body: { status, manager_comment: managerComment },
+      body: payload,
+    });
+  },
+  getLeadStages() {
+    return apiRequest<LeadStage[]>("/api/admin/lead-stages", { token: authStorage.getToken() ?? "" });
+  },
+  createLeadStage(payload: Omit<LeadStage, "id" | "created_at">) {
+    return apiRequest<LeadStage>("/api/admin/lead-stages", {
+      method: "POST",
+      token: authStorage.getToken() ?? "",
+      body: payload,
+    });
+  },
+  updateLeadStage(id: number, payload: Omit<LeadStage, "id" | "created_at">) {
+    return apiRequest<LeadStage>(`/api/admin/lead-stages/${id}`, {
+      method: "PATCH",
+      token: authStorage.getToken() ?? "",
+      body: payload,
+    });
+  },
+  deleteLeadStage(id: number) {
+    return apiRequest<{ ok: boolean }>(`/api/admin/lead-stages/${id}`, {
+      method: "DELETE",
+      token: authStorage.getToken() ?? "",
     });
   },
   getTours() {

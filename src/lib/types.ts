@@ -14,6 +14,14 @@ export interface SiteSettings {
   guide_image_url: string;
 }
 
+export interface LeadStage {
+  id: number;
+  title: string;
+  sort_order: number;
+  color: string;
+  created_at: string;
+}
+
 
 export interface Lead {
   id: number;
@@ -23,6 +31,7 @@ export interface Lead {
   phone: string;
   message: string | null;
   status: LeadStatus;
+  stage_id: number | null;
   manager_comment: string | null;
   created_at: string;
   updated_at: string;

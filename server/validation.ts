@@ -3,6 +3,7 @@ import type {
   LeadInsertDto,
   LeadStatus,
   LeadUpdateDto,
+  LeadStageDto,
   TourProgramItemDto,
   TourUpsertDto,
 } from "./types.ts";
@@ -53,16 +54,27 @@ export function parseLeadUpdate(payload: unknown): LeadUpdateDto {
   }
   const body = payload as Record<string, unknown>;
   const result: LeadUpdateDto = {};
-  if (typeof body.status === "string") {
-    if (!LEAD_STATUSES.includes(body.status as LeadStatus)) {
-      throw new Error("Invalid status");
-    }
-    result.status = body.status as LeadStatus;
+  if (typeof body.stage_id === "number" && Number.isFinite(body.stage_id)) {
+    result.stage_id = body.stage_id;
   }
   if (typeof body.manager_comment === "string" || body.manager_comment === null) {
     result.manager_comment = body.manager_comment as string | null;
   }
   return result;
+}
+
+export function parseLeadStage(payload: unknown): LeadStageDto {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Payload must be an object");
+  }
+  const body = payload as Record<string, unknown>;
+  if (!isNonEmptyString(body.title)) throw new Error("title is required");
+  
+  return {
+    title: body.title.trim(),
+    sort_order: typeof body.sort_order === "number" ? body.sort_order : 0,
+    color: typeof body.color === "string" ? body.color : "#78716c",
+  };
 }
 
 function parseProgramItem(payload: unknown, index: number): TourProgramItemDto {
