@@ -135,7 +135,7 @@ export default function TourDetail() {
           <div className="w-full lg:w-auto flex-shrink-0 pt-6 lg:pt-0 border-t lg:border-t-0 border-stone-100">
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group relative inline-flex min-h-[4.5rem] w-full items-center justify-center overflow-hidden rounded-[2.5rem] bg-accent-500 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.35em] text-white transition-all duration-300 hover:bg-accent-400 lg:w-auto"
+              className="group btn-primary lg:w-auto"
             >
               <span className="relative z-10 flex items-center gap-4">Записаться на тур</span>
             </button>
@@ -179,7 +179,7 @@ export default function TourDetail() {
                         <img src={item.image} alt={item.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
                       </div>
                       <div className="p-6">
-                        <h3 className="font-serif text-lg font-bold uppercase mb-3 text-stone-900">{item.title}</h3>
+                        <h3 className="font-serif text-lg uppercase mb-3 text-stone-900">{item.title}</h3>
                         <p className="text-stone-600 text-sm leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export default function TourDetail() {
                 <div className="text-stone-700 mb-4">
                   {card.icon}
                 </div>
-                <h3 className="font-bold text-stone-900 mb-3">{card.title}</h3>
+                <h3 className="mb-3">{card.title}</h3>
                 <p className="text-stone-600 text-sm leading-relaxed">{card.desc}</p>
               </div>
             ))}
@@ -280,7 +280,7 @@ export default function TourDetail() {
                 <div className="mt-4">
                   <button
                     type="submit"
-                    className="inline-flex w-full items-center justify-center rounded-[2rem] bg-[#c0885e] px-10 py-4 text-sm font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-[#b0784e]"
+                    className="group btn-primary w-full"
                   >
                     Отправить
                   </button>

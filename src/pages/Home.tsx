@@ -134,7 +134,7 @@ export default function Home() {
             {/* Left Column: Main Impact */}
             <div className="grid min-w-0">
               <div className="flex flex-col">
-                <h1 className="mb-8 font-serif text-[clamp(3.15rem,10vw,6.5rem)] leading-[0.95] tracking-tight text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(5rem,7vw,7.5rem)]">
+                <h1 className="mb-8 font-serif text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.95] text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(4.5rem,6vw,6.5rem)]">
                   Открой <br />
                   <span className="text-accent-500">настоящую</span> <br /> Аланию
                 </h1>
@@ -146,7 +146,7 @@ export default function Home() {
                 <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                   <Link
                     to="/tours"
-                    className="group relative inline-flex min-h-16 w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 px-12 py-6 text-xs font-bold uppercase tracking-[0.35em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:min-h-[4.5rem] sm:w-[26rem] sm:text-sm xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base min-[1700px]:rounded-[3rem]"
+                    className="group btn-glass sm:w-[26rem] xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base"
                   >
                     <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
                   </Link>
@@ -233,7 +233,7 @@ export default function Home() {
                     <div>
                       <Link
                         to="/tours/1"
-                        className="group/btn inline-flex w-full items-center justify-between gap-4 rounded-[2.5rem] border border-white/20 bg-white/10 backdrop-blur-md px-6 py-4 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:bg-accent-500 min-[1700px]:rounded-[3rem] min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs min-[1700px]:tracking-[0.3em]"
+                        className="group btn-sm group/btn w-full justify-between gap-4 px-6 py-4 text-[11px] min-[1700px]:px-8 min-[1700px]:py-5 min-[1700px]:text-xs"
                       >
                         Смотреть <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
                       </Link>
@@ -339,9 +339,9 @@ export default function Home() {
                   </span>
                 </div>
 
-                <h2 className="font-serif mb-10 leading-[1.05] text-4xl md:text-5xl lg:text-6xl text-[#121c28]">
+                <h2 className="mb-10 leading-[1.05] text-4xl md:text-5xl lg:text-6xl text-[#121c28]">
                   Мы знаем горы<br />
-                  <span className="font-light text-[#887364]">как свои пять пальцев</span>
+                  <span className="text-[#887364]">как свои пять пальцев</span>
                 </h2>
 
                 <p className="text-lg font-light leading-relaxed mb-14 max-w-lg" style={{ color: '#554336' }}>
@@ -380,7 +380,7 @@ export default function Home() {
                         <div style={{ color: '#D97706' }}>{item.icon}</div>
                       </div>
                       <div>
-                        <h4 className="font-serif text-lg mb-1" style={{ color: '#121c28' }}>{item.title}</h4>
+                        <h4 className="text-lg mb-1" style={{ color: '#121c28' }}>{item.title}</h4>
                         <p className="text-sm font-light leading-relaxed" style={{ color: '#554336' }}>{item.text}</p>
                       </div>
                     </motion.div>
@@ -415,7 +415,7 @@ export default function Home() {
       {/* Guide Section */}
       <section className="py-20 bg-stone-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-12">Ваш гид</h2>
+          <h2 className="text-3xl md:text-5xl mb-12">Ваш гид</h2>
           
           <div
             className="mb-8 inline-block"
@@ -466,7 +466,7 @@ export default function Home() {
                   <div className="h-px w-12 bg-white/40 drop-shadow-md"></div>
                 </div>
 
-                <h2 className="mb-6 font-serif text-4xl font-bold leading-[1.05] text-white drop-shadow-md md:text-5xl lg:text-6xl">
+                <h2 className="mb-6 font-serif text-4xl leading-[1.05] text-white drop-shadow-md md:text-5xl lg:text-6xl">
                   Готовы к <span className="text-white">незабываемому</span> путешествию?
                 </h2>
 
@@ -482,16 +482,16 @@ export default function Home() {
                   href="https://wa.me/79000000000"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex w-full items-center justify-center rounded-full bg-[#25D366] px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-[#20bd5a] shadow-[0_0_30px_rgba(37,211,102,0.25)] sm:w-auto"
+                  className="group btn-primary !bg-[#25D366] hover:!bg-[#20bd5a] shadow-[0_0_30px_rgba(37,211,102,0.25)]"
                 >
-                  <WhatsAppIcon className="mr-3 h-5 w-5 transition-transform group-hover:rotate-12" />
+                  <WhatsAppIcon className="mr-3 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                   WhatsApp
                 </a>
                 <a
                   href="https://t.me/yourid"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex w-full items-center justify-center rounded-full border border-stone-700/50 bg-white/5 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase backdrop-blur-md transition-all duration-300 hover:bg-white/10 sm:w-auto"
+                  className="group btn-glass !border-stone-700/50 !bg-white/5 hover:!bg-white/10"
                 >
                   <Send className="mr-3 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                   Telegram
@@ -501,7 +501,7 @@ export default function Home() {
 
             {/* RIGHT Form Container - Liquid Glass */}
             <div className="flex w-full flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10">
-              <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+              <h3 className="mb-8 text-center text-3xl leading-[1.1] text-white">Оставить заявку</h3>
 
               <form className="flex h-full flex-col justify-between" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-5">
@@ -555,7 +555,7 @@ export default function Home() {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="inline-flex w-full items-center justify-center rounded-full bg-accent-500 px-10 py-5 text-sm font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-accent-400"
+                    className="group btn-primary w-full"
                   >
                     Отправить
                   </button>

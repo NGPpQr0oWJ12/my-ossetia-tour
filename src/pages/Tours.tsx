@@ -72,9 +72,9 @@ export default function Tours() {
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1
-            className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
+            className="text-4xl md:text-6xl mb-6"
           >
-            Наши <span className="font-light text-stone-500">маршруты</span>
+            Наши <span className="text-stone-500">маршруты</span>
           </h1>
           <p
             className="text-xl text-stone-600"
@@ -87,7 +87,7 @@ export default function Tours() {
           {tours.map((tour, index) => (
             <div 
               key={tour.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col sm:flex-row"
+              className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col sm:flex-row"
             >
               <div className="sm:w-2/5 h-64 sm:h-auto relative">
                 <img 
@@ -99,7 +99,7 @@ export default function Tours() {
               </div>
               <div className="p-8 sm:w-3/5 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-2xl font-serif text-stone-900 mb-3">{tour.title}</h3>
+                  <h3 className="text-2xl mb-3">{tour.title}</h3>
                   <p className="text-stone-600 mb-6 text-sm leading-relaxed line-clamp-3">
                     {tour.description}
                   </p>
@@ -122,7 +122,7 @@ export default function Tours() {
                 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-stone-100">
                   <span className="text-lg font-medium text-stone-900">{tour.price}</span>
-                  <Link to={`/tours/${tour.id}`} className="text-sm font-medium text-accent-500 hover:text-accent-600 uppercase tracking-wider">
+                  <Link to={`/tours/${tour.id}`} className="btn-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     Подробнее
                   </Link>
                 </div>

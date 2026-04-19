@@ -14,9 +14,9 @@ export default function About() {
             О компании
           </span>
           <h1
-            className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
+            className="text-4xl md:text-6xl mb-6"
           >
-            Мы открываем <span className="font-light text-stone-500">настоящий Кавказ</span>
+            Мы открываем <span className="text-stone-500">настоящий Кавказ</span>
           </h1>
           <p
             className="text-xl text-stone-600 leading-relaxed"
@@ -65,14 +65,14 @@ export default function About() {
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
           <div
           >
-            <h3 className="text-2xl font-serif mb-4">Наша миссия</h3>
+            <h3 className="text-2xl mb-4">Наша миссия</h3>
             <p className="text-stone-600 leading-relaxed">
               Показать красоту Северной Осетии так, чтобы каждый гость захотел вернуться. Мы стремимся развивать экологичный и ответственный туризм, сохраняя природу и уважая местные традиции.
             </p>
           </div>
           <div
           >
-            <h3 className="text-2xl font-serif mb-4">Безопасность</h3>
+            <h3 className="text-2xl mb-4">Безопасность</h3>
             <p className="text-stone-600 leading-relaxed">
               Горы не терпят легкомыслия. Все наши маршруты проверены, автомобили проходят регулярное ТО, а гиды имеют сертификаты оказания первой помощи и огромный опыт работы в горной местности.
             </p>

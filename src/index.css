@@ -20,6 +20,18 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-[0.02em] text-stone-900;
+    @apply font-serif tracking-[0.02em] font-extrabold text-stone-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply relative inline-flex w-full items-center justify-center overflow-hidden rounded-[2.5rem] bg-accent-500 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.35em] text-white transition-all duration-300 hover:bg-accent-400 sm:w-auto;
+  }
+  .btn-glass {
+    @apply relative inline-flex w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.35em] text-white backdrop-blur-md transition-all duration-300 hover:bg-accent-500 sm:w-auto;
+  }
+  .btn-sm {
+    @apply inline-flex items-center justify-center rounded-[2.5rem] border border-white/20 bg-white/10 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white backdrop-blur-sm transition-all hover:bg-accent-500 sm:w-auto;
   }
 }

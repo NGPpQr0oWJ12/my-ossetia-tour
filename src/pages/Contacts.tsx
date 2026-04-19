@@ -8,9 +8,9 @@ export default function Contacts() {
 
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1
-            className="text-4xl md:text-6xl font-serif text-stone-900 mb-6"
+            className="text-4xl md:text-6xl mb-6"
           >
-            Свяжитесь с <span className="font-light text-stone-500">нами</span>
+            Свяжитесь с <span className="text-stone-500">нами</span>
           </h1>
           <p
             className="text-xl text-stone-600"
@@ -24,7 +24,7 @@ export default function Contacts() {
           <div
             className="bg-stone-50 p-10 rounded-3xl"
           >
-            <h3 className="text-2xl font-serif mb-8">Контактная информация</h3>
+            <h3 className="text-2xl mb-8">Контактная информация</h3>
 
             <div className="space-y-8">
               <div className="flex items-start gap-4">
@@ -72,7 +72,7 @@ export default function Contacts() {
           {/* Contact Form */}
           <div
           >
-            <h3 className="text-2xl font-serif mb-8">Оставить заявку</h3>
+            <h3 className="text-2xl mb-8">Оставить заявку</h3>
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -122,10 +122,9 @@ export default function Contacts() {
 
               <button
                 type="submit"
-                className="group relative inline-flex items-center justify-center w-full px-8 py-5 text-sm font-medium tracking-widest uppercase overflow-hidden bg-accent-500 text-white hover:text-white transition-colors duration-300"
+                className="group btn-primary w-full"
               >
-                <span className="absolute inset-0 bg-accent-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-                <span className="relative z-10">Отправить заявку</span>
+                Отправить заявку
               </button>
 
               <p className="text-xs text-stone-500 text-center mt-4">
