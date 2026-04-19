@@ -190,7 +190,7 @@ export default function Layout() {
                 </a>
                 <a href="mailto:hello@myossetia.tours" className="flex items-center gap-3 text-stone-300 hover:text-white transition-colors">
                   <Mail className="h-4 w-4 text-accent-500" />
-                  hello@myossetia.tours
+                  travel@myossetia.ru
                 </a>
                 <div className="flex items-center gap-3 text-stone-300">
                   <MapPin className="h-4 w-4 text-accent-500" />
@@ -212,7 +212,7 @@ export default function Layout() {
           </div>
 
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-xs tracking-wide text-stone-500">
-            <p>© {new Date().getFullYear()} My Ossetia Travel. Все права защищены.</p>
+            <p>© {new Date().getFullYear()} MY OSSETIA TRAVEL. Все права защищены.</p>
             <p>Сделано с любовью к горам.</p>
           </div>
         </div>

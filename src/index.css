@@ -16,10 +16,10 @@
 
 @layer base {
   body {
-    @apply font-sans text-stone-800 bg-white antialiased selection:bg-accent-500 selection:text-white;
+    @apply font-sans text-stone-800 bg-white antialiased tracking-[0.015em] selection:bg-accent-500 selection:text-white;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight text-stone-900;
+    @apply font-serif tracking-[0.02em] text-stone-900;
   }
 }

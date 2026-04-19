@@ -1,10 +1,11 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Footprints, ShieldAlert, HeartHandshake, HeartPulse, Waves, IdCard, Clock, Mountain, Users, Calendar, MapPin } from "lucide-react";
-const guideImage = "/gid.png";
+import { ArrowLeft, Footprints, ShieldAlert, HeartHandshake, HeartPulse, Waves, IdCard, Clock, Mountain, Users, Calendar, MapPin, X } from "lucide-react";
+import { useState } from "react";
 
 export default function TourDetail() {
   const { id } = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Mock data for the timeline
   const timeline = [
@@ -64,7 +65,7 @@ export default function TourDetail() {
   ];
 
   return (
-    <div className="pt-24 pb-24 bg-stone-50">
+    <div className="pt-24 bg-stone-50">
       {/* Hero / Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <Link to="/tours" className="inline-flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors mb-8">
@@ -132,10 +133,12 @@ export default function TourDetail() {
           </div>
 
           <div className="w-full lg:w-auto flex-shrink-0 pt-6 lg:pt-0 border-t lg:border-t-0 border-stone-100">
-            <Link to="/contacts" className="group relative inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-widest uppercase overflow-hidden bg-accent-500 text-white hover:text-white transition-colors duration-300 w-full lg:w-auto">
-              <span className="absolute inset-0 bg-accent-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-              <span className="relative z-10">Записаться на тур</span>
-            </Link>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="group relative inline-flex min-h-[4.5rem] w-full items-center justify-center overflow-hidden rounded-[2.5rem] bg-accent-500 px-10 py-5 text-[11px] font-bold uppercase tracking-[0.35em] text-white transition-all duration-300 hover:bg-accent-400 lg:w-auto"
+            >
+              <span className="relative z-10 flex items-center gap-4">Записаться на тур</span>
+            </button>
           </div>
         </div>
       </div>
@@ -216,36 +219,80 @@ export default function TourDetail() {
         </div>
       </section>
 
-      {/* Guide Section */}
-      <section className="py-20 bg-stone-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-12">Ваш гид</h2>
-          
-          <div
-            className="mb-8 inline-block"
+    <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
           >
-            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
-              <img 
-                src={guideImage} 
-                alt="Гид Тимур" 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          </div>
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-stone-900 border border-white/10 p-8 shadow-2xl lg:p-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-6 right-6 lg:top-8 lg:right-8 text-white/50 hover:text-white transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
 
-          <div
-            className="space-y-6 text-stone-700 leading-relaxed text-left md:text-center"
-          >
-            <p>
-              Меня зовут Тимур. Я родился и вырос в Северной Осетии, с самого детства люблю нашу природу и горы. Вот уже более пяти лет я провожу экскурсии по этим удивительным местам, показывая туристам красоту ущелий, величие гор, старинные монастыри и уникальные арт-объекты. Для меня каждая поездка — это возможность поделиться любовью к родной земле и показать её с самой яркой, незабываемой стороны.
-            </p>
-            <p>
-              По окончанию экскурсии мы дарим каждому гостю небольшой набор сувениров от нашего магазина My Ossetia Store.
-            </p>
-          </div>
-        </div>
-      </section>
+              <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+
+              <form className="flex flex-col gap-5" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }}>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div>
+                    <label htmlFor="modal-name" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
+                    <input
+                      type="text"
+                      id="modal-name"
+                      className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                      placeholder="Иван Иванов"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="modal-phone" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
+                    <input
+                      type="tel"
+                      id="modal-phone"
+                      className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                      placeholder="+7 (___) ___-__-__"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="modal-message" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Комментарий к заявке</label>
+                  <textarea
+                    id="modal-message"
+                    rows={2}
+                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none resize-none"
+                    placeholder="Расскажите о ваших пожеланиях..."
+                  ></textarea>
+                </div>
+
+                <div className="mt-4">
+                  <button
+                    type="submit"
+                    className="inline-flex w-full items-center justify-center rounded-[2rem] bg-[#c0885e] px-10 py-4 text-sm font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-[#b0784e]"
+                  >
+                    Отправить
+                  </button>
+                  <p className="mt-4 text-center text-[9px] leading-relaxed tracking-wider text-white/40 uppercase">
+                    Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.
+                  </p>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

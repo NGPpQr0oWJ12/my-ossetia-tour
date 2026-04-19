@@ -1,10 +1,16 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
-import { ArrowRight, Compass, Camera, Calendar, Users, Star, Phone, Send, Clock } from "lucide-react";
+import { ArrowRight, Compass, Camera, Calendar, Users, Star, Send, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 const heroImage = "/12476587.jpg";
 const founderImage = "/gid.png";
 const storyImage = "/onas.webp";
+
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 360 362" className={className}>
+    <path fill="currentColor" fillRule="evenodd" d="M307.546 52.566C273.709 18.684 228.706.017 180.756 0 81.951 0 1.538 80.404 1.504 179.235c-.017 31.594 8.242 62.432 23.928 89.609L0 361.736l95.024-24.925c26.179 14.285 55.659 21.805 85.655 21.814h.077c98.788 0 179.21-80.413 179.244-179.244.017-47.898-18.608-92.926-52.454-126.807v-.008Zm-126.79 275.788h-.06c-26.73-.008-52.952-7.194-75.831-20.765l-5.44-3.231-56.391 14.791 15.05-54.981-3.542-5.638c-14.912-23.721-22.793-51.139-22.776-79.286.035-82.14 66.867-148.973 149.051-148.973 39.793.017 77.198 15.53 105.328 43.695 28.131 28.157 43.61 65.596 43.593 105.398-.035 82.149-66.867 148.982-148.982 148.982v.008Zm81.719-111.577c-4.478-2.243-26.497-13.073-30.606-14.568-4.108-1.496-7.09-2.243-10.073 2.243-2.982 4.487-11.568 14.577-14.181 17.559-2.613 2.991-5.226 3.361-9.704 1.117-4.477-2.243-18.908-6.97-36.02-22.226-13.313-11.878-22.304-26.54-24.916-31.027-2.613-4.486-.275-6.91 1.959-9.136 2.011-2.011 4.478-5.234 6.721-7.847 2.244-2.613 2.983-4.486 4.478-7.469 1.496-2.991.748-5.603-.369-7.847-1.118-2.243-10.073-24.289-13.812-33.253-3.636-8.732-7.331-7.546-10.073-7.692-2.613-.13-5.595-.155-8.586-.155-2.991 0-7.839 1.118-11.947 5.604-4.108 4.486-15.677 15.324-15.677 37.361s16.047 43.344 18.29 46.335c2.243 2.991 31.585 48.225 76.51 67.632 10.684 4.615 19.029 7.374 25.535 9.437 10.727 3.412 20.49 2.931 28.208 1.779 8.604-1.289 26.498-10.838 30.228-21.298 3.73-10.46 3.73-19.433 2.613-21.298-1.117-1.865-4.108-2.991-8.586-5.234l.008-.017Z" clipRule="evenodd"/>
+  </svg>
+);
 
 const ParallaxImage = ({ src, alt, speed = 0.1 }: { src: string; alt: string; speed?: number }) => {
   const ref = useRef(null);
@@ -406,19 +412,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section - The Horizon Escape */}
-      < section className="relative overflow-hidden bg-stone-950" >
-        <div className="absolute inset-0 z-0 flex">
-          <div className="h-full w-full bg-stone-950 md:w-1/2" />
-          <div className="relative h-full w-full md:w-1/2">
-            <ParallaxImage
-              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
-              alt="Закат в горах"
-              speed={0.12}
-            />
-            {/* Gradient Mask between black and image */}
-            <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/40 to-transparent" />
+      {/* Guide Section */}
+      <section className="py-20 bg-stone-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-12">Ваш гид</h2>
+          
+          <div
+            className="mb-8 inline-block"
+          >
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
+              <img 
+                src={founderImage} 
+                alt="Гид Тимур" 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
+
+          <div
+            className="space-y-6 text-stone-700 leading-relaxed text-left md:text-center"
+          >
+            <p>
+              Меня зовут Тимур. Я родился и вырос в Северной Осетии, с самого детства люблю нашу природу и горы. Вот уже более пяти лет я провожу экскурсии по этим удивительным местам, показывая туристам красоту ущелий, величие гор, старинные монастыри и уникальные арт-объекты. Для меня каждая поездка — это возможность поделиться любовью к родной земле и показать её с самой яркой, незабываемой стороны.
+            </p>
+            <p>
+              По окончанию экскурсии мы дарим каждому гостю небольшой набор сувениров от нашего магазина My Ossetia Store.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - The Horizon Escape */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <ParallaxImage
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
+            alt="Закат в горах"
+            speed={0.12}
+          />
+          {/* Frosted Glass Overlay */}
+          <div className="absolute inset-0 bg-stone-900/50 backdrop-blur-md" />
         </div>
 
         <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col px-6 py-12 lg:px-8 xl:py-24">
@@ -428,17 +462,17 @@ export default function Home() {
             <div className="flex flex-col justify-between">
               <div>
                 <div className="mb-4 flex items-center gap-4 sm:mb-8">
-                  <span className="font-mono text-[10px] tracking-widest text-amber-500 uppercase">42°50′21″N 44°24′15″E</span>
-                  <div className="h-px w-12 bg-stone-800"></div>
+                  <span className="font-mono text-xs font-bold tracking-widest text-amber-400 drop-shadow-md uppercase">42°50′21″N 44°24′15″E</span>
+                  <div className="h-px w-12 bg-white/40 drop-shadow-md"></div>
                 </div>
 
-                <h2 className="mb-6 font-serif text-4xl leading-[1.05] text-white md:text-5xl lg:text-6xl">
-                  Готовы к <span className="text-stone-400">незабываемому</span> путешествию?
+                <h2 className="mb-6 font-serif text-4xl font-bold leading-[1.05] text-white drop-shadow-md md:text-5xl lg:text-6xl">
+                  Готовы к <span className="text-white">незабываемому</span> путешествию?
                 </h2>
 
-                <p className="mb-10 text-lg font-light leading-relaxed text-stone-400 lg:text-xl">
+                <p className="mb-10 text-lg font-medium leading-relaxed text-white drop-shadow-md lg:text-xl">
                   Напишите нам, и мы подберем идеальный авторский маршрут, учитывая ваши пожелания и уровень подготовки.
-                  <span className="mt-4 block font-serif text-stone-500">— Ваш гид, Тимур</span>
+                  <span className="mt-4 block font-serif text-white/90 drop-shadow-sm">— Ваш гид, Тимур</span>
                 </p>
               </div>
 
@@ -448,9 +482,9 @@ export default function Home() {
                   href="https://wa.me/79000000000"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex w-full items-center justify-center rounded-full bg-amber-600 px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-amber-500 shadow-[0_0_30px_rgba(217,119,6,0.15)] sm:w-auto"
+                  className="group inline-flex w-full items-center justify-center rounded-full bg-[#25D366] px-10 py-5 text-[11px] font-bold tracking-[0.25em] text-white uppercase transition-all duration-300 hover:bg-[#20bd5a] shadow-[0_0_30px_rgba(37,211,102,0.25)] sm:w-auto"
                 >
-                  <Phone className="mr-3 h-5 w-5 transition-transform group-hover:rotate-12" />
+                  <WhatsAppIcon className="mr-3 h-5 w-5 transition-transform group-hover:rotate-12" />
                   WhatsApp
                 </a>
                 <a
