@@ -6,6 +6,7 @@ import type {
   Tour,
   TourUpsertInput,
   TourWithProgram,
+  SiteSettings,
 } from "./types";
 
 const ADMIN_TOKEN_KEY = "admin_access_token";
@@ -56,6 +57,9 @@ export const publicApi = {
   },
   getHome() {
     return apiRequest<HomeContent>("/api/public/home");
+  },
+  getSiteSettings() {
+    return apiRequest<SiteSettings>("/api/public/site-settings");
   },
   createLead(payload: LeadInsertInput) {
     return apiRequest<Lead>("/api/leads", { method: "POST", body: payload });

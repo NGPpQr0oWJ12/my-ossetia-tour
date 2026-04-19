@@ -15,6 +15,7 @@ import {
   MapPin,
   X,
   Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { publicApi } from "../lib/api";
@@ -24,8 +25,9 @@ export default function TourDetail() {
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tour, setTour] = useState<TourWithProgram | null>(null);
-  const [form, setForm] = useState({ name: "", phone: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "+7", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -100,10 +102,43 @@ export default function TourDetail() {
     },
   ];
 
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, "");
+    if (digits.length === 0) return "+7";
+    
+    // Если начали стирать 7, возвращаем +7
+    const clean = digits.startsWith("7") ? digits : "7" + digits;
+    const limited = clean.slice(0, 11);
+    
+    let res = "+7";
+    if (limited.length > 1) {
+      res += " (" + limited.slice(1, 4);
+    }
+    if (limited.length > 4) {
+      res += ") " + limited.slice(4, 7);
+    }
+    if (limited.length > 7) {
+      res += "-" + limited.slice(7, 9);
+    }
+    if (limited.length > 9) {
+      res += "-" + limited.slice(9, 11);
+    }
+    return res;
+  };
+
   async function submitLead(event: FormEvent) {
     event.preventDefault();
-    if (!tour) return;
+    if (!tour || isSubmitting) return;
+    
+    // Простейшая проверка длины (11 цифр включая 7)
+    const digits = form.phone.replace(/\D/g, "");
+    if (digits.length < 11) {
+      alert("Пожалуйста, введите полный номер телефона");
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
       await publicApi.createLead({
         source_page: "tour_detail",
         tour_id: tour.id,
@@ -112,10 +147,12 @@ export default function TourDetail() {
         message: form.message,
       });
       setSubmitted(true);
-      setForm({ name: "", phone: "", message: "" });
-      setIsModalOpen(false);
+      setForm({ name: "", phone: "+7", message: "" });
+      // Не закрываем модалку сразу, чтобы показать анимацию успеха
     } catch {
-      // silent
+      alert("Произошла ошибка при отправке. Попробуйте еще раз.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -275,55 +312,101 @@ export default function TourDetail() {
       <AnimatePresence>
         {isModalOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
-            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-stone-900 border border-white/10 p-8 shadow-2xl lg:p-10" onClick={(e) => e.stopPropagation()}>
-              <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 lg:top-8 lg:right-8 text-white/50 hover:text-white transition-colors" aria-label="Close modal">
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.95, opacity: 0 }} 
+              className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-stone-900 border border-white/10 p-8 shadow-2xl lg:p-10" 
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => {
+                  setIsModalOpen(false);
+                  if (submitted) setTimeout(() => setSubmitted(false), 500);
+                }} 
+                className="absolute top-6 right-6 lg:top-8 lg:right-8 text-white/50 hover:text-white transition-colors z-10" 
+                aria-label="Close modal"
+              >
                 <X className="w-6 h-6" />
               </button>
-              <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
-              <form className="flex flex-col gap-5" onSubmit={submitLead}>
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  <div>
-                    <label htmlFor="modal-name" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
-                    <input
-                      type="text"
-                      id="modal-name"
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-                      className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
-                      placeholder="Иван Иванов"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="modal-phone" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
-                    <input
-                      type="tel"
-                      id="modal-phone"
-                      required
-                      value={form.phone}
-                      onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
-                      className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
-                      placeholder="+7 (___) ___-__-__"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="modal-message" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Комментарий к заявке</label>
-                  <textarea
-                    id="modal-message"
-                    rows={2}
-                    value={form.message}
-                    onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
-                    className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none resize-none"
-                    placeholder="Расскажите о ваших пожеланиях..."
-                  ></textarea>
-                </div>
-                <div className="mt-4">
-                  <button type="submit" className="group btn-primary w-full">
-                    Отправить
-                  </button>
-                </div>
-              </form>
+
+              <AnimatePresence mode="wait">
+                {submitted ? (
+                  <motion.div 
+                    key="success"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="py-12 flex flex-col items-center text-center"
+                  >
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
+                      className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-8"
+                    >
+                      <CheckCircle2 className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <h3 className="text-3xl font-serif text-white mb-4">Заявка отправлена!</h3>
+                    <p className="text-white/60 max-w-[280px] leading-relaxed">
+                      Мы получили ваш запрос и свяжемся с вами в ближайшее время для уточнения деталей.
+                    </p>
+                    <button 
+                      onClick={() => setIsModalOpen(false)}
+                      className="mt-10 admin-button-primary bg-white text-stone-900 border-white hover:bg-stone-200"
+                    >
+                      Понятно
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <h3 className="mb-8 text-center font-serif text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+                    <form className="flex flex-col gap-5" onSubmit={submitLead}>
+                      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                          <label htmlFor="modal-name" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
+                          <input
+                            type="text"
+                            id="modal-name"
+                            required
+                            value={form.name}
+                            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                            className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none"
+                            placeholder="Иван Иванов"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="modal-phone" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
+                          <input
+                            type="tel"
+                            id="modal-phone"
+                            required
+                            value={form.phone}
+                            onChange={(e) => setForm((prev) => ({ ...prev, phone: formatPhone(e.target.value) }))}
+                            className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none tracking-wider"
+                            placeholder="+7 (___) ___-__-__"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label htmlFor="modal-message" className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Комментарий к заявке</label>
+                        <textarea
+                          id="modal-message"
+                          rows={2}
+                          value={form.message}
+                          onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
+                          className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 transition-colors focus:border-accent-500 focus:outline-none resize-none"
+                          placeholder="Расскажите о ваших пожеланиях..."
+                        ></textarea>
+                      </div>
+                      <div className="mt-4">
+                        <button type="submit" disabled={isSubmitting} className="group btn-primary w-full flex items-center justify-center gap-3">
+                          {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Отправить"}
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </motion.div>
         )}

@@ -1,282 +1,232 @@
-import { FormEvent, type Dispatch, type SetStateAction, useEffect, useMemo, useState } from "react";
-import { ContactRound, LifeBuoy, Save, Settings2, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
+import { 
+  Save, 
+  User, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  MessageSquare, 
+  Send as TelegramIcon,
+  Globe,
+  Settings,
+  AlertCircle
+} from "lucide-react";
 import { adminApi } from "../lib/api";
-import {
-  AdminPageHeader,
-  FormField,
-  LoadingState,
-  Notice,
-  Section,
-  StatCard,
-  TextArea,
-  TextInput,
+import { 
+  AdminPageHeader, 
+  FormField, 
+  LoadingState, 
+  Notice, 
+  Section, 
+  TextInput, 
+  TextArea, 
+  ImageUpload 
 } from "./components/AdminUI";
-
-type FieldDefinition = {
-  key: string;
-  label: string;
-  placeholder: string;
-  rows?: number;
-  hint?: string;
-};
-
-const CONTACT_PAGE_FIELDS: FieldDefinition[] = [
-  {
-    key: "contacts_title",
-    label: "Заголовок страницы контактов",
-    placeholder: "Свяжитесь с нами",
-  },
-  {
-    key: "contacts_subtitle",
-    label: "Подзаголовок",
-    placeholder: "Поможем подобрать маршрут и ответим на организационные вопросы.",
-    rows: 3,
-  },
-];
-
-const CONTACT_FIELDS: FieldDefinition[] = [
-  {
-    key: "office_text",
-    label: "Адрес или описание офиса",
-    placeholder: "Владикавказ, Республика Северная Осетия...",
-    rows: 3,
-  },
-  {
-    key: "phones_text",
-    label: "Телефоны",
-    placeholder: "+7 (999) 123-45-67\n+7 (999) 765-43-21",
-    rows: 3,
-    hint: "Один номер на строку",
-  },
-  {
-    key: "email_text",
-    label: "Email",
-    placeholder: "travel@myossetia.ru",
-  },
-  {
-    key: "schedule_text",
-    label: "Режим работы",
-    placeholder: "Ежедневно с 09:00 до 20:00",
-    rows: 3,
-  },
-];
-
-const MESSENGER_FIELDS: FieldDefinition[] = [
-  {
-    key: "whatsapp_url",
-    label: "Ссылка WhatsApp",
-    placeholder: "https://wa.me/79991234567",
-  },
-  {
-    key: "telegram_url",
-    label: "Ссылка Telegram",
-    placeholder: "https://t.me/myossetia",
-  },
-];
-
-const GUIDE_FIELDS: FieldDefinition[] = [
-  {
-    key: "guide_name",
-    label: "Имя гида",
-    placeholder: "Аслан",
-  },
-  {
-    key: "guide_bio",
-    label: "Текст о гиде",
-    placeholder: "Короткая история, опыт и подход к маршрутам.",
-    rows: 5,
-  },
-];
+import { SiteSettings } from "../lib/types";
 
 export default function AdminSiteSettings() {
-  const [form, setForm] = useState<Record<string, string>>({});
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [status, setStatus] = useState("");
-  const [error, setError] = useState("");
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function load() {
-    setLoading(true);
-    setError("");
-    setStatus("");
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
+  async function loadSettings() {
     try {
-      setForm(await adminApi.getSiteSettings());
+      setLoading(true);
+      const data = await adminApi.getSiteSettings();
+      // Приводим Record<string, string> к SiteSettings c дефолтными значениями
+      setSettings({
+        contacts_title: data.contacts_title || "",
+        contacts_subtitle: data.contacts_subtitle || "",
+        office_text: data.office_text || "",
+        phones_text: data.phones_text || "",
+        email_text: data.email_text || "",
+        schedule_text: data.schedule_text || "",
+        whatsapp_url: data.whatsapp_url || "",
+        telegram_url: data.telegram_url || "",
+        guide_name: data.guide_name || "",
+        guide_bio: data.guide_bio || "",
+        guide_image_url: data.guide_image_url || "/gid.png",
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки настроек.");
+      setError("Не удалось загрузить настройки");
     } finally {
       setLoading(false);
     }
   }
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault();
-    setSaving(true);
-    setStatus("");
-    setError("");
-
+  async function save() {
+    if (!settings) return;
     try {
-      await adminApi.updateSiteSettings(form);
-      setStatus("Настройки сайта сохранены.");
+      setSaving(true);
+      setError(null);
+      await adminApi.updateSiteSettings(settings as unknown as Record<string, string>);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка сохранения.");
+      setError("Ошибка при сохранении");
     } finally {
       setSaving(false);
     }
   }
 
-  useEffect(() => {
-    void load();
-  }, []);
+  const updateSetting = (key: keyof SiteSettings, value: string) => {
+    setSettings(prev => prev ? { ...prev, [key]: value } : null);
+    setSaved(false);
+  };
 
-  const filledFields = useMemo(
-    () => Object.values(form).filter((value) => String(value).trim().length > 0).length,
-    [form],
+  if (loading) return <LoadingState title="Загрузка настроек" description="Получаем текущие параметры сайта..." />;
+
+  if (!settings) return (
+    <div className="p-8">
+      <Notice tone="danger" title="Ошибка">{error || "Настройки не найдены"}</Notice>
+    </div>
   );
 
-  if (loading) {
-    return (
-      <LoadingState
-        title="Загрузка настроек сайта"
-        description="Подтягиваем контактные данные, тексты и мессенджеры."
-      />
-    );
-  }
-
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <AdminPageHeader
-        eyebrow="Общие данные"
+        eyebrow="Конфигурация"
         title="Настройки сайта"
-        description="Здесь редактируются контакты, описания и служебные тексты, которые переиспользуются на публичных страницах."
+        description="Управляйте контактами, информацией о гиде и ссылками на мессенджеры."
         actions={
-          <>
-            <button type="button" onClick={() => void load()} className="admin-button-secondary">
-              Обновить
-            </button>
-            <button type="submit" disabled={saving} className="admin-button-primary">
-              <Save className="h-4 w-4" />
-              {saving ? "Сохранение..." : "Сохранить"}
-            </button>
-          </>
-        }
-        meta={
-          <>
-            <StatCard
-              icon={Settings2}
-              label="Заполнено"
-              value={filledFields}
-              description="Количество заполненных ключевых полей в настройках."
-              tone={filledFields > 0 ? "success" : "default"}
-            />
-            <StatCard
-              icon={ContactRound}
-              label="Контакты"
-              value={form.email_text || "Не задано"}
-              description="Основной email, который будет доступен на сайте."
-            />
-            <StatCard
-              icon={LifeBuoy}
-              label="Мессенджеры"
-              value={
-                [form.whatsapp_url, form.telegram_url].filter((item) => (item ?? "").trim().length > 0).length
-              }
-              description="Ссылки на быстрые каналы связи с клиентом."
-              tone="accent"
-            />
-            <StatCard
-              icon={UserRound}
-              label="Гид"
-              value={form.guide_name || "Не указан"}
-              description="Имя и описание эксперта, который сопровождает туры."
-            />
-          </>
+          <button
+            onClick={save}
+            disabled={saving}
+            className={`admin-button-primary min-w-[140px] ${saved ? 'bg-emerald-600 border-emerald-600' : ''}`}
+          >
+            {saving ? (
+              <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : saved ? (
+              <>Применено</>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Сохранить
+              </>
+            )}
+          </button>
         }
       />
 
-      {error ? <Notice tone="danger">{error}</Notice> : null}
-      {status ? <Notice tone="success">{status}</Notice> : null}
+      {error && <Notice tone="danger" title="Проблема">{error}</Notice>}
 
-      <Section
-        title="Страница контактов"
-        description="Тексты первого экрана и вводного блока на странице контактов."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {CONTACT_PAGE_FIELDS.map((field) => (
-            <div key={field.key}>
-              <FieldEditor field={field} form={form} setForm={setForm} />
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Гид */}
+        <Section 
+          title="Информация о гиде" 
+          description="Эти данные отображаются в блоке 'Ваш гид' на главной странице."
+        >
+          <div className="flex flex-col gap-6">
+            <ImageUpload 
+              label="Фото гида" 
+              description="Рекомендуется портретное фото на светлом фоне."
+              value={settings.guide_image_url}
+              onChange={(url) => updateSetting("guide_image_url", url)}
+              aspectClassName="aspect-square max-w-[240px]"
+            />
+            
+            <FormField label="Имя гида">
+              <TextInput 
+                value={settings.guide_name}
+                onChange={(e) => updateSetting("guide_name", e.target.value)}
+                placeholder="Например: Тимур"
+              />
+            </FormField>
+
+            <FormField label="Биография / Описание">
+              <TextArea 
+                value={settings.guide_bio}
+                onChange={(e) => updateSetting("guide_bio", e.target.value)}
+                placeholder="Краткий рассказ о себе..."
+                rows={5}
+              />
+            </FormField>
+          </div>
+        </Section>
+
+        {/* Контакты */}
+        <div className="space-y-8">
+          <Section 
+            title="Контакты" 
+            description="Основные контактные данные для связи."
+          >
+            <div className="grid gap-6">
+              <FormField label="Заголовок блока">
+                <TextInput 
+                  value={settings.contacts_title}
+                  onChange={(e) => updateSetting("contacts_title", e.target.value)}
+                />
+              </FormField>
+
+              <FormField label="Подзаголовок">
+                <TextInput 
+                  value={settings.contacts_subtitle}
+                  onChange={(e) => updateSetting("contacts_subtitle", e.target.value)}
+                />
+              </FormField>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                <FormField label="Телефон(ы)">
+                  <TextArea 
+                    value={settings.phones_text}
+                    onChange={(e) => updateSetting("phones_text", e.target.value)}
+                    rows={2}
+                  />
+                </FormField>
+                <FormField label="Почта">
+                  <TextInput 
+                    value={settings.email_text}
+                    onChange={(e) => updateSetting("email_text", e.target.value)}
+                  />
+                </FormField>
+              </div>
+
+              <FormField label="Адрес офиса">
+                <TextArea 
+                  value={settings.office_text}
+                  onChange={(e) => updateSetting("office_text", e.target.value)}
+                  rows={2}
+                />
+              </FormField>
+
+              <FormField label="Режим работы">
+                <TextInput 
+                  value={settings.schedule_text}
+                  onChange={(e) => updateSetting("schedule_text", e.target.value)}
+                />
+              </FormField>
             </div>
-          ))}
-        </div>
-      </Section>
+          </Section>
 
-      <Section
-        title="Контактные данные"
-        description="Основной адрес, телефоны, почта и график работы. Эти данные должны быть актуальными для клиентов."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {CONTACT_FIELDS.map((field) => (
-            <div key={field.key}>
-              <FieldEditor field={field} form={form} setForm={setForm} />
+          <Section 
+            title="Мессенджеры" 
+            description="Ссылки для быстрого перехода в чат."
+          >
+            <div className="grid gap-6">
+              <FormField label="Ссылка на WhatsApp" hint="Формат: https://wa.me/79001234567">
+                <TextInput 
+                  value={settings.whatsapp_url}
+                  onChange={(e) => updateSetting("whatsapp_url", e.target.value)}
+                />
+              </FormField>
+
+              <FormField label="Ссылка на Telegram" hint="Формат: https://t.me/username">
+                <TextInput 
+                  value={settings.telegram_url}
+                  onChange={(e) => updateSetting("telegram_url", e.target.value)}
+                />
+              </FormField>
             </div>
-          ))}
+          </Section>
         </div>
-      </Section>
-
-      <Section
-        title="Мессенджеры"
-        description="Добавьте быстрые ссылки на чаты и каналы. Если поле пустое, соответствующая ссылка на сайте может быть скрыта."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {MESSENGER_FIELDS.map((field) => (
-            <div key={field.key}>
-              <FieldEditor field={field} form={form} setForm={setForm} />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section
-        title="Блок о гиде"
-        description="Личность проводника усиливает доверие к бренду. Поддерживайте этот блок живым и конкретным."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {GUIDE_FIELDS.map((field) => (
-            <div key={field.key}>
-              <FieldEditor field={field} form={form} setForm={setForm} />
-            </div>
-          ))}
-        </div>
-      </Section>
-    </form>
-  );
-}
-
-function FieldEditor({
-  field,
-  form,
-  setForm,
-}: {
-  field: FieldDefinition;
-  form: Record<string, string>;
-  setForm: Dispatch<SetStateAction<Record<string, string>>>;
-}) {
-  return (
-    <FormField label={field.label} hint={field.hint}>
-      {field.rows ? (
-        <TextArea
-          rows={field.rows}
-          value={form[field.key] ?? ""}
-          onChange={(event) => setForm((prev) => ({ ...prev, [field.key]: event.target.value }))}
-          placeholder={field.placeholder}
-        />
-      ) : (
-        <TextInput
-          value={form[field.key] ?? ""}
-          onChange={(event) => setForm((prev) => ({ ...prev, [field.key]: event.target.value }))}
-          placeholder={field.placeholder}
-        />
-      )}
-    </FormField>
+      </div>
+    </div>
   );
 }

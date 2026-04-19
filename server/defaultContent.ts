@@ -145,4 +145,5 @@ export const DEFAULT_SITE_SETTINGS = {
   guide_name: "Тимур",
   guide_bio:
     "Меня зовут Тимур. Я родился и вырос в Северной Осетии, с самого детства люблю нашу природу и горы.",
+  guide_image_url: "/gid.png",
 };

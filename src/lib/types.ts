@@ -1,5 +1,20 @@
 export type LeadStatus = "new" | "in_progress" | "booked" | "closed_lost";
 
+export interface SiteSettings {
+  contacts_title: string;
+  contacts_subtitle: string;
+  office_text: string;
+  phones_text: string;
+  email_text: string;
+  schedule_text: string;
+  whatsapp_url: string;
+  telegram_url: string;
+  guide_name: string;
+  guide_bio: string;
+  guide_image_url: string;
+}
+
+
 export interface Lead {
   id: number;
   source_page: string;

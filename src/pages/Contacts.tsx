@@ -1,7 +1,8 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { CheckCircle2, Loader2, MapPin, Phone, Mail, Clock } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { publicApi, publicSettingsApi } from "../lib/api";
-import type { Tour } from "../lib/types";
+import { motion, AnimatePresence } from "motion/react";
+import { publicApi } from "../lib/api";
+import type { Tour, SiteSettings } from "../lib/types";
 
 const DEFAULT_SETTINGS = {
   contacts_title: "Свяжитесь с нами",
@@ -13,19 +14,20 @@ const DEFAULT_SETTINGS = {
 };
 
 export default function Contacts() {
-  const [settings, setSettings] = useState<Record<string, string>>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [tours, setTours] = useState<Tour[]>([]);
-  const [form, setForm] = useState({ name: "", phone: "", tourId: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "+7", tourId: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     void (async () => {
       try {
         const [siteSettings, toursData] = await Promise.all([
-          publicSettingsApi.getSiteSettings(),
+          publicApi.getSiteSettings(),
           publicApi.getTours(),
         ]);
-        setSettings((prev) => ({ ...prev, ...siteSettings }));
+        if (siteSettings) setSettings(siteSettings as unknown as SiteSettings);
         setTours(toursData);
       } catch {
         // keep defaults
@@ -33,9 +35,31 @@ export default function Contacts() {
     })();
   }, []);
 
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, "");
+    if (digits.length === 0) return "+7";
+    const clean = digits.startsWith("7") ? digits : "7" + digits;
+    const limited = clean.slice(0, 11);
+    let res = "+7";
+    if (limited.length > 1) res += " (" + limited.slice(1, 4);
+    if (limited.length > 4) res += ") " + limited.slice(4, 7);
+    if (limited.length > 7) res += "-" + limited.slice(7, 9);
+    if (limited.length > 9) res += "-" + limited.slice(9, 11);
+    return res;
+  };
+
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
+    if (isSubmitting) return;
+
+    const digits = form.phone.replace(/\D/g, "");
+    if (digits.length < 11) {
+      alert("Пожалуйста, введите полный номер телефона");
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
       await publicApi.createLead({
         source_page: "contacts",
         tour_id: form.tourId ? Number(form.tourId) : null,
@@ -44,9 +68,11 @@ export default function Contacts() {
         message: form.message,
       });
       setSubmitted(true);
-      setForm({ name: "", phone: "", tourId: "", message: "" });
+      setForm({ name: "", phone: "+7", tourId: "", message: "" });
     } catch {
-      // keep page stable
+      alert("Ошибка при отправке. Попробуйте еще раз.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -70,126 +96,148 @@ export default function Contacts() {
             <h3 className="text-2xl mb-8">Контактная информация</h3>
             <div className="space-y-8">
               <div className="flex items-start gap-4">
-                <div className="bg-white p-3 rounded-full shadow-sm text-forest-600">
+                <div className="bg-white p-3 rounded-full shadow-sm text-amber-600">
                   <MapPin className="h-6 w-6" />
                 </div>
                 <div>
                   <h4 className="font-medium text-stone-900 mb-1">Офис</h4>
-                  <p className="text-stone-600 whitespace-pre-line">{settings.office_text}</p>
+                  <p className="text-stone-600 whitespace-pre-line">{settings?.office_text || DEFAULT_SETTINGS.office_text}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="bg-white p-3 rounded-full shadow-sm text-forest-600">
+                <div className="bg-white p-3 rounded-full shadow-sm text-amber-600">
                   <Phone className="h-6 w-6" />
                 </div>
                 <div>
                   <h4 className="font-medium text-stone-900 mb-1">Телефон</h4>
                   <p className="text-stone-600 whitespace-pre-line">
-                    {phones.join("\n")}
+                    {settings?.phones_text || DEFAULT_SETTINGS.phones_text}
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="bg-white p-3 rounded-full shadow-sm text-forest-600">
+                <div className="bg-white p-3 rounded-full shadow-sm text-amber-600">
                   <Mail className="h-6 w-6" />
                 </div>
                 <div>
                   <h4 className="font-medium text-stone-900 mb-1">Email</h4>
-                  <p className="text-stone-600">{settings.email_text}</p>
+                  <p className="text-stone-600">{settings?.email_text || DEFAULT_SETTINGS.email_text}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="bg-white p-3 rounded-full shadow-sm text-forest-600">
+                <div className="bg-white p-3 rounded-full shadow-sm text-amber-600">
                   <Clock className="h-6 w-6" />
                 </div>
                 <div>
                   <h4 className="font-medium text-stone-900 mb-1">Режим работы</h4>
-                  <p className="text-stone-600 whitespace-pre-line">{settings.schedule_text}</p>
+                  <p className="text-stone-600 whitespace-pre-line">{settings?.schedule_text || DEFAULT_SETTINGS.schedule_text}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div>
+          <div className="relative min-h-[400px] flex flex-col">
             <h3 className="text-2xl mb-8">Оставить заявку</h3>
-            <form className="space-y-6" onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-stone-700 mb-2">
-                    Ваше имя
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    required
-                    value={form.name}
-                    onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent"
-                    placeholder="Иван Иванов"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-stone-700 mb-2">
-                    Телефон
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    required
-                    value={form.phone}
-                    onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent"
-                    placeholder="+7 (___) ___-__-__"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="tour" className="block text-sm font-medium text-stone-700 mb-2">
-                  Интересующий тур
-                </label>
-                <select
-                  id="tour"
-                  value={form.tourId}
-                  onChange={(e) => setForm((prev) => ({ ...prev, tourId: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent appearance-none"
-                >
-                  <option value="">Выберите тур из списка</option>
-                  {tours.map((tour) => (
-                    <option key={tour.id} value={String(tour.id)}>
-                      {tour.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-stone-700 mb-2">
-                  Комментарий
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  value={form.message}
-                  onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent resize-none"
-                  placeholder="Напишите ваши пожелания, даты поездки и количество человек..."
-                ></textarea>
-              </div>
-
-              <button type="submit" className="group btn-primary w-full">
-                Отправить заявку
-              </button>
+            <AnimatePresence mode="wait">
               {submitted ? (
-                <p className="text-sm text-green-700">
-                  Спасибо! Заявка отправлена, мы свяжемся с вами.
-                </p>
-              ) : null}
+                <motion.div 
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-stone-50 rounded-3xl p-10 flex flex-col items-center text-center justify-center flex-grow"
+                >
+                  <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mb-6">
+                    <CheckCircle2 className="w-8 h-8 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-serif mb-4">Заявка принята!</h4>
+                  <p className="text-stone-600 max-w-[280px] mb-8">
+                    Мы получили ваше сообщение и свяжемся с вами в ближайшее время.
+                  </p>
+                  <button 
+                    onClick={() => setSubmitted(false)}
+                    className="text-amber-700 text-sm font-bold uppercase tracking-widest hover:text-amber-800 transition-colors"
+                  >
+                    Отправить еще раз
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <form className="space-y-6" onSubmit={onSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-stone-700 mb-2">
+                          Ваше имя
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          required
+                          value={form.name}
+                          onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                          className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent italic"
+                          placeholder="Иван Иванов"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="phone" className="block text-sm font-medium text-stone-700 mb-2">
+                          Телефон
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          required
+                          value={form.phone}
+                          onChange={(e) => setForm((prev) => ({ ...prev, phone: formatPhone(e.target.value) }))}
+                          className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent italic"
+                          placeholder="+7 (___) ___-__-__"
+                        />
+                      </div>
+                    </div>
 
-              <p className="text-xs text-stone-500 text-center mt-4">
-                Нажимая кнопку «Отправить заявку», вы соглашаетесь с политикой обработки персональных данных.
-              </p>
-            </form>
+                    <div>
+                      <label htmlFor="tour" className="block text-sm font-medium text-stone-700 mb-2">
+                        Интересующий тур
+                      </label>
+                      <select
+                        id="tour"
+                        value={form.tourId}
+                        onChange={(e) => setForm((prev) => ({ ...prev, tourId: e.target.value }))}
+                        className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent appearance-none italic"
+                      >
+                        <option value="">Выберите тур из списка</option>
+                        {tours.map((tour) => (
+                          <option key={tour.id} value={String(tour.id)}>
+                            {tour.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-stone-700 mb-2">
+                        Комментарий
+                      </label>
+                      <textarea
+                        id="message"
+                        rows={4}
+                        value={form.message}
+                        onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
+                        className="w-full px-4 py-3 rounded-none border-b border-stone-200 focus:outline-none focus:border-accent-500 transition-colors bg-transparent resize-none italic"
+                        placeholder="Напишите ваши пожелания, даты поездки и количество человек..."
+                      ></textarea>
+                    </div>
+
+                    <button type="submit" disabled={isSubmitting} className="group btn-primary w-full flex items-center justify-center gap-3">
+                      {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Отправить заявку"}
+                    </button>
+
+                    <p className="text-xs text-stone-500 text-center mt-4">
+                      Нажимая кнопку «Отправить заявку», вы соглашаетесь с политикой обработки персональных данных.
+                    </p>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

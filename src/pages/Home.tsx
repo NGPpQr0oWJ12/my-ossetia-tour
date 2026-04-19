@@ -1,10 +1,10 @@
 import React from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { ArrowRight, Compass, Camera, Calendar, Users, Star, Send, Clock } from "lucide-react";
+import { ArrowRight, Compass, Camera, Calendar, Users, Star, Send, Clock, CheckCircle2, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { publicApi } from "../lib/api";
-import type { HomeContent, Tour } from "../lib/types";
+import type { HomeContent, Tour, SiteSettings } from "../lib/types";
 
 const defaultHeroImage = "/12476587.jpg";
 const founderImage = "/gid.png";
@@ -104,17 +104,63 @@ const TourCard: React.FC<TourCardProps> = ({ tour }) => {
 
 export default function Home() {
   const [data, setData] = useState<HomeContent>(INITIAL_DATA);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
+  const [homeForm, setHomeForm] = useState({ name: "", phone: "+7", tour_id: "" });
+  const [homeSubmitted, setHomeSubmitted] = useState(false);
+  const [homeIsSubmitting, setHomeIsSubmitting] = useState(false);
   const { scrollYProgress } = useScroll();
   const yHero = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   useEffect(() => {
-    publicApi.getHome()
-      .then((res) => {
-        if (res) setData(res);
-      })
-      .finally(() => setLoading(false));
+    Promise.all([
+      publicApi.getHome(),
+      publicApi.getSiteSettings()
+    ]).then(([homeRes, settingsRes]) => {
+      if (homeRes) setData(homeRes);
+      if (settingsRes) setSettings(settingsRes as unknown as SiteSettings);
+    }).finally(() => setLoading(false));
   }, []);
+
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, "");
+    if (digits.length === 0) return "+7";
+    const clean = digits.startsWith("7") ? digits : "7" + digits;
+    const limited = clean.slice(0, 11);
+    let res = "+7";
+    if (limited.length > 1) res += " (" + limited.slice(1, 4);
+    if (limited.length > 4) res += ") " + limited.slice(4, 7);
+    if (limited.length > 7) res += "-" + limited.slice(7, 9);
+    if (limited.length > 9) res += "-" + limited.slice(9, 11);
+    return res;
+  };
+
+  const handleHomeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (homeIsSubmitting) return;
+
+    const digits = homeForm.phone.replace(/\D/g, "");
+    if (digits.length < 11) {
+      alert("Пожалуйста, введите полный номер телефона");
+      return;
+    }
+
+    try {
+      setHomeIsSubmitting(true);
+      await publicApi.createLead({
+        source_page: "home_cta",
+        tour_id: homeForm.tour_id ? Number(homeForm.tour_id) : null,
+        name: homeForm.name,
+        phone: homeForm.phone,
+        message: homeForm.tour_id ? `Интересует тур ID: ${homeForm.tour_id}` : "Заявка с главной страницы",
+      });
+      setHomeSubmitted(true);
+    } catch {
+      alert("Ошибка при отправке. Попробуйте еще раз.");
+    } finally {
+      setHomeIsSubmitting(false);
+    }
+  };
 
   const featuredTours = data.featured_tours || [];
 
@@ -156,29 +202,43 @@ export default function Home() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center py-8 md:py-12">
           <div className="w-full grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 items-center">
             <div className="grid min-w-0">
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: loading ? 0 : 1 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col"
-              >
-                <h1 className="mb-8 font-serif text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.95] text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(4.5rem,6vw,6.5rem)] whitespace-pre-line min-h-[1.2em]">
-                  {renderTitle(data.hero_title)}
-                </h1>
-
-                <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl min-h-[2em]">
-                  {data.hero_subtitle}
-                </p>
-
-                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                  <Link
-                    to="/tours"
-                    className="group btn-glass sm:w-[26rem] xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base"
-                  >
-                    <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
-                  </Link>
+              {loading ? (
+                <div className="flex flex-col space-y-8 animate-pulse">
+                  <div className="space-y-4">
+                    <div className="h-[6vw] min-h-[3rem] w-3/4 bg-white/20 rounded-[2rem]" />
+                    <div className="h-[6vw] min-h-[3rem] w-1/2 bg-white/20 rounded-[2rem]" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-6 w-full bg-white/10 rounded-xl" />
+                    <div className="h-6 w-2/3 bg-white/10 rounded-xl" />
+                  </div>
+                  <div className="h-16 w-[28rem] bg-white/10 rounded-3xl" />
                 </div>
-              </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col"
+                >
+                  <h1 className="mb-8 font-serif text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.95] text-white drop-shadow-2xl sm:mb-10 sm:leading-[0.9] xl:mb-12 xl:text-[clamp(4.5rem,6vw,6.5rem)] whitespace-pre-line">
+                    {renderTitle(data.hero_title)}
+                  </h1>
+
+                  <p className="mb-12 max-w-2xl text-[1rem] font-light leading-relaxed text-white/92 drop-shadow-lg sm:mb-12 sm:text-xl lg:text-2xl xl:mb-12 xl:text-3xl">
+                    {data.hero_subtitle}
+                  </p>
+
+                  <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                    <Link
+                      to="/tours"
+                      className="group btn-glass sm:w-[26rem] xl:w-[28rem] min-[1700px]:w-[32rem] min-[1700px]:min-h-[5.5rem] min-[1700px]:text-base"
+                    >
+                      <span className="relative z-10 flex items-center gap-4">Выбрать тур <ArrowRight className="h-5 w-5" /></span>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             {/* Popular Route Sticky Sidebar Style */}
@@ -319,12 +379,19 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-5xl mb-12">Ваш гид</h2>
           <div className="mb-8 inline-block">
-            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
-              <img src={founderImage} alt="Гид Тимур" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto bg-stone-200">
+              <img 
+                src={settings?.guide_image_url || founderImage} 
+                alt={`Гид ${settings?.guide_name || "Тимур"}`} 
+                className="w-full h-full object-cover" 
+                referrerPolicy="no-referrer" 
+              />
             </div>
           </div>
           <div className="space-y-6 text-stone-700 leading-relaxed text-left md:text-center">
-            <p>Меня зовут Тимур. Я родился и вырос в Северной Осетии, с самого детства люблю нашу природу и горы. Вот уже более пяти лет я провожу экскурсии по этим удивительным местам, показывая туристам красоту ущелий, величие гор, старинные монастыри и уникальные арт-объекты.</p>
+            <p className="whitespace-pre-line">
+              {settings?.guide_bio || "Меня зовут Тимур. Я родился и вырос в Северной Осетии, с самого детства люблю нашу природу и горы..."}
+            </p>
             <p>По окончанию экскурсии мы дарим каждому гостю небольшой набор сувениров от нашего магазина My Ossetia Store.</p>
           </div>
         </div>
@@ -369,33 +436,80 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex w-full flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10">
-              <h3 className="mb-8 text-center text-3xl leading-[1.1] text-white">Оставить заявку</h3>
-              <form className="flex h-full flex-col justify-between" onSubmit={(e) => e.preventDefault()}>
-                <div className="space-y-5">
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
-                      <input type="text" className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 focus:border-accent-500 focus:outline-none" placeholder="Иван Иванов" />
+            <div className="flex w-full flex-col justify-center overflow-hidden rounded-[2.5rem] border border-white/20 bg-stone-900/40 p-8 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-3xl md:ml-auto lg:p-10 min-h-[400px]">
+              <AnimatePresence mode="wait">
+                {homeSubmitted ? (
+                  <motion.div 
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-center text-center space-y-6"
+                  >
+                    <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center">
+                      <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
-                      <input type="tel" className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 focus:border-accent-500 focus:outline-none" placeholder="+7 (___) ___-__-__" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Интересующий тур</label>
-                    <select className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-base text-white focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900">
-                      <option value="">Выберите тур из списка</option>
-                      {featuredTours.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-                    </select>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <button type="submit" className="group btn-primary w-full">Отправить</button>
-                  <p className="mt-4 text-center text-[9px] leading-relaxed tracking-wider text-white/40 uppercase">Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.</p>
-                </div>
-              </form>
+                    <h3 className="text-3xl font-serif text-white">Заявка принята!</h3>
+                    <p className="text-white/60 text-sm leading-relaxed max-w-[240px]">
+                      Менеджер свяжется с вами в ближайшее время.
+                    </p>
+                    <button 
+                      onClick={() => setHomeSubmitted(false)}
+                      className="text-white/40 text-[10px] uppercase tracking-widest hover:text-white transition-colors"
+                    >
+                      Отправить еще одну
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <h3 className="mb-8 text-center text-3xl leading-[1.1] text-white">Оставить заявку</h3>
+                    <form className="flex h-full flex-col justify-between" onSubmit={handleHomeSubmit}>
+                      <div className="space-y-5">
+                        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                          <div>
+                            <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Ваше имя</label>
+                            <input 
+                              type="text" 
+                              required
+                              value={homeForm.name}
+                              onChange={(e) => setHomeForm(prev => ({ ...prev, name: e.target.value }))}
+                              className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 focus:border-accent-500 focus:outline-none" 
+                              placeholder="Иван Иванов" 
+                            />
+                          </div>
+                          <div>
+                            <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Телефон</label>
+                            <input 
+                              type="tel" 
+                              required
+                              value={homeForm.phone}
+                              onChange={(e) => setHomeForm(prev => ({ ...prev, phone: formatPhone(e.target.value) }))}
+                              className="w-full border-b border-white/20 bg-transparent px-0 py-2 text-base text-white placeholder-white/30 focus:border-accent-500 focus:outline-none" 
+                              placeholder="+7 (___) ___-__-__" 
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-[10px] font-bold tracking-widest text-white/50 uppercase">Интересующий тур</label>
+                          <select 
+                            value={homeForm.tour_id}
+                            onChange={(e) => setHomeForm(prev => ({ ...prev, tour_id: e.target.value }))}
+                            className="w-full appearance-none border-b border-white/20 bg-transparent px-0 py-2 text-base text-white focus:border-accent-500 focus:outline-none [&>option]:bg-stone-900"
+                          >
+                            <option value="">Выберите тур из списка</option>
+                            {featuredTours.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="mt-6">
+                        <button type="submit" disabled={homeIsSubmitting} className="group btn-primary w-full flex items-center justify-center gap-3">
+                          {homeIsSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Отправить"}
+                        </button>
+                        <p className="mt-4 text-center text-[9px] leading-relaxed tracking-wider text-white/40 uppercase">Нажимая кнопку, вы соглашаетесь с<br /> политикой обработки данных.</p>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
