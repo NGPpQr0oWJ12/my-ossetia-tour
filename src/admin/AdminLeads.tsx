@@ -125,7 +125,7 @@ function KanbanCard({
       {...attributes}
       {...listeners}
       className={cn(
-        "group relative flex flex-col gap-4 rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm transition-all hover:border-accent-500/40 hover:shadow-2xl cursor-grab active:cursor-grabbing",
+        "group relative flex flex-col gap-3 rounded-3xl border border-stone-200 bg-white p-4 shadow-sm transition-all hover:border-accent-500/40 hover:shadow-xl cursor-grab active:cursor-grabbing",
         isDragging && "z-50 shadow-2xl scale-[1.02] border-accent-500",
         isSaving && "animate-pulse"
       )}
@@ -142,7 +142,7 @@ function KanbanCard({
       </div>
 
       <div className="flex items-start justify-between gap-3">
-        <h4 className="font-serif text-xl font-black text-stone-900 tracking-tight leading-none line-clamp-1">
+        <h4 className="font-serif text-base font-black text-stone-900 tracking-tight leading-none line-clamp-1">
           {lead.name}
         </h4>
         <div className="flex items-center gap-2">
@@ -153,39 +153,39 @@ function KanbanCard({
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex flex-wrap gap-2">
-          <div className="flex items-center gap-2 rounded-xl bg-stone-100/80 px-3 py-1.5 text-[10px] font-black text-stone-600 border border-stone-200/40 shadow-sm">
-            <ExternalLink className="h-3.5 w-3.5 text-stone-400" />
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-center gap-1.5 rounded-lg bg-stone-100/80 px-2 py-1 text-[9px] font-black text-stone-500 border border-stone-200/40 shadow-sm">
+            <ExternalLink className="h-3 w-3 text-stone-400" />
             <span className="uppercase tracking-widest">{getSourceName(lead.source_page, tourTitle)}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-base font-bold text-stone-800">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 border border-stone-200/50 shadow-sm">
-            <Phone className="h-4 w-4 text-stone-500" />
+        <div className="flex items-center gap-2.5 text-sm font-bold text-stone-800">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-50 border border-stone-200/50">
+            <Phone className="h-3.5 w-3.5 text-stone-500" />
           </div>
           <span className="tracking-tight">{lead.phone}</span>
         </div>
       </div>
 
       {lead.manager_comment && (
-        <div className="mt-2 flex flex-col gap-2 rounded-2xl bg-stone-50/50 border border-stone-100 p-4 text-[11px] text-stone-700 shadow-sm">
-          <div className="flex items-center gap-2 font-black text-stone-900/40 uppercase tracking-[0.1em] text-[9px]">
-            <MessageSquare className="h-3 w-3" />
+        <div className="mt-1 flex flex-col gap-1.5 rounded-xl bg-stone-50/50 border border-stone-100 p-3 text-[10px] text-stone-700 shadow-sm">
+          <div className="flex items-center gap-1.5 font-black text-stone-900/40 uppercase tracking-[0.1em] text-[8px]">
+            <MessageSquare className="h-2.5 w-2.5" />
             Заметка
           </div>
-          <p className="line-clamp-3 leading-relaxed font-medium opacity-90">{lead.manager_comment}</p>
+          <p className="line-clamp-2 leading-relaxed font-medium opacity-90">{lead.manager_comment}</p>
         </div>
       )}
       
-      <div className="flex items-center justify-between mt-2 pt-4 border-t border-stone-100/50">
-         <div className="flex items-center gap-2 text-[10px] text-stone-400 font-black uppercase tracking-[0.2em]">
-          <CalendarClock className="h-3.5 w-3.5" />
+      <div className="flex items-center justify-between mt-1 pt-3 border-t border-stone-100/50">
+         <div className="flex items-center gap-2 text-[9px] text-stone-400 font-black uppercase tracking-[0.2em]">
+          <CalendarClock className="h-3 w-3" />
           <span>{new Date(lead.created_at).toLocaleDateString("ru-RU")}</span>
         </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-accent-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-accent-500/20 transition-all">
-          <ChevronRight className="h-4 w-4" />
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-stone-50 text-stone-300 group-hover:bg-accent-600 group-hover:text-white transition-all shadow-sm">
+          <ChevronRight className="h-3 w-3" />
         </div>
       </div>
     </div>
@@ -218,31 +218,27 @@ function KanbanColumn({
   });
 
   return (
-    <div className="flex h-full w-[420px] shrink-0 flex-col gap-6">
-      <div className="flex flex-col gap-2 px-6">
+    <div className="flex h-full w-[320px] shrink-0 flex-col gap-4">
+      <div className="flex flex-col gap-1.5 px-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div 
-              className="h-4 w-4 rounded-full ring-[10px] ring-white shadow-xl border border-black/5" 
+              className="h-3 w-3 rounded-full ring-[6px] ring-white shadow-lg border border-black/5" 
               style={{ backgroundColor: stage.color }} 
             />
-            <h3 className="font-serif text-3xl font-black text-stone-900 tracking-tighter">{stage.title}</h3>
+            <h3 className="font-serif text-lg font-black text-stone-900 tracking-tighter">{stage.title}</h3>
           </div>
-          <span className="rounded-xl bg-white border border-stone-200 px-3.5 py-1.5 text-xs font-black text-stone-900 shadow-sm">
+          <span className="rounded-lg bg-white border border-stone-200 px-2.5 py-1 text-[10px] font-black text-stone-900 shadow-sm">
             {leads.length}
           </span>
         </div>
-        <div 
-          className="h-1.5 w-full rounded-full opacity-10 transition-opacity group-hover:opacity-30" 
-          style={{ backgroundColor: stage.color }}
-        />
       </div>
 
       <div
         ref={setNodeRef}
         className={cn(
-          "flex min-h-[750px] flex-1 flex-col gap-6 rounded-[4rem] border-2 border-transparent p-6 transition-all duration-300",
-          isOver ? "bg-accent-500/5 border-accent-500/20 scale-[1.01] shadow-2xl ring-4 ring-accent-500/10" : "bg-stone-100/30 shadow-inner"
+          "flex min-h-[500px] flex-1 flex-col gap-4 rounded-3xl border-2 border-transparent p-4 transition-all duration-300",
+          isOver ? "bg-accent-500/5 border-accent-500/20 scale-[1.01] shadow-xl ring-2 ring-accent-500/5" : "bg-stone-100/30 shadow-inner"
         )}
       >
         <SortableContext items={leads.map(l => l.id)} strategy={verticalListSortingStrategy}>
@@ -692,13 +688,13 @@ export default function AdminLeads() {
                 style={{ pointerEvents: 'none' }}
               >
                 {activeLead ? (
-                  <div className="flex flex-col gap-4 rounded-[2.5rem] border-2 border-accent-500 bg-white p-7 shadow-2xl rotate-2 scale-105 cursor-grabbing w-[380px]">
-                     <div className="flex items-start justify-between gap-3">
-                      <h4 className="font-serif text-2xl font-black text-stone-900 tracking-tighter line-clamp-1">{activeLead.name}</h4>
-                      <GripVertical className="h-5 w-5 text-accent-500" />
+                  <div className="flex flex-col gap-3 rounded-2xl border-2 border-accent-500 bg-white p-5 shadow-2xl rotate-1 scale-105 cursor-grabbing w-[280px]">
+                     <div className="flex items-start justify-between gap-2">
+                       <h4 className="font-serif text-base font-black text-stone-900 tracking-tighter line-clamp-1">{activeLead.name}</h4>
+                       <GripVertical className="h-4 w-4 text-accent-500" />
                     </div>
-                    <div className="flex items-center gap-3 text-stone-500">
-                      <Phone className="h-4 w-4" />
+                    <div className="flex items-center gap-2 text-xs text-stone-500">
+                      <Phone className="h-3.5 w-3.5" />
                       <span className="font-bold">{activeLead.phone}</span>
                     </div>
                   </div>
@@ -708,12 +704,12 @@ export default function AdminLeads() {
 
             <button 
               onClick={() => setIsSettingsOpen(true)}
-              className="flex h-full w-96 shrink-0 flex-col items-center justify-center gap-5 rounded-[4rem] border-[3px] border-dashed border-stone-200/50 bg-stone-50/20 text-stone-300 transition-all hover:border-accent-500/30 hover:text-accent-600 hover:bg-accent-500/5 group"
+              className="flex h-full w-80 shrink-0 flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-stone-200/50 bg-stone-50/20 text-stone-300 transition-all hover:border-accent-500/30 hover:text-accent-600 hover:bg-accent-500/5 group"
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-xl group-hover:scale-110 transition-transform">
-                <Plus className="h-8 w-8 text-stone-300 group-hover:text-accent-500" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg group-hover:scale-110 transition-transform">
+                <Plus className="h-6 w-6 text-stone-300 group-hover:text-accent-500" />
               </div>
-              <span className="text-xs font-black uppercase tracking-[0.3em] opacity-60">Добавить стадию</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Добавить стадию</span>
             </button>
           </div>
         </div>
