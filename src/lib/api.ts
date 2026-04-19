@@ -144,31 +144,17 @@ export const publicSettingsApi = {
 export async function uploadToSupabaseStorage(
   file: File,
   token: string,
-  bucket = "crm-media",
 ): Promise<string> {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-  if (!supabaseUrl || !anonKey) {
-    throw new Error("VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are required");
-  }
-  const extension = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
-  const objectPath = `uploads/${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
-  const uploadRes = await fetch(
-    `${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`,
-    {
-      method: "POST",
-      headers: {
-        apikey: anonKey,
-        Authorization: `Bearer ${token}`,
-        "x-upsert": "true",
-        "Content-Type": file.type || "application/octet-stream",
-      },
-      body: file,
+  const res = await fetch("/api/admin/upload-media", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
-  if (!uploadRes.ok) {
-    const error = await uploadRes.text();
-    throw new Error(error || "Upload failed");
+    body: file,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data?.error ?? "Upload failed");
   }
-  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${objectPath}`;
+  return data.url as string;
 }

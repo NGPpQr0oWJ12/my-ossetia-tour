@@ -164,6 +164,11 @@ export function parseHomeContent(payload: unknown): HomeContentDto {
   const featured = asNumberArray(body.featured_tour_ids);
   if (!featured) throw new Error("featured_tour_ids must be number[]");
 
+  const heroTourId =
+    typeof body.hero_tour_id === "number" && Number.isFinite(body.hero_tour_id)
+      ? body.hero_tour_id
+      : null;
+
   return {
     hero_title: (body.hero_title as string).trim(),
     hero_subtitle: (body.hero_subtitle as string).trim(),
@@ -175,5 +180,6 @@ export function parseHomeContent(payload: unknown): HomeContentDto {
     cta_primary_url: (body.cta_primary_url as string).trim(),
     cta_secondary_label: (body.cta_secondary_label as string).trim(),
     cta_secondary_url: (body.cta_secondary_url as string).trim(),
+    hero_tour_id: heroTourId,
   };
 }

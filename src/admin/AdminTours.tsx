@@ -24,7 +24,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { adminApi, authStorage, uploadToSupabaseStorage } from "../lib/api";
-import type { Tour, TourUpsertInput, TourWithProgram } from "../lib/types";
+import type { Tour, TourUpsertInput, TourWithProgram, HomeContent } from "../lib/types";
 import { slugify } from "../lib/utils";
 import {
   AdminPageHeader,
@@ -42,7 +42,11 @@ import {
 } from "./components/AdminUI";
 import { cn } from "../lib/utils";
 
-const EMPTY_FORM: TourUpsertInput = {
+interface AdminTourForm extends TourUpsertInput {
+  hero_tour_id: number | null;
+}
+
+const EMPTY_FORM: AdminTourForm = {
   slug: "",
   title: "",
   short_description: "",
@@ -57,10 +61,11 @@ const EMPTY_FORM: TourUpsertInput = {
   sort_order: 0,
   seo_title: "",
   seo_description: "",
+  hero_tour_id: null,
   program_items: [],
 };
 
-function mapTourToForm(tour?: TourWithProgram | null): TourUpsertInput {
+function mapTourToForm(tour?: TourWithProgram | null, homeContent?: HomeContent | null): AdminTourForm {
   if (!tour) {
     return { ...EMPTY_FORM, gallery: [], program_items: [] };
   }
@@ -80,6 +85,7 @@ function mapTourToForm(tour?: TourWithProgram | null): TourUpsertInput {
     sort_order: Number(tour.sort_order ?? 0),
     seo_title: tour.seo_title ?? "",
     seo_description: tour.seo_description ?? "",
+    hero_tour_id: homeContent?.hero_tour_id === tour.id ? tour.id : null,
     program_items: (tour.program_items ?? []).map((item, index) => ({
       title: item.title ?? "",
       description: item.description ?? "",
@@ -89,7 +95,7 @@ function mapTourToForm(tour?: TourWithProgram | null): TourUpsertInput {
   };
 }
 
-function normalizeForm(form: TourUpsertInput): TourUpsertInput {
+function normalizeForm(form: AdminTourForm): AdminTourForm {
   return {
     ...form,
     slug: form.slug.trim(),
@@ -115,7 +121,7 @@ function normalizeForm(form: TourUpsertInput): TourUpsertInput {
   };
 }
 
-function validateTourForm(form: TourUpsertInput) {
+function validateTourForm(form: AdminTourForm) {
   if (!form.title) return "Укажите название тура.";
   if (!form.slug) return "Заполните slug маршрута.";
   if (!form.short_description) return "Добавьте короткое описание для карточки.";
@@ -134,8 +140,8 @@ function validateTourForm(form: TourUpsertInput) {
 export default function AdminTours() {
   const [tours, setTours] = useState<Tour[]>([]);
   const [selectedId, setSelectedId] = useState<number | "new">("new");
-  const [form, setForm] = useState<TourUpsertInput>(mapTourToForm());
-  const [initialForm, setInitialForm] = useState<TourUpsertInput>(mapTourToForm());
+  const [form, setForm] = useState<AdminTourForm>(mapTourToForm());
+  const [initialForm, setInitialForm] = useState<AdminTourForm>(mapTourToForm());
   const [saving, setSaving] = useState(false);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -146,6 +152,7 @@ export default function AdminTours() {
   const [slugTouched, setSlugTouched] = useState(false);
   const [galleryDraft, setGalleryDraft] = useState("");
   const [galleryUploading, setGalleryUploading] = useState(false);
+  const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const selectedTour = useMemo(
@@ -173,13 +180,22 @@ export default function AdminTours() {
     }
   }
 
+  async function loadHomeContent() {
+    try {
+      const data = await adminApi.getHome();
+      setHomeContent(data);
+    } catch (err) {
+      console.error("Failed to load home content:", err);
+    }
+  }
+
   async function loadTourDetails(id: number) {
     setLoadingDetail(true);
     setError("");
 
     try {
       const detail = await adminApi.getTour(id);
-      const nextForm = mapTourToForm(detail);
+      const nextForm = mapTourToForm(detail, homeContent);
       setSelectedId(id);
       setForm(nextForm);
       setInitialForm(nextForm);
@@ -226,10 +242,26 @@ export default function AdminTours() {
     setStatus("");
 
     try {
+      // Исключаем hero_tour_id из полезной нагрузки для API туров
+      const { hero_tour_id, ...tourPayload } = payload;
+
       const saved =
         selectedId === "new"
-          ? await adminApi.createTour(payload)
-          : await adminApi.updateTour(selectedId, payload);
+          ? await adminApi.createTour(tourPayload)
+          : await adminApi.updateTour(selectedId, tourPayload);
+
+      // Синхронизация Hero-тура
+      const isHero = hero_tour_id === Number(selectedId === "new" ? saved.id : selectedId);
+      if (homeContent) {
+        const wasHero = homeContent.hero_tour_id === saved.id;
+        if (isHero !== wasHero) {
+          await adminApi.updateHome({
+            ...homeContent,
+            hero_tour_id: isHero ? saved.id : null,
+          });
+          await loadHomeContent();
+        }
+      }
 
       await loadTours();
       await loadTourDetails(saved.id);
@@ -360,6 +392,7 @@ export default function AdminTours() {
 
   useEffect(() => {
     void loadTours();
+    void loadHomeContent();
   }, []);
 
   const filteredTours = useMemo(
@@ -388,63 +421,23 @@ export default function AdminTours() {
         title="Туры"
         description="Редактируйте карточки маршрутов, наполнение страниц и порядок публикации без риска потерять программу поездки."
         actions={
-          <>
+          <div className="flex gap-2">
             <button type="button" onClick={openNewTour} className="admin-button-secondary">
               <Plus className="h-4 w-4" />
-              Новый тур
-            </button>
-            <button
-              type="button"
-              onClick={() => void bootstrapTours()}
-              disabled={bootstrapping}
-              className="admin-button-secondary"
-            >
-              <RefreshCcw className={cn("h-4 w-4", bootstrapping && "animate-spin")} />
-              {bootstrapping ? "Импорт..." : "Импорт текущих"}
+              Новый
             </button>
             <button type="button" onClick={() => void save()} disabled={saving || loadingDetail} className="admin-button-primary">
               <Save className="h-4 w-4" />
-              {saving ? "Сохранение..." : "Сохранить"}
+              {saving ? "..." : "Сохранить"}
             </button>
-          </>
-        }
-        meta={
-          <>
-            <StatCard
-              icon={Layers}
-              label="Всего туров"
-              value={tours.length}
-              description="Маршруты, доступные в каталоге управления."
-              tone={tours.length > 0 ? "accent" : "default"}
-            />
-            <StatCard
-              icon={CheckCircle2}
-              label="Опубликовано"
-              value={publishedCount}
-              description="Туры, которые сейчас видны на публичном сайте."
-              tone={publishedCount > 0 ? "success" : "default"}
-            />
-            <StatCard
-              icon={Sparkles}
-              label="Черновики"
-              value={draftCount}
-              description="Маршруты, которые ещё не готовы к публикации."
-            />
-            <StatCard
-              icon={Eye}
-              label="Редактор"
-              value={selectedId === "new" ? "Создание" : isDirty ? "Есть правки" : "Синхронно"}
-              description="Сигнал о том, есть ли несохранённые изменения в текущем туре."
-              tone={isDirty ? "accent" : "default"}
-            />
-          </>
+          </div>
         }
       />
 
       {error ? <Notice tone="danger">{error}</Notice> : null}
       {status ? <Notice tone="success">{status}</Notice> : null}
 
-      <div className="grid gap-8 xl:grid-cols-[340px_minmax(0,1fr)]">
+      <div className="grid gap-8 xl:grid-cols-[260px_minmax(0,1fr)]">
         <aside className="space-y-5">
           <div className="admin-soft-surface p-5">
             <div className="space-y-4">
@@ -578,12 +571,25 @@ export default function AdminTours() {
                     </div>
                   </div>
                 </div>
-                <Toggle
-                  checked={form.is_published}
-                  onChange={(checked) => updateField("is_published", checked)}
-                  label="Показывать на сайте"
-                  description="Выключите публикацию, если маршрут ещё в работе или временно недоступен."
-                />
+                <div className="grid gap-6 md:grid-cols-2">
+                  <Toggle
+                    label="Опубликовать"
+                    description="Тур будет виден всем посетителям."
+                    checked={form.is_published}
+                    onChange={(val) => setForm({ ...form, is_published: val })}
+                  />
+                  <Toggle
+                    label="Популярный маршрут"
+                    description="Отображать этот тур в Hero-блоке на главной."
+                    checked={form.hero_tour_id !== null}
+                    onChange={(val) =>
+                      setForm({
+                        ...form,
+                        hero_tour_id: val ? Number(selectedId) : null,
+                      })
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>

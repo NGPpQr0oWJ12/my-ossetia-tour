@@ -23,10 +23,11 @@ const app = express();
 const PORT = Number(process.env.API_PORT ?? 8787);
 
 app.use(express.json({ limit: "2mb" }));
+app.use(express.raw({ type: "image/*", limit: "50mb" }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "authorization, content-type");
+  res.header("Access-Control-Allow-Headers", "authorization, content-type, x-filename");
   res.header("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
   if (req.method === "OPTIONS") {
     res.status(204).end();
@@ -50,7 +51,7 @@ async function requireAdmin(req: Request, res: Response, next: NextFunction) {
     return;
   }
   const token = header.slice("Bearer ".length);
-  if (!verifyAdminSession(token)) {
+  if (!(await verifyAdminSession(token))) {
     res.status(401).json({ error: "Invalid token" });
     return;
   }
@@ -140,7 +141,7 @@ app.post(
       res.status(401).json({ error: "Invalid credentials" });
       return;
     }
-    const accessToken = createAdminSession();
+    const accessToken = await createAdminSession();
     res.json({ access_token: accessToken });
   }),
 );
@@ -221,6 +222,45 @@ app.post(
       return;
     }
     res.json({ ok: true });
+  }),
+);
+
+app.post(
+  "/api/admin/upload-media",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const config = await getRuntimeConfig();
+    if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
+      res.status(400).json({ error: "Supabase is not configured" });
+      return;
+    }
+    const contentType = (req.headers["content-type"] ?? "application/octet-stream") as string;
+    const extension = contentType.startsWith("image/png") ? "png"
+      : contentType.startsWith("image/gif") ? "gif"
+      : contentType.startsWith("image/webp") ? "webp"
+      : "jpg";
+    const objectPath = `uploads/${Date.now()}-${Math.random().toString(16).slice(2)}.${extension}`;
+
+    const uploadRes = await fetch(
+      `${config.supabaseUrl}/storage/v1/object/crm-media/${objectPath}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: config.supabaseServiceRoleKey,
+          Authorization: `Bearer ${config.supabaseServiceRoleKey}`,
+          "x-upsert": "true",
+          "Content-Type": contentType,
+        },
+        body: req.body,
+      },
+    );
+    if (!uploadRes.ok) {
+      const error = await uploadRes.text();
+      res.status(400).json({ error: error || "Upload failed" });
+      return;
+    }
+    const publicUrl = `${config.supabaseUrl}/storage/v1/object/public/crm-media/${objectPath}`;
+    res.json({ url: publicUrl });
   }),
 );
 
@@ -420,8 +460,13 @@ app.get(
       return;
     }
     let featuredTours: unknown[] = [];
-    if (Array.isArray(home.featured_tour_ids) && home.featured_tour_ids.length > 0) {
-      const idList = home.featured_tour_ids.join(",");
+    const idsToFetch = Array.isArray(home.featured_tour_ids) ? [...home.featured_tour_ids] : [];
+    if (home.hero_tour_id && !idsToFetch.includes(home.hero_tour_id)) {
+      idsToFetch.push(home.hero_tour_id);
+    }
+
+    if (idsToFetch.length > 0) {
+      const idList = idsToFetch.join(",");
       featuredTours = await supabaseRest("/rest/v1/tours", {
         query: {
           select: "*",

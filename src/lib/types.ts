@@ -58,6 +58,7 @@ export interface HomeContent {
   cta_primary_url: string;
   cta_secondary_label: string;
   cta_secondary_url: string;
+  hero_tour_id: number | null;
   updated_at: string;
   featured_tours?: Tour[];
 }

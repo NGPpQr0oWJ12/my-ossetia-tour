@@ -101,10 +101,10 @@ const toneIconClasses: Record<Tone, string> = {
 
 export function FormField({ label, error, hint, children }: FormFieldProps) {
   return (
-    <label className="grid gap-2">
+    <label className="grid gap-1.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="admin-kicker">{label}</span>
-        {hint ? <span className="text-xs text-stone-400">{hint}</span> : null}
+        <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">{label}</span>
+        {hint ? <span className="text-[10px] text-stone-400">{hint}</span> : null}
       </div>
       {children}
       {error ? <p className="text-xs text-red-600">{error}</p> : null}
@@ -122,11 +122,10 @@ export function Section({
   return (
     <section className={cn("admin-soft-surface p-6 md:p-8", className)}>
       <div className="mb-6 flex flex-col gap-4 border-b border-stone-100 pb-5 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-1.5">
-          <div className="admin-kicker">Раздел</div>
+        <div className="space-y-1">
           <h2 className="font-serif text-2xl font-extrabold text-stone-900">{title}</h2>
           {description ? (
-            <p className="max-w-2xl text-sm leading-relaxed text-stone-500">{description}</p>
+            <p className="max-w-2xl text-xs leading-relaxed text-stone-500">{description}</p>
           ) : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
@@ -180,16 +179,16 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div className="admin-soft-surface p-5">
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <div className={cn("flex h-11 w-11 items-center justify-center rounded-2xl", toneIconClasses[tone])}>
-          <Icon className="h-5 w-5" />
+      <div className="flex items-center gap-4">
+        <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", toneIconClasses[tone])}>
+          <Icon className="h-4 w-4" />
         </div>
-        <span className="admin-kicker">{label}</span>
+        <div className="min-w-0">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-stone-400">{label}</div>
+          <div className="truncate font-serif text-2xl font-extrabold text-stone-900">{value}</div>
+        </div>
       </div>
-      <div className="space-y-1.5">
-        <div className="font-serif text-3xl font-extrabold text-stone-900">{value}</div>
-        {description ? <p className="text-sm leading-relaxed text-stone-500">{description}</p> : null}
-      </div>
+      {description ? <p className="mt-3 text-[10px] leading-relaxed text-stone-500 opacity-60">{description}</p> : null}
     </div>
   );
 }

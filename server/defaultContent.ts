@@ -130,6 +130,7 @@ export const DEFAULT_HOME_CONTENT: HomeContentDto = {
   cta_primary_url: "/tours",
   cta_secondary_label: "Контакты",
   cta_secondary_url: "/contacts",
+  hero_tour_id: null,
 };
 
 export const DEFAULT_SITE_SETTINGS = {

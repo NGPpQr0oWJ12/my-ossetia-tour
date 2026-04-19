@@ -49,4 +49,5 @@ export interface HomeContentDto {
   cta_primary_url: string;
   cta_secondary_label: string;
   cta_secondary_url: string;
+  hero_tour_id: number | null;
 }

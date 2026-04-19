@@ -64,7 +64,7 @@ export default function AdminLayout() {
       </div>
 
       <header className="sticky top-0 z-50 border-b border-white/60 bg-white/75 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4 sm:gap-6">
             <Link
               to="/"
@@ -78,9 +78,6 @@ export default function AdminLayout() {
               <div className="truncate font-serif text-lg font-extrabold tracking-tight text-stone-900 sm:text-xl">
                 My Ossetia Admin
               </div>
-              <div className="hidden text-xs text-stone-500 md:block">
-                Управление маршрутами, заявками и контентом сайта.
-              </div>
             </div>
           </div>
 
@@ -91,7 +88,7 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <div className="relative mx-auto grid max-w-[1600px] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:px-8 lg:py-8">
+      <div className="relative grid w-full gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:px-8 lg:py-8">
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <section className="admin-surface p-6">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(205,165,119,0.18),transparent_42%)]" />
