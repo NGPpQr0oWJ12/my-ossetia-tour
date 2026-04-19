@@ -40,6 +40,8 @@ export interface Tour {
   location: string;
   cover_image_url: string;
   gallery: string[];
+  difficulty: string;
+  season: string;
   is_published: boolean;
   sort_order: number;
   seo_title: string;
@@ -97,6 +99,8 @@ export interface TourUpsertInput {
   location: string;
   cover_image_url: string;
   gallery: string[];
+  difficulty: string;
+  season: string;
   is_published: boolean;
   sort_order: number;
   seo_title: string;

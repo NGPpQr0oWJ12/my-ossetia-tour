@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   ImagePlus,
   Loader2,
+  Search,
   Upload,
   X,
 } from "lucide-react";
@@ -83,6 +84,13 @@ interface ImageUploadProps {
   description?: string;
   aspectClassName?: string;
   inputPlaceholder?: string;
+}
+
+interface TabsProps {
+  tabs: { id: string; label: string; icon?: LucideIcon }[];
+  activeTab: string;
+  onChange: (id: string) => void;
+  className?: string;
 }
 
 const toneClasses: Record<Tone, string> = {
@@ -396,19 +404,79 @@ export function ImageUpload({
         )}
       </div>
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleUpload}
-        accept="image/*"
-        className="hidden"
-      />
-
       <TextInput
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={inputPlaceholder}
       />
     </div>
+  );
+}
+
+export function Tabs({ tabs, activeTab, onChange, className }: TabsProps) {
+  return (
+    <div className={cn("flex flex-wrap gap-1.5 rounded-[1.5rem] bg-stone-200/50 p-1.5", className)}>
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => onChange(tab.id)}
+            className={cn(
+              "flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-300",
+              isActive
+                ? "bg-white text-stone-950 shadow-sm shadow-stone-200"
+                : "text-stone-500 hover:bg-white/40 hover:text-stone-700"
+            )}
+          >
+            {Icon && <Icon className="h-3.5 w-3.5" />}
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function SearchInput({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <div className="relative group">
+      <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400 transition-colors group-focus-within:text-accent-500" />
+      <input
+        {...props}
+        className={cn("admin-input pl-11", className)}
+      />
+    </div>
+  );
+}
+
+interface SelectProps {
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  className?: string;
+  disabled?: boolean;
+}
+
+export function Select({ options, value, onChange, className, disabled, ...props }: SelectProps) {
+  return (
+    <select
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      {...props}
+      className={cn(
+        "admin-input appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.75rem_center] bg-no-repeat pr-10",
+        className
+      )}
+    >
+      {options.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
   );
 }

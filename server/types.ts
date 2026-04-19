@@ -35,6 +35,8 @@ export interface TourUpsertDto {
   sort_order: number;
   seo_title: string;
   seo_description: string;
+  difficulty?: string;
+  season?: string;
   program_items: TourProgramItemDto[];
 }
 

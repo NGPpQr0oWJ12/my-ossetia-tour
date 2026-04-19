@@ -136,6 +136,8 @@ export function parseTourUpsert(payload: unknown): TourUpsertDto {
         : 0,
     seo_title: (body.seo_title as string).trim(),
     seo_description: (body.seo_description as string).trim(),
+    difficulty: typeof body.difficulty === "string" ? body.difficulty.trim() : "Легкая",
+    season: typeof body.season === "string" ? body.season.trim() : "Круглый год",
     program_items,
   };
 }

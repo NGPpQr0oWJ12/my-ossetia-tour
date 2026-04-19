@@ -581,6 +581,8 @@ app.post(
           sort_order: dto.sort_order,
           seo_title: dto.seo_title,
           seo_description: dto.seo_description,
+          difficulty: dto.difficulty,
+          season: dto.season,
         },
       ],
     });
@@ -632,6 +634,8 @@ app.patch(
         sort_order: dto.sort_order,
         seo_title: dto.seo_title,
         seo_description: dto.seo_description,
+        difficulty: dto.difficulty,
+        season: dto.season,
       },
     });
     await supabaseRest("/rest/v1/tour_program_items", {

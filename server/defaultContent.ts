@@ -18,6 +18,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 1,
     seo_title: "Кармадонское ущелье и Даргавс",
     seo_description: "Однодневный авторский тур по Кармадону и Даргавсу.",
+    difficulty: "Легкая",
+    season: "Круглый год",
     program_items: [],
   },
   {
@@ -37,6 +39,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 2,
     seo_title: "Цейское ущелье и Сказский ледник",
     seo_description: "Однодневный маршрут по Цейскому ущелью.",
+    difficulty: "Легкая",
+    season: "Круглый год",
     program_items: [],
   },
   {
@@ -56,6 +60,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 3,
     seo_title: "Дигория — край тысячи водопадов",
     seo_description: "Двухдневный тур по Дигории.",
+    difficulty: "Средняя",
+    season: "Лето",
     program_items: [],
   },
   {
@@ -75,6 +81,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 4,
     seo_title: "Куртатинское ущелье",
     seo_description: "Однодневный тур по Куртатинскому ущелью.",
+    difficulty: "Легкая",
+    season: "Круглый год",
     program_items: [],
   },
   {
@@ -94,6 +102,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 5,
     seo_title: "Горная Ингушетия",
     seo_description: "Однодневный тур по горной Ингушетии.",
+    difficulty: "Легкая",
+    season: "Круглый год",
     program_items: [],
   },
   {
@@ -113,6 +123,8 @@ export const DEFAULT_TOURS: TourUpsertDto[] = [
     sort_order: 6,
     seo_title: "Джип-тур на плато Бермамыт",
     seo_description: "Однодневный джип-тур на Бермамыт.",
+    difficulty: "Средняя",
+    season: "Круглый год",
     program_items: [],
   },
 ];

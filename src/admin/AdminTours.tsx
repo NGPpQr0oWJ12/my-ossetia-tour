@@ -23,6 +23,7 @@ import {
   LoadingState,
   Notice,
   Section,
+  Select,
   TextArea,
   TextInput,
   Toggle,
@@ -48,6 +49,8 @@ const EMPTY_FORM: AdminTourForm = {
   gallery: [],
   is_published: true,
   sort_order: 0,
+  difficulty: "Легкая",
+  season: "Круглый год",
   seo_title: "",
   seo_description: "",
   hero_tour_id: null,
@@ -73,6 +76,8 @@ function mapTourToForm(tour?: TourWithProgram | null, homeContent?: HomeContent 
     location: tour.location || "",
     cover_image_url: tour.cover_image_url || "",
     gallery: Array.isArray(tour.gallery) ? [...tour.gallery] : [],
+    difficulty: tour.difficulty || "Легкая",
+    season: tour.season || "Круглый год",
     is_published: Boolean(tour.is_published),
     sort_order: typeof tour.sort_order === "number" ? tour.sort_order : 0,
     seo_title: tour.seo_title || "",
@@ -103,6 +108,8 @@ function normalizeForm(form: AdminTourForm): AdminTourForm {
     location: form.location.trim(),
     cover_image_url: form.cover_image_url.trim(),
     gallery: form.gallery.map(url => url.trim()).filter(Boolean),
+    difficulty: form.difficulty,
+    season: form.season,
     seo_title: form.seo_title.trim(),
     seo_description: form.seo_description.trim(),
     program_items: form.program_items
@@ -438,6 +445,30 @@ export default function AdminTours() {
                     <FormField label="Длительность"><TextInput value={form.duration} onChange={e => updateField("duration", e.target.value)} /></FormField>
                     <FormField label="Группа"><TextInput value={form.group_size} onChange={e => updateField("group_size", e.target.value)} /></FormField>
                     <FormField label="Локация"><TextInput value={form.location} onChange={e => updateField("location", e.target.value)} /></FormField>
+                    <FormField label="Сложность">
+                      <Select
+                        value={form.difficulty}
+                        onChange={e => updateField("difficulty", e.target.value)}
+                        options={[
+                          { value: "Легкая", label: "Легкая" },
+                          { value: "Средняя", label: "Средняя" },
+                          { value: "Сложная", label: "Сложная" }
+                        ]}
+                      />
+                    </FormField>
+                    <FormField label="Сезон">
+                      <Select
+                        value={form.season}
+                        onChange={e => updateField("season", e.target.value)}
+                        options={[
+                          { value: "Круглый год", label: "Круглый год" },
+                          { value: "Весна", label: "Весна" },
+                          { value: "Лето", label: "Лето" },
+                          { value: "Осень", label: "Осень" },
+                          { value: "Зима", label: "Зима" }
+                        ]}
+                      />
+                    </FormField>
                     <div className="md:col-span-2">
                       <FormField label="Краткое описание"><TextInput value={form.short_description} onChange={e => updateField("short_description", e.target.value)} /></FormField>
                     </div>

@@ -222,7 +222,7 @@ export default function TourDetail() {
                 <Mountain className="h-4 w-4" />
                 <span className="text-xs uppercase tracking-wider font-medium">Сложность</span>
               </div>
-              <span className="text-stone-900 font-medium">Легкая</span>
+              <span className="text-stone-900 font-medium">{tour?.difficulty || "—"}</span>
             </div>
 
             <div className="flex flex-col gap-1">
@@ -238,7 +238,7 @@ export default function TourDetail() {
                 <Calendar className="h-4 w-4" />
                 <span className="text-xs uppercase tracking-wider font-medium">Сезон</span>
               </div>
-              <span className="text-stone-900 font-medium">Круглый год</span>
+              <span className="text-stone-900 font-medium">{tour?.season || "—"}</span>
             </div>
 
             <div className="flex flex-col gap-1">
