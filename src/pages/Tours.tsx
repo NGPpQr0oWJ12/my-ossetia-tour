@@ -122,7 +122,7 @@ export default function Tours() {
                 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-stone-100">
                   <span className="text-lg font-medium text-stone-900">{tour.price}</span>
-                  <Link to={`/tours/${tour.id}`} className="btn-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Link to={`/tours/${tour.id}`} className="btn-primary py-3 px-6 text-[10px]">
                     Подробнее
                   </Link>
                 </div>
