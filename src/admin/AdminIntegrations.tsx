@@ -1,5 +1,24 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  BellRing,
+  KeyRound,
+  Mail,
+  Save,
+  Send,
+  ShieldCheck,
+  TestTube2,
+} from "lucide-react";
 import { authStorage } from "../lib/api";
+import {
+  AdminPageHeader,
+  FormField,
+  LoadingState,
+  Notice,
+  Section,
+  StatCard,
+  TextInput,
+  Toggle,
+} from "./components/AdminUI";
 
 interface IntegrationState {
   supabaseUrl: string;
@@ -33,9 +52,11 @@ async function request<T>(path: string, method = "GET", body?: unknown): Promise
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
     throw new Error(data?.error ?? "Request failed");
   }
+
   return data as T;
 }
 
@@ -53,20 +74,31 @@ export default function AdminIntegrations() {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [testing, setTesting] = useState<"supabase" | "telegram" | null>(null);
 
   async function load() {
+    setLoading(true);
     setError("");
-    const data = await request<IntegrationState>("/api/admin/integrations");
-    setInitial(data);
-    setForm({
-      supabaseUrl: data.supabaseUrl ?? "",
-      supabaseAnonKey: "",
-      supabaseServiceRoleKey: "",
-      adminEmails: (data.adminEmails ?? []).join(", "),
-      telegramBotToken: "",
-      telegramChatId: data.telegramChatId ?? "",
-      telegramEnabled: Boolean(data.telegramEnabled),
-    });
+    setStatus("");
+
+    try {
+      const data = await request<IntegrationState>("/api/admin/integrations");
+      setInitial(data);
+      setForm({
+        supabaseUrl: data.supabaseUrl ?? "",
+        supabaseAnonKey: "",
+        supabaseServiceRoleKey: "",
+        adminEmails: (data.adminEmails ?? []).join(", "),
+        telegramBotToken: "",
+        telegramChatId: data.telegramChatId ?? "",
+        telegramEnabled: Boolean(data.telegramEnabled),
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось загрузить интеграции.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function save(event: FormEvent) {
@@ -74,6 +106,7 @@ export default function AdminIntegrations() {
     setSaving(true);
     setStatus("");
     setError("");
+
     try {
       const payload = {
         supabaseUrl: form.supabaseUrl.trim(),
@@ -87,6 +120,7 @@ export default function AdminIntegrations() {
         telegramChatId: form.telegramChatId.trim(),
         telegramEnabled: form.telegramEnabled,
       };
+
       const data = await request<IntegrationState>("/api/admin/integrations", "PATCH", payload);
       setInitial(data);
       setForm((prev) => ({
@@ -95,51 +129,41 @@ export default function AdminIntegrations() {
         supabaseServiceRoleKey: "",
         telegramBotToken: "",
       }));
-      setStatus(
-        "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0438\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0439 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u044b.",
-      );
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c",
-      );
+      setStatus("Настройки интеграций сохранены.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось сохранить интеграции.");
     } finally {
       setSaving(false);
     }
   }
 
   async function testSupabase() {
+    setTesting("supabase");
     setStatus("");
     setError("");
+
     try {
       await request("/api/admin/integrations/test-supabase", "POST");
-      setStatus(
-        "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 Supabase \u0443\u0441\u043f\u0435\u0448\u043d\u043e.",
-      );
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 Supabase \u043d\u0435 \u043f\u0440\u043e\u0448\u043b\u0430",
-      );
+      setStatus("Проверка Supabase прошла успешно.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Проверка Supabase не прошла.");
+    } finally {
+      setTesting(null);
     }
   }
 
   async function testTelegram() {
+    setTesting("telegram");
     setStatus("");
     setError("");
+
     try {
       await request("/api/admin/integrations/test-telegram", "POST");
-      setStatus(
-        "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 Telegram \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e.",
-      );
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 Telegram \u043d\u0435 \u043f\u0440\u043e\u0448\u043b\u0430",
-      );
+      setStatus("Тестовое сообщение Telegram отправлено.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Проверка Telegram не прошла.");
+    } finally {
+      setTesting(null);
     }
   }
 
@@ -147,127 +171,171 @@ export default function AdminIntegrations() {
     void load();
   }, []);
 
+  const integrationHealth = useMemo(() => {
+    const supabaseReady = Boolean(initial?.hasSupabase && initial.supabaseUrl);
+    const telegramReady = Boolean(initial?.telegramBotToken && initial.telegramChatId);
+    const adminsConfigured = initial?.adminEmails.length ?? 0;
+    return { supabaseReady, telegramReady, adminsConfigured };
+  }, [initial]);
+
+  if (loading) {
+    return (
+      <LoadingState
+        title="Загрузка интеграций"
+        description="Проверяем Supabase, Telegram и служебные параметры."
+      />
+    );
+  }
+
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold">
-          {"\u0418\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0438"}
-        </h1>
-        <p className="text-sm text-stone-500">
-          {"\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 API-\u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 Supabase \u0438 Telegram \u043f\u0440\u044f\u043c\u043e \u0438\u0437 \u0430\u0434\u043c\u0438\u043d\u043a\u0438."}
-        </p>
-      </div>
-
-      {initial ? (
-        <div className="rounded-lg border border-stone-200 bg-stone-50 p-3 text-xs text-stone-600">
-          <div>
-            {"Supabase configured: "}
-            {initial.hasSupabase ? "yes" : "no"}
-          </div>
-          <div>
-            {"Anon key: "}
-            {initial.supabaseAnonKey || "not set"}
-          </div>
-          <div>
-            {"Service key: "}
-            {initial.supabaseServiceRoleKey || "not set"}
-          </div>
-          <div>
-            {"Telegram token: "}
-            {initial.telegramBotToken || "not set"}
-          </div>
-        </div>
-      ) : null}
-
-      <form onSubmit={save} className="grid gap-5">
-        <section className="rounded-xl border border-stone-200 p-4">
-          <h2 className="mb-3 text-lg font-medium">Supabase</h2>
-          <div className="grid gap-3">
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Supabase URL"
-              value={form.supabaseUrl}
-              onChange={(e) => setForm((prev) => ({ ...prev, supabaseUrl: e.target.value }))}
-            />
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Supabase anon key (leave empty to keep current)"
-              value={form.supabaseAnonKey}
-              onChange={(e) => setForm((prev) => ({ ...prev, supabaseAnonKey: e.target.value }))}
-            />
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Supabase service role key (leave empty to keep current)"
-              value={form.supabaseServiceRoleKey}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, supabaseServiceRoleKey: e.target.value }))
-              }
-            />
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Admin emails (comma separated)"
-              value={form.adminEmails}
-              onChange={(e) => setForm((prev) => ({ ...prev, adminEmails: e.target.value }))}
-            />
-            <button
-              type="button"
-              onClick={() => void testSupabase()}
-              className="w-fit rounded-md border border-stone-300 px-3 py-2 text-sm"
-            >
-              {"\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c Supabase"}
+    <form onSubmit={save} className="space-y-8">
+      <AdminPageHeader
+        eyebrow="Служебные подключения"
+        title="Интеграции"
+        description="Управляйте подключением к Supabase, списком администраторов и Telegram-уведомлениями, не раскрывая секреты прямо на экране."
+        actions={
+          <>
+            <button type="button" onClick={() => void load()} className="admin-button-secondary">
+              Обновить
             </button>
-          </div>
-        </section>
-
-        <section className="rounded-xl border border-stone-200 p-4">
-          <h2 className="mb-3 text-lg font-medium">Telegram Notifications</h2>
-          <div className="grid gap-3">
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Telegram bot token (leave empty to keep current)"
-              value={form.telegramBotToken}
-              onChange={(e) => setForm((prev) => ({ ...prev, telegramBotToken: e.target.value }))}
-            />
-            <input
-              className="rounded-md border border-stone-300 px-3 py-2 text-sm"
-              placeholder="Telegram chat id"
-              value={form.telegramChatId}
-              onChange={(e) => setForm((prev) => ({ ...prev, telegramChatId: e.target.value }))}
-            />
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.telegramEnabled}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, telegramEnabled: e.target.checked }))
-                }
-              />
-              {"\u0412\u043a\u043b\u044e\u0447\u0438\u0442\u044c \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u043e \u0437\u0430\u044f\u0432\u043a\u0430\u0445 \u0432 Telegram"}
-            </label>
-            <button
-              type="button"
-              onClick={() => void testTelegram()}
-              className="w-fit rounded-md border border-stone-300 px-3 py-2 text-sm"
-            >
-              {"\u0422\u0435\u0441\u0442 Telegram"}
+            <button type="submit" disabled={saving} className="admin-button-primary">
+              <Save className="h-4 w-4" />
+              {saving ? "Сохранение..." : "Сохранить"}
             </button>
-          </div>
-        </section>
+          </>
+        }
+        meta={
+          <>
+            <StatCard
+              icon={ShieldCheck}
+              label="Supabase"
+              value={integrationHealth.supabaseReady ? "Подключен" : "Не подключен"}
+              description="База данных и хранилище медиафайлов для админки."
+              tone={integrationHealth.supabaseReady ? "success" : "default"}
+            />
+            <StatCard
+              icon={Mail}
+              label="Админы"
+              value={integrationHealth.adminsConfigured}
+              description="Email-адреса, которым разрешён доступ в систему."
+              tone={integrationHealth.adminsConfigured > 0 ? "accent" : "default"}
+            />
+            <StatCard
+              icon={BellRing}
+              label="Telegram"
+              value={form.telegramEnabled ? "Включен" : "Выключен"}
+              description="Отправка уведомлений о новых заявках в чат команды."
+              tone={form.telegramEnabled ? "accent" : "default"}
+            />
+            <StatCard
+              icon={KeyRound}
+              label="Секреты"
+              value={initial?.supabaseAnonKey || initial?.telegramBotToken ? "Настроены" : "Пусто"}
+              description="Сами ключи скрыты. Пустое поле при сохранении оставляет текущее значение."
+              tone={initial?.supabaseAnonKey || initial?.telegramBotToken ? "success" : "default"}
+            />
+          </>
+        }
+      />
 
-        <div className="flex items-center gap-3">
+      {error ? <Notice tone="danger">{error}</Notice> : null}
+      {status ? <Notice tone="success">{status}</Notice> : null}
+
+      <Notice tone="accent" title="Как работает сохранение">
+        Если оставить поле с ключом пустым, текущее секретное значение не будет перезаписано.
+      </Notice>
+
+      <Section
+        title="Supabase и доступ администраторов"
+        description="Здесь настраивается база, публичный URL и список email, которым разрешён вход в админку."
+        actions={
           <button
-            type="submit"
-            disabled={saving}
-            className="rounded-md bg-stone-900 px-4 py-2 text-sm text-white"
+            type="button"
+            onClick={() => void testSupabase()}
+            disabled={testing !== null}
+            className="admin-button-secondary"
           >
-            {saving
-              ? "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435..."
-              : "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0438\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0438"}
+            <TestTube2 className="h-4 w-4" />
+            {testing === "supabase" ? "Проверка..." : "Проверить Supabase"}
           </button>
-          {status ? <span className="text-sm text-green-700">{status}</span> : null}
-          {error ? <span className="text-sm text-red-600">{error}</span> : null}
+        }
+      >
+        <div className="grid gap-5 md:grid-cols-2">
+          <FormField label="Supabase URL">
+            <TextInput
+              value={form.supabaseUrl}
+              onChange={(event) => setForm((prev) => ({ ...prev, supabaseUrl: event.target.value }))}
+              placeholder="https://project.supabase.co"
+            />
+          </FormField>
+          <FormField
+            label="Admin emails"
+            hint="Через запятую"
+          >
+            <TextInput
+              value={form.adminEmails}
+              onChange={(event) => setForm((prev) => ({ ...prev, adminEmails: event.target.value }))}
+              placeholder="admin@example.com, ops@example.com"
+            />
+          </FormField>
+          <FormField label="Supabase anon key" hint="Оставьте пустым, чтобы сохранить текущий">
+            <TextInput
+              value={form.supabaseAnonKey}
+              onChange={(event) => setForm((prev) => ({ ...prev, supabaseAnonKey: event.target.value }))}
+              placeholder="Новый public/anon ключ"
+            />
+          </FormField>
+          <FormField label="Service role key" hint="Оставьте пустым, чтобы сохранить текущий">
+            <TextInput
+              value={form.supabaseServiceRoleKey}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, supabaseServiceRoleKey: event.target.value }))
+              }
+              placeholder="Новый service role key"
+            />
+          </FormField>
         </div>
-      </form>
-    </div>
+      </Section>
+
+      <Section
+        title="Telegram-уведомления"
+        description="Используйте Telegram, чтобы команда быстрее реагировала на новые обращения."
+        actions={
+          <button
+            type="button"
+            onClick={() => void testTelegram()}
+            disabled={testing !== null}
+            className="admin-button-secondary"
+          >
+            <Send className="h-4 w-4" />
+            {testing === "telegram" ? "Проверка..." : "Тест Telegram"}
+          </button>
+        }
+      >
+        <div className="grid gap-5 md:grid-cols-2">
+          <FormField label="Telegram bot token" hint="Оставьте пустым, чтобы сохранить текущий">
+            <TextInput
+              value={form.telegramBotToken}
+              onChange={(event) => setForm((prev) => ({ ...prev, telegramBotToken: event.target.value }))}
+              placeholder="Новый токен бота"
+            />
+          </FormField>
+          <FormField label="Telegram chat id">
+            <TextInput
+              value={form.telegramChatId}
+              onChange={(event) => setForm((prev) => ({ ...prev, telegramChatId: event.target.value }))}
+              placeholder="-1001234567890"
+            />
+          </FormField>
+        </div>
+
+        <Toggle
+          checked={form.telegramEnabled}
+          onChange={(checked) => setForm((prev) => ({ ...prev, telegramEnabled: checked }))}
+          label="Включить уведомления о заявках"
+          description="Когда переключатель активен, новые обращения будут отправляться в указанный Telegram-чат."
+        />
+      </Section>
+    </form>
   );
 }

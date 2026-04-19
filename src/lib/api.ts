@@ -84,6 +84,11 @@ export const adminApi = {
   getTours() {
     return apiRequest<Tour[]>("/api/admin/tours", { token: authStorage.getToken() ?? "" });
   },
+  getTour(id: number) {
+    return apiRequest<TourWithProgram>(`/api/admin/tours/${id}`, {
+      token: authStorage.getToken() ?? "",
+    });
+  },
   createTour(payload: TourUpsertInput) {
     return apiRequest<Tour>("/api/admin/tours", {
       method: "POST",

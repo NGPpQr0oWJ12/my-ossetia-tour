@@ -475,6 +475,41 @@ app.get(
   }),
 );
 
+app.get(
+  "/api/admin/tours/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+
+    const tours = await supabaseRest("/rest/v1/tours", {
+      query: {
+        select: "*",
+        id: `eq.${id}`,
+        limit: "1",
+      },
+    });
+    const tour = tours?.[0];
+    if (!tour) {
+      res.status(404).json({ error: "Tour not found" });
+      return;
+    }
+
+    const items = await supabaseRest("/rest/v1/tour_program_items", {
+      query: {
+        select: "*",
+        tour_id: `eq.${tour.id}`,
+        order: "position.asc",
+      },
+    });
+
+    res.json({ ...tour, program_items: items ?? [] });
+  }),
+);
+
 app.post(
   "/api/admin/tours",
   requireAdmin,

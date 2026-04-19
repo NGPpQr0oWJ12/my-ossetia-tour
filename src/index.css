@@ -34,4 +34,31 @@
   .btn-sm {
     @apply inline-flex items-center justify-center rounded-[2.5rem] border border-white/20 bg-white/10 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white backdrop-blur-sm transition-all hover:bg-accent-500 sm:w-auto;
   }
+  .admin-surface {
+    @apply relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_80px_rgba(28,25,23,0.08)] backdrop-blur-xl;
+  }
+  .admin-soft-surface {
+    @apply rounded-[1.75rem] border border-stone-200/70 bg-white/75 shadow-[0_18px_45px_rgba(28,25,23,0.05)] backdrop-blur-sm;
+  }
+  .admin-subtle-panel {
+    @apply rounded-[1.5rem] border border-stone-200/70 bg-stone-50/85;
+  }
+  .admin-input {
+    @apply w-full rounded-[1.3rem] border border-stone-200/80 bg-white/95 px-4 py-3.5 text-sm text-stone-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-all duration-300 placeholder:text-stone-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-accent-500/10;
+  }
+  .admin-textarea {
+    @apply w-full min-h-[7rem] resize-y rounded-[1.3rem] border border-stone-200/80 bg-white/95 px-4 py-4 text-sm text-stone-800 leading-relaxed shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-all duration-300 placeholder:text-stone-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-accent-500/10;
+  }
+  .admin-kicker {
+    @apply text-[10px] font-bold uppercase tracking-[0.34em] text-stone-400;
+  }
+  .admin-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-stone-200/80 bg-white/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-stone-500;
+  }
+  .admin-button-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-stone-200/80 bg-white/90 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.22em] text-stone-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:text-accent-600 hover:shadow-[0_18px_30px_rgba(205,165,119,0.18)];
+  }
+  .admin-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent-500 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.22em] text-white shadow-[0_22px_40px_rgba(188,141,89,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-[0_26px_45px_rgba(188,141,89,0.34)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
+  }
 }
